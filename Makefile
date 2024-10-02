@@ -1,9 +1,9 @@
 UNAME_S := $(shell uname -s)
 # Flags específicos para macOS e Linux
 ifeq ($(UNAME_S), Darwin)  # macOS
-    LFLAGS = -ll  # No need for -lfl in macOS, use -ll for Flex library
+    LFLAGS = -ll  
 else ifeq ($(UNAME_S), Linux)  # Linux
-    LFLAGS = -lfl  # Use -lfl in Linux for Flex library
+    LFLAGS = -lfl 
 endif
 
 etapa1: scanner.l lex.yy.c main.c tokens.h
