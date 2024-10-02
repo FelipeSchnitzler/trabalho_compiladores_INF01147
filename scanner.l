@@ -148,6 +148,8 @@ return      return      TK_PR_RETURN         ;
 "!="        return      TK_OC_NE             ;
 "&"         return      TK_OC_AND               ;
 "|"         return      TK_OC_OR                ;
+";"         return      ';'                     ;
+
 
 
 

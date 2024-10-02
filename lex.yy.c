@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 13
-#define YY_END_OF_BUFFER 14
+#define YY_NUM_RULES 14
+#define YY_END_OF_BUFFER 15
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -363,12 +363,12 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[40] =
+static const flex_int16_t yy_accept[41] =
     {   0,
-        0,    0,   14,   13,   13,   11,   13,   13,   13,   13,
-       13,   13,   13,   13,   12,   10,    7,    9,    8,    0,
-        0,    3,    0,    0,    0,    0,    0,    1,    0,    0,
-        4,    0,    0,    0,    2,    0,    5,    6,    0
+        0,    0,   15,   14,   14,   11,   13,   14,   14,   14,
+       14,   14,   14,   14,   14,   12,   10,    7,    9,    8,
+        0,    0,    3,    0,    0,    0,    0,    0,    1,    0,
+        0,    4,    0,    0,    0,    2,    0,    5,    6,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -378,15 +378,15 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    2,    1,    1,    1,    1,    3,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    4,
-        5,    6,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    4,    5,
+        6,    7,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    7,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    8,    1,    1,    1,
 
-        8,    9,    1,   10,   11,    1,    1,   12,    1,   13,
-       14,    1,    1,   15,   16,   17,   18,    1,   19,    1,
-        1,    1,    1,   20,    1,    1,    1,    1,    1,    1,
+        9,   10,    1,   11,   12,    1,    1,   13,    1,   14,
+       15,    1,    1,   16,   17,   18,   19,    1,   20,    1,
+        1,    1,    1,   21,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -403,48 +403,49 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[21] =
-    {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1
-    } ;
-
-static const flex_int16_t yy_base[40] =
-    {   0,
-        0,    0,   44,   45,   38,   45,   37,   36,   35,   27,
-       26,   12,   29,   26,   45,   45,   45,   45,   45,   19,
-       20,   45,   16,   15,   20,   22,   22,   45,   10,   15,
-       45,    9,    9,   15,   45,    9,   45,   45,   45
-    } ;
-
-static const flex_int16_t yy_def[40] =
-    {   0,
-       39,    1,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,    0
-    } ;
-
-static const flex_int16_t yy_nxt[66] =
-    {   0,
-        4,    5,    6,    7,    8,    9,    4,   10,   11,    4,
-       12,    4,    4,    4,   13,    4,    4,    4,   14,   15,
-       22,   38,   37,   36,   23,   35,   34,   33,   32,   31,
-       30,   29,   28,   27,   26,   25,   24,   21,   20,   19,
-       18,   17,   16,   39,    3,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39
-    } ;
-
-static const flex_int16_t yy_chk[66] =
+static const YY_CHAR yy_meta[22] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-       12,   36,   34,   33,   12,   32,   30,   29,   27,   26,
-       25,   24,   23,   21,   20,   14,   13,   11,   10,    9,
-        8,    7,    5,    3,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39
+        1
+    } ;
+
+static const flex_int16_t yy_base[41] =
+    {   0,
+        0,    0,   45,   46,   38,   46,   46,   37,   36,   35,
+       27,   26,   12,   29,   26,   46,   46,   46,   46,   46,
+       19,   20,   46,   16,   15,   20,   22,   22,   46,   10,
+       15,   46,    9,    9,   15,   46,    9,   46,   46,   46
+    } ;
+
+static const flex_int16_t yy_def[41] =
+    {   0,
+       40,    1,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,    0
+    } ;
+
+static const flex_int16_t yy_nxt[68] =
+    {   0,
+        4,    5,    6,    7,    8,    9,   10,    4,   11,   12,
+        4,   13,    4,    4,    4,   14,    4,    4,    4,   15,
+       16,   23,   39,   38,   37,   24,   36,   35,   34,   33,
+       32,   31,   30,   29,   28,   27,   26,   25,   22,   21,
+       20,   19,   18,   17,   40,    3,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40
+    } ;
+
+static const flex_int16_t yy_chk[68] =
+    {   0,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,   13,   37,   35,   34,   13,   33,   31,   30,   28,
+       27,   26,   25,   24,   22,   21,   15,   14,   12,   11,
+       10,    9,    8,    5,    3,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -469,7 +470,98 @@ char *yytext;
         return  TK_LIT_INT              ;
         return  TK_LIT_FLOAT            ;
         return  TK_ERRO                 ;
-        
+
+# ==== DESCRICAO COMPLETA ======================
+
+1 Introdução
+A primeira etapa consiste em fazer um analisador léxico uti-
+lizando a ferramenta de geração de reconhecedores flex.
+Tu deves manter o arquivo tokens.h (fornecido) sem mo-
+dificações. A função principal deve estar em um arquivo
+main.c separado do arquivo scanner.l para facilitar tes-
+tes automáticos que utilizam uma função principal parecida
+com a fornecida em anexo.
+
+2 Funcionalidades Necessárias
+
+2.1 Definir expressões regulares
+Reconhecimento dos lexemas correspondentes aos tokens
+descritos na seção Descrição dos Tokens abaixo, unicamente
+através da definição de expressões regulares no arquivo da
+ferramenta flex. Cada expressão regular deve estar associ-
+ada a pelo menos um tipo de token. Classificar os lexemas
+reconhecidos em tokens retornando as constantes definidas
+no arquivo tokens.h fornecido ou códigos ASCII para ca-
+racteres simples.
+
+2.2 Contagem de linhas
+Controlar o número de linha do arquivo de entrada. Uma
+função cujo protótipo é int get_line_number(void)
+deve ser implementada e deve retornar o número da linha
+atual no processo de reconhecimento de tokens. Ela é utili-
+zada nos testes automáticos. Lembre-se que a primeira linha
+de qualquer arquivo dado como é entrada é a linha número
+um. Procure no manual do FLAX a opção para contagem
+automática, e use yylineno.
+
+2.3 Ignorar comentários
+Comentários começam com duas barras // e seguem até o
+final da linha. Espaços devem ser igualmente ignorados.
+
+2.4 Lançar erros léxicos
+O erro léxico deve ser retornado ao encontrar caracteres in-
+válidos na entrada, retornando o token de erro TK_ERRO. O
+programa deve terminar ao encontrar o primeiro erro léxico.
+Veja que a função main(), fornecida, já faz isso.
+
+3 Descrição dos Tokens
+
+Existem tokens que correspondem a caracteres, como vír-
+gula, ponto-e-vírgula, parênteses. Para estes, é mais conve-
+niente usar seu próprio código ASCII, convertido para in-
+teiro, como valor de retorno que os identifica. Para os demais
+tokens, como palavras reservadas e identificadores, utiliza-
+se uma constante com valores superiores ao maior valor da
+tabela ASCII, definida em tokens.h. Os tokens se enqua-
+dram em diferentes categorias descritas a segui
+
+3.1 Palavras Reservadas da Linguagem
+As palavras reservadas (PR) da linguagem são as seguin-
+tes, acompanhadas dos tokens correspondentes no arquivo
+tokens.h:
+PR Token
+int TK_PR_INT
+float TK_PR_FLOAT
+if TK_PR_IF
+else TK_PR_ELSE
+while TK_PR_WHILE
+return TK_PR_RETURN
+
+3.2 Caracteres Especiais
+Os caracteres simples especiais empregados pela linguagem
+são listados abaixo separados apenas por espaços, e devem
+ser retornados com o próprio código ASCII convertido para
+inteiro. São eles:
+- ! * / % + - < > { } ( ) = , ;
+
+3.3 Operadores Compostos
+Estes são os operadores compostos (OC).
+Lexema Token Descrição
+<= TK_OC_LE menor igual
+>= TK_OC_GE maior igual
+== TK_OC_EQ igual igual
+!= TK_OC_NE exclama igual
+& TK_OC_AND e comercial
+| TK_OC_OR barra vertica
+
+3.4 Identificadores
+Os identificadores da linguagem começam por um carac-
+tere alfabético minúsculo ou o caractere sublinhado, se-
+guido opcionalmente de repetições destes com a possibili-
+dade de dígitos. Ao reconhecer um identificador, retorna-
+mos TK_IDENTIFICADOR.
+
+3.5 Literais 
 Literais são formas de descrever constantes no código fonte.
 • TK_LIT_INT: literais deste tipo são representados
 como repetições de um ou mais dígitos.
@@ -477,12 +569,31 @@ como repetições de um ou mais dígitos.
 um inteiro opcional seguido de ponto decimal e uma
 sequência de dígitos não vazia.
 
+
+3.1 Palavras Reservadas da Linguagem
+As palavras reservadas (PR) da linguagem são as seguin-
+tes, acompanhadas dos tokens correspondentes no arquivo
+tokens.h:
+PR Token
+int TK_PR_INT
+float TK_PR_FLOAT
+if TK_PR_IF
+else TK_PR_ELSE
+while TK_PR_WHILE
+return TK_PR_RETURN
+3.2 Caracteres Especiais
+Os caracteres simples especiais empregados pela linguagem
+são listados abaixo separados apenas por espaços, e devem
+ser retornados com o próprio código ASCII convertido para
+inteiro. São eles:
+- ! * / % + - < > { } ( ) = , ;
+
 ******************************************************  */ 
-#line 20 "scanner.l"
+#line 130 "scanner.l"
     #include "tokens.h"
     #include "stdio.h"
-#line 484 "lex.yy.c"
-#line 485 "lex.yy.c"
+#line 595 "lex.yy.c"
+#line 596 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -699,9 +810,9 @@ YY_DECL
 		}
 
 	{
-#line 28 "scanner.l"
+#line 138 "scanner.l"
 
-#line 704 "lex.yy.c"
+#line 815 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -728,13 +839,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 40 )
+				if ( yy_current_state >= 41 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 45 );
+		while ( yy_base[yy_current_state] != 46 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -760,70 +871,75 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 29 "scanner.l"
+#line 139 "scanner.l"
 return      TK_PR_INT            ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 30 "scanner.l"
+#line 140 "scanner.l"
 return      TK_PR_FLOAT          ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "scanner.l"
+#line 141 "scanner.l"
 return      TK_PR_IF             ;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "scanner.l"
+#line 142 "scanner.l"
 return      TK_PR_ELSE           ;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "scanner.l"
+#line 143 "scanner.l"
 return      TK_PR_WHILE          ;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 34 "scanner.l"
+#line 144 "scanner.l"
 return      TK_PR_RETURN         ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "scanner.l"
+#line 145 "scanner.l"
 return      TK_OC_LE             ;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 36 "scanner.l"
+#line 146 "scanner.l"
 return      TK_OC_GE             ;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 37 "scanner.l"
+#line 147 "scanner.l"
 return      TK_OC_EQ             ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 38 "scanner.l"
+#line 148 "scanner.l"
 return      TK_OC_NE             ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 39 "scanner.l"
+#line 149 "scanner.l"
 return      TK_OC_AND               ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "scanner.l"
+#line 150 "scanner.l"
 return      TK_OC_OR                ;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 45 "scanner.l"
+#line 151 "scanner.l"
+return      ';'                     ;
+	YY_BREAK
+case 14:
+YY_RULE_SETUP
+#line 157 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 826 "lex.yy.c"
+#line 942 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1120,7 +1236,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 40 )
+			if ( yy_current_state >= 41 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1148,11 +1264,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 40 )
+		if ( yy_current_state >= 41 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 39);
+	yy_is_jam = (yy_current_state == 40);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1828,7 +1944,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 45 "scanner.l"
+#line 157 "scanner.l"
 
 int get_line_number(void){ 
     return 0;
