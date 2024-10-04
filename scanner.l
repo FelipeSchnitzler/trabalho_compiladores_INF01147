@@ -140,6 +140,7 @@ digit [0-9]
 
 %%
 [ \t\n] /*do nothing */  ;
+"//".*  /*do nothing */  ;
 
 int         return      TK_PR_INT            ;
 float       return      TK_PR_FLOAT          ;
@@ -165,7 +166,7 @@ return      return      TK_PR_RETURN         ;
 [0-9]*[.][0-9]+      return          TK_LIT_FLOAT    ;
 
 
-
+.          return      TK_ERRO             ;
 %%
 int get_line_number(void){ 
     return yylineno; 

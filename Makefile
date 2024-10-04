@@ -15,5 +15,5 @@ clean:
 	rm -f lex.yy.c etapa1
 
 all:
-	make etapa1
 	make clean
+	make etapa1
