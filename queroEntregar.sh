@@ -1,7 +1,5 @@
-#!/bin/bash
+# #!/bin/bash
 
-ETAPA = "etapa1"
-
-rm -f lex.yy.c "$ETAPA"  "$ETAPA".tgz
-tar cvzf "$ETAPA.tgz" .
+rm -f lex.yy.c etapa1  etapa1.tgz
+tar cvzf etapa1.tgz . 
 
