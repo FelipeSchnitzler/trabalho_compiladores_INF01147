@@ -160,7 +160,7 @@ return      return      TK_PR_RETURN         ;
 [;|!|]       return     yytext[0]             ;
 [!|*|/|%|+|-|<|>|{|}|(|)|=|,|;]       return     yytext[0]             ;
 
-[a-z_]+[A-Za-z0-9_]*     return TK_IDENTIFICADOR;
+[a-z_]+[a-z0-9_]*     return TK_IDENTIFICADOR;
 
 [0-9]+               return          TK_LIT_INT      ; 
 [0-9]*[.][0-9]+      return          TK_LIT_FLOAT    ;
