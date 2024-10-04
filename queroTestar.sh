@@ -1,3 +1,5 @@
+#!/bin/bash
+make
 # Objetivo eh criar testes automatizados de forma simples para a etapa01
 
 
@@ -38,7 +40,7 @@ echo "====== TESTE FLOAT [0.] =============="
 ./etapa1 < testes/erros/float_incorreto.in >  testes/erros/float_incorreto.out
 
 if diff testes/erros/float_incorreto.out testes/erros/float_incorreto.res; then
-    echo "Teste maiusculo passou"
+    echo "Teste FLOAT passou"
 else
-    echo "Teste maiusculo falhou"
+    echo "Teste FLOAT falhou"
 fi

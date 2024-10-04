@@ -13,11 +13,6 @@ lex.yy.c: scanner.l
 
 clean:
 	rm -f lex.yy.c etapa1
-
-teste: 
-	./etapa1 < testes/01.in < testes/01.out
-	./etapa1 < testes/02.in < testes/02.out
-
 all:
 	make clean
 	make etapa1
