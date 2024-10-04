@@ -140,7 +140,7 @@ digit [0-9]
 
 %%
 [ \t\n] /*do nothing */  ;
-"//".*  /*do nothing */  ;
+"//".*$  /*do nothing */  ;
 
 int         return      TK_PR_INT            ;
 float       return      TK_PR_FLOAT          ;

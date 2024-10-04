@@ -1,0 +1,2 @@
+2 TK_IDENTIFICADOR [ma]
+2 TK_ERRO [I]

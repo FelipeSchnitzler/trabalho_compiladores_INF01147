@@ -10,10 +10,10 @@ else
 fi
 
 
-./etapa1 < testes/03.in > testes/03.out
+./etapa1 < testes/erros/maiusculo.in >  testes/erros/maiusculo.out
 
-if diff testes/03.out testes/03.res; then
-    echo "Teste 03 passou"
+if diff testes/erros/maiusculo.out testes/erros/maiusculo.res; then
+    echo "Teste maiusculo passou"
 else
-    echo "Teste 03 falhou"
+    echo "Teste maiusculo falhou"
 fi
