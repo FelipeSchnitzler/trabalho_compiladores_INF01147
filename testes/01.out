@@ -4,3 +4,8 @@
 3 TK_PR_INT [int]
 3 TK_PR_FLOAT [float]
 3 TK_ESPECIAL [;]
+6 TK_PR_INT [int]
+8 TK_ESPECIAL [{]
+8 TK_ESPECIAL [}]
+10 TK_ESPECIAL [(]
+10 TK_ESPECIAL [)]
