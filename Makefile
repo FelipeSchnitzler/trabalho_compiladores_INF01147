@@ -10,3 +10,10 @@ etapa1: scanner.l lex.yy.c main.c tokens.h
 	gcc main.c lex.yy.c -o etapa1 $(LFLAGS)
 lex.yy.c: scanner.l
 	flex scanner.l
+
+clean:
+	rm -f lex.yy.c etapa1
+
+all:
+	make etapa1
+	make clean
