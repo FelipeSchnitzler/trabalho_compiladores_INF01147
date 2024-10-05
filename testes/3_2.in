@@ -1,0 +1,14 @@
+// THIS SHOULD NOT ERROR AND BREAK
+// Test TOKENS ESPECIAIS
+- 
+!
+*
+/
+%
++ - 
+< > 
+{ }
+( )
+=
+,
+;

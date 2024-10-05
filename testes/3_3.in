@@ -1,0 +1,18 @@
+// 3.3 Operadores Compostos
+// Estes são os operadores compostos (OC).
+// Lexema Token Descrição
+// <= TK_OC_LE menor igual
+// >= TK_OC_GE maior igual
+// == TK_OC_EQ igual igual
+// != TK_OC_NE exclama igual
+// & TK_OC_AND e comercial
+// | TK_OC_OR barra vertica
+
+<= 
+>= 
+==
+!=
+&
+|
+
+

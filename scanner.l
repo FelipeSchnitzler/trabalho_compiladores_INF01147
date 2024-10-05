@@ -31,7 +31,7 @@ return      return      TK_PR_RETURN         ;
 "|"         return      TK_OC_OR             ;
 
 
-[;|!|]       return     yytext[0]             ;
+[;|!|-]       return     yytext[0]             ;
 [!|*|/|%|+|-|<|>|{|}|(|)|=|,|;]       return     yytext[0]             ;
 
 [a-z_]+[a-z0-9_]*     return TK_IDENTIFICADOR;
