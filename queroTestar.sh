@@ -53,3 +53,31 @@ if diff testes/3_1.out testes/3_1.res; then
 else
     echo "Teste 3_1 falhou"
 fi
+
+echo "====== TESTES SECAO 3.2 =============="
+./etapa1 < testes/3_2.in > testes/3_2.out
+
+if diff testes/3_2.out testes/3_2.res; then
+    echo "Teste 3_2 passou"
+else
+    echo "Teste 3_2 falhou"
+fi
+
+
+echo "====== TESTES SECAO 3.3 =============="
+./etapa1 < testes/3_3.in > testes/3_3.out
+
+if diff testes/3_3.out testes/3_3.res; then
+    echo "Teste 3_3 passou"
+else
+    echo "Teste 3_3 FALHOU"
+fi
+
+echo "====== TESTES SECAO 3.4 =============="
+./etapa1 < testes/3_4.in > testes/3_4.out
+
+if diff testes/3_4.out testes/3_4.res; then
+    echo "Teste 3_4 passou"
+else
+    echo "Teste 3_4 FALHOU"
+fi
