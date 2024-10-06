@@ -81,3 +81,12 @@ if diff testes/3_4.out testes/3_4.res; then
 else
     echo "Teste 3_4 FALHOU"
 fi
+
+echo "====== TESTES SECAO 3.5 =============="
+./etapa1 < testes/3_5.in > testes/3_5.out
+
+if diff testes/3_5.out testes/3_5.res; then
+    echo "Teste 3_5 passou"
+else
+    echo "Teste 3_5 FALHOU"
+fi
