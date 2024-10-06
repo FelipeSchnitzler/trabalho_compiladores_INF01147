@@ -44,3 +44,12 @@ if diff testes/erros/float_incorreto.out testes/erros/float_incorreto.res; then
 else
     echo "Teste FLOAT falhou"
 fi
+
+echo "====== TESTES SECAO 3.1 =============="
+./etapa1 < testes/3_1.in > testes/3_1.out
+
+if diff testes/3_1.out testes/3_1.res; then
+    echo "Teste 3_1 passou"
+else
+    echo "Teste 3_1 falhou"
+fi
