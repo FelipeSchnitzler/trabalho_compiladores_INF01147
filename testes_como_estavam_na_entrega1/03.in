@@ -1,0 +1,21 @@
+// THIS SHOULD NOT ERROR AND BREAK
+THIS SHOULD ERROR AND BREAK
+
+if _lucas;  
+int 1997;
+float 3.14;
+float .2; 
+//comentario legal
+3 <= 2.0 ;
+1 >= 1  ;
+while (true){ 
+    return 1;
+}
+if (1 == 1){ 
+    return false;
+}
+
+
+//deve gerar erro 
+111. 
+
