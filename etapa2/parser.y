@@ -1,4 +1,5 @@
 %{
+    #include <stdio.h>
 int yylex(void);
 void yyerror (char const *mensagem);
 %}
@@ -20,8 +21,15 @@ void yyerror (char const *mensagem);
 %token TK_LIT_FLOAT
 %token TK_ERRO
 
+%define parse.error verbose
+
 %%
 
 programa:
 
 %%
+
+void yyerror(char const *mensagem)
+{
+    fprintf(stderr, "%s\n", mensagem);
+}

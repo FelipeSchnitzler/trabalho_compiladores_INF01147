@@ -1,7 +1,7 @@
 
 
 %{
-    #include "tokens.h"
+    #include "parser.tab.h"
     #include "stdio.h"
 %}
 
