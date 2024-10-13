@@ -1,0 +1,29 @@
+//func vazia
+foobar = > float {}
+
+//func declaracao var
+foobar = par1 <- int | par2 <- float > float { 
+    int id , id2 <= 2 ;   
+    float id3 <= 3.2 ;
+    int x <= 2.2 ;//teste tipo atribuicao declaracao
+    
+    //teste chamada func capado por enquanto
+    func1 (2) ;
+    func1 (2 , 1) ;
+
+    //teste atribuicao capado por enquanto
+    ident = 2;
+
+    //teste retorno capado por enquanto
+    return 2 ;
+
+    //teste controle de fluxo capado por enquanto
+    if(2){};
+    if(2){ int a ; } else {int a;};
+    while(2){
+        if(2){s = 2;};//blocos aninhados
+    };
+
+}
+
+

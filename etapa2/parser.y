@@ -25,11 +25,63 @@ void yyerror (char const *mensagem);
 
 %%
 
-programa:
+programa: lista_de_funcoes | /* vazio */;
+lista_de_funcoes: lista_de_funcoes funcao | funcao;
+
+tipo: TK_PR_INT | TK_PR_FLOAT;
+literal: TK_LIT_FLOAT | TK_LIT_INT;
+
+//funcao
+funcao: cabecalho corpo;
+
+cabecalho: TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo /*| 
+           TK_IDENTIFICADOR '=' '>' tipo; /* caso lista_de_parametros permitir vazio gere problemas só tirar esse comentario*/
+lista_de_parametros: lista_de_parametros TK_OC_OR parametro | parametro | /* vazio */;
+parametro: TK_IDENTIFICADOR '<' '-' tipo;
+
+corpo: bloco_comandos;
+
+//3.2
+bloco_comandos: '{' '}' | 
+                '{' sequencia_de_comandos '}';
+sequencia_de_comandos: sequencia_de_comandos comando_simples ';'|
+                       comando_simples ';';
+
+//3.3
+comando_simples: bloco_comandos |  /* **ACHO** Q É ASSIM. coloquei essa linha porque é a ultima frase do paragrafo de blocos de comando.*/
+                 declaracao_variavel | 
+                 comando_atribuicao | 
+                 chamada_funcao | 
+                 comando_retorno |
+                 comando_controle_fluxo;
+
+    //3.3.1 declaracao de variavel
+declaracao_variavel: tipo lista_de_identificadores;
+lista_de_identificadores: identificador | 
+                          lista_de_identificadores ',' identificador;
+identificador: TK_IDENTIFICADOR | TK_IDENTIFICADOR TK_OC_LE literal; //PERGUNTAR SE TIPO DA ATRIBUIÇÃO = TIPO VARIAVEL {int X = 1.2}
+    
+    //3.3.2 comando de atribuicao
+comando_atribuicao: TK_IDENTIFICADOR '=' expressao;
+
+    //3.3.3 chamada de funcao
+chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')';
+lista_argumentos: lista_argumentos ',' argumento | argumento;
+argumento: expressao;
+
+    //3.3.4 comando de retorno
+comando_retorno: TK_PR_RETURN expressao;
+
+    //3.3.5 comando de controle de fluxo
+comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos |
+                        TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos |
+                        TK_PR_WHILE '(' expressao ')' bloco_comandos;
+//TODO
+expressao: TK_LIT_INT ;
 
 %%
 
 void yyerror(char const *mensagem)
 {
-    fprintf(stderr, "%s\n", mensagem);
+    fprintf(stderr, "%s on line %d\n", mensagem, get_line_number());
 }

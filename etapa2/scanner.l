@@ -2,7 +2,7 @@
 
 %{
     #include "parser.tab.h"
-    #include "stdio.h"
+    #include <stdio.h>
 %}
 
 
