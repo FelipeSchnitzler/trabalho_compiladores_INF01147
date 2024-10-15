@@ -28,8 +28,16 @@ void yyerror (char const *mensagem);
 programa: lista_de_funcoes | /* vazio */;
 lista_de_funcoes: lista_de_funcoes funcao | funcao;
 
+// utils
 tipo: TK_PR_INT | TK_PR_FLOAT;
 literal: TK_LIT_FLOAT | TK_LIT_INT;
+
+op5: TK_OC_EQ | TK_OC_NE;
+op4: '<' | '>' | TK_OC_LE | TK_OC_GE;
+op3: '+' | '-';
+op2: '*' | '/' | '%';
+op1: '-' | '!';
+
 
 //funcao
 funcao: cabecalho corpo;
@@ -77,7 +85,15 @@ comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos |
                         TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos |
                         TK_PR_WHILE '(' expressao ')' bloco_comandos;
 //TODO
-expressao: TK_LIT_INT ;
+expressao: expr7 ;
+expr7: expr7 TK_OC_OR expr6 | expr6;
+expr6: expr6 TK_OC_AND expr5 | expr5;
+expr5: expr5 op5 expr4 | expr4;
+expr4: expr4 op4 expr3 | expr3;
+expr3: expr3 op3 expr2 | expr2;
+expr2: expr2 op2 expr1 | expr1;
+expr1: op1 operando | operando;
+operando: TK_IDENTIFICADOR | literal | chamada_funcao |'(' expressao ')'
 
 %%
 
