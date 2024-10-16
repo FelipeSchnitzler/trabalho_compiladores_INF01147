@@ -19,9 +19,19 @@ lex.yy.c: scanner.l parser.y parser.tab.c
 parser.tab.c: parser.y
 	bison -d parser.y -Wcounterexamples
 
-
+#==============================================================================
+entrega: entrega_dir 
+	echo "Empacotando arquivos..."
+	tar -cvzf entrega/etapa2.tgz scanner.l parser.y main.c Makefile
+entrega_dir: clean_entrega
+	echo "Criando diretório de entrega..."
+	mkdir -p entrega
+clean_entrega:
+	echo "Limpando diretório de entrega..."
+	rm -rf entrega
+#==============================================================================
 clean:
-	rm -f lex.yy.c etapa2 parser.tab.*
+	rm -f lex.yy.c etapa2 parser.tab.* etapa2.tgz
 all:
 	make clean
 	make etapa2
