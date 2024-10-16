@@ -1,6 +1,0 @@
-12 TK_PR_INT [int]
-13 TK_PR_FLOAT [float]
-14 TK_PR_IF [if]
-15 TK_PR_ELSE [else]
-16 TK_PR_WHILE [while]
-17 TK_PR_RETURN [return]
