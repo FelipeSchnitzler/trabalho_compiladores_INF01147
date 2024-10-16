@@ -1,7 +1,7 @@
 %{
     #include <stdio.h>
-int yylex(void);
-void yyerror (char const *mensagem);
+    int yylex(void);
+    void yyerror (char const *mensagem);
 %}
 
 %token TK_PR_INT
@@ -99,5 +99,6 @@ operando: TK_IDENTIFICADOR | literal | chamada_funcao |'(' expressao ')'
 
 void yyerror(char const *mensagem)
 {
-    fprintf(stderr, "%s on line %d\n", mensagem, get_line_number());
+    /* fprintf(stderr, "%s on line %d\n", mensagem, get_line_number());*/ 
+    fprintf(stderr, "%s on line %d\n", mensagem, 1);
 }

@@ -1,6 +1,4 @@
-# Makefile para gerenciar Docker
 
-# Nome da imagem e do container
 IMAGE_NAME = etapa2_img
 CONTAINER_NAME = etapa2_container
 
