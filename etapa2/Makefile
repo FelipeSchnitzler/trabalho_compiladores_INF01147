@@ -41,7 +41,7 @@ clean_entrega:
 	rm -rf entrega
 #==============================================================================
 clean:
-	rm -f lex.yy.c etapa2 parser.tab.* etapa2.tgz
+	rm -f lex.yy.* etapa2 parser.tab.* etapa2.tgz
 all:
 	make clean
 	make etapa2

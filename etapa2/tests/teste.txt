@@ -31,3 +31,4 @@ foobar = par1 <- int | par2 <- float > float {
 }
 
 
+foobar = | par2 <- float > float { }

@@ -43,9 +43,9 @@ op1: '-' | '!';
 //funcao
 funcao: cabecalho corpo;
 
-cabecalho: TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo /*| 
-           TK_IDENTIFICADOR '=' '>' tipo; /* caso lista_de_parametros permitir vazio gere problemas só tirar esse comentario*/
-lista_de_parametros: lista_de_parametros TK_OC_OR parametro | parametro | /* vazio */;
+cabecalho: TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo | 
+           TK_IDENTIFICADOR '=' '>' tipo; 
+lista_de_parametros: lista_de_parametros TK_OC_OR parametro | parametro;
 parametro: TK_IDENTIFICADOR '<' '-' tipo;
 
 corpo: bloco_comandos;
