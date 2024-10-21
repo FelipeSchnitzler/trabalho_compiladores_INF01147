@@ -30,7 +30,7 @@ parser.tab.c: parser.y
 	bison -d parser.y -Wcounterexamples
 
 #==============================================================================
-entrega: entrega_dir 
+entrega: entrega_dir all 
 	echo "Empacotando arquivos..."
 	tar -cvzf entrega/etapa2.tgz scanner.l parser.y main.c Makefile
 entrega_dir: clean_entrega
