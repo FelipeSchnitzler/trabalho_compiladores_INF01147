@@ -1,0 +1,14 @@
+// 3.4 Identificadores
+// Os identificadores da linguagem começam por um carac-
+// tere alfabético minúsculo ou o caractere sublinhado, se-
+// guido opcionalmente de repetições destes com a possibili-
+// dade de dígitos. Ao reconhecer um identificador, retorna-
+// mos TK_IDENTIFICADOR.
+        
+a1997_1999                       a1977                     ; 
+_2002
+asdrubal_2002
+abelardo2002_
+porpicio_2002 porpicio_2002 
+a1997
+int 1997lucas

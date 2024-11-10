@@ -1,0 +1,15 @@
+//3.5 Literais 
+//Literais são formas de descrever constantes no código fonte.
+//• TK_LIT_INT: literais deste tipo são representados
+//como repetições de um ou mais dígitos.
+//• TK_LIT_FLOAT: literais deste tipo são formados como
+//um inteiro opcional seguido de ponto decimal e uma
+//sequência de dígitos não vazia.
+
+
+199
+1.022
+001.0
+0 1 2 3 4 5 6 7 8 9 10
+.1000
+1112230.0022
