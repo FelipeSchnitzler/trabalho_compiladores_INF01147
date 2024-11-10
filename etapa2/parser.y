@@ -93,7 +93,14 @@ expr5: expr5 op5 expr4 | expr4;
 expr4: expr4 op4 expr3 | expr3;
 expr3: expr3 op3 expr2 | expr2;
 expr2: expr2 op2 expr1 | expr1;
-expr1: op1 operando | operando;
+expr1: 
+'-' expr1
+| '!' expr1
+| TK_IDENTIFICADOR 
+| TK_LIT_FLOAT 
+| TK_LIT_INT 
+| chamada_funcao 
+|'(' expressao ')' ;
 operando: TK_IDENTIFICADOR | literal | chamada_funcao |'(' expressao ')'
 
 %%
