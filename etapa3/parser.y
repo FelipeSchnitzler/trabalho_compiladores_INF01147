@@ -61,7 +61,6 @@
 %type<arvore> expr3
 %type<arvore> expr2
 %type<arvore> expr1
-%type<arvore> operando
 
 %define parse.error verbose
 
@@ -192,12 +191,9 @@ expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3);
 | expr1 { $$ = $1;};
 
 expr1: 
-'-' operando { $$ = asd_new("-"); asd_add_child($$,$2); }
-| '!' operando { $$ = asd_new("!"); asd_add_child($$,$2); }
-| operando { $$ = $1; };
-
-operando: 
-TK_IDENTIFICADOR { $$ = asd_new($1->valor); }
+'-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); }
+| '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); }
+| TK_IDENTIFICADOR { $$ = asd_new($1->valor); }
 | TK_LIT_FLOAT { $$ = asd_new($1->valor); }
 | TK_LIT_INT { $$ = asd_new($1->valor); }
 | chamada_funcao  { $$ = $1; }
