@@ -81,8 +81,8 @@ tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frent
 funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
 
 cabecalho: 
-TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor);}
-| TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor);};
+TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1);}
+| TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1); };
  
 lista_de_parametros: 
 lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
@@ -150,14 +150,14 @@ identificador { if($1 != NULL){$$ = $1;} }
 
 identificador: 
 TK_IDENTIFICADOR { $$ = NULL; }
-| TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor));}
-| TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor));};
+| TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);}
+| TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);};
     
     //3.3.2 comando de atribuicao
-comando_atribuicao: TK_IDENTIFICADOR '=' expressao { $$ = asd_new("="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$,$3); };
+comando_atribuicao: TK_IDENTIFICADOR '=' expressao { $$ = asd_new("="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
 
     //3.3.3 chamada de funcao
-chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); };
+chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
 
 lista_argumentos: 
 expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
@@ -210,9 +210,9 @@ expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3);
 expr1: 
 '-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); }
 | '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); }
-| TK_IDENTIFICADOR { $$ = asd_new($1->valor); }
-| TK_LIT_FLOAT { $$ = asd_new($1->valor); }
-| TK_LIT_INT { $$ = asd_new($1->valor); }
+| TK_IDENTIFICADOR { $$ = asd_new($1->valor); valor_lexico_free($1); }
+| TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); }
+| TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); }
 | chamada_funcao  { $$ = $1; }
 |'(' expressao ')' { $$ = $2; };
 
