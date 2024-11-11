@@ -96,8 +96,25 @@ bloco_comandos: '{' '}' { $$ = NULL; }|
                 '{' sequencia_de_comandos '}' { $$ = $2; };
 
 sequencia_de_comandos: 
-comando_simples ';' sequencia_de_comandos { $$ = $1;  if($$ != NULL){ asd_add_child($$,$3);}else{$$ = $3;} }
-| comando_simples ';' { $$ = $1; };
+comando_simples ';' { $$ = $1; }
+| comando_simples ';' sequencia_de_comandos { 
+    $$ = $1;  
+    if($$ != NULL)
+    {
+        if($3 != NULL)
+        {
+            asd_add_child($$,$3); 
+        } 
+    }else{ 
+        if($3 != NULL)
+        {
+            $$ = $3;
+        } else 
+        {
+            $$ = NULL;
+        } 
+    } 
+};
 
 //3.3
 comando_simples: 
