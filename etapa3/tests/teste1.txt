@@ -1,0 +1,8 @@
+//CORRECT
+main = > int {
+    x = 1+3;
+}
+
+foobar = par2 <- float > float { 
+    return -5;
+ }

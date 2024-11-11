@@ -71,7 +71,7 @@ lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); }
 | /* vazio */ { $$ = NULL; arvore = $$; };
 
 lista_de_funcoes: 
-funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$1); }
+funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$2); }
 | funcao { $$ = $1; };
 
 // utils
