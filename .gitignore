@@ -2,6 +2,7 @@
 
 lex.yy.c
 avaliacoes/ 
-etapa*/etapa*
+etapa*/*.o
 
 etapa3/gitignore
+etapa3/testes/

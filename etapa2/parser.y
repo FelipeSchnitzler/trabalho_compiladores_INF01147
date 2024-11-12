@@ -26,25 +26,31 @@
 
 %%
 
+/* ----- UTILS ----------- */
+tipo:
+    TK_PR_INT | TK_PR_FLOAT;
+
 /* ======= PROGRAMA ================= */
 programa: 
-    lista_de_funcoes | /* vazio */;
+    lista_de_funcoes 
+    | /* vazio */;
 
 lista_de_funcoes: 
     lista_de_funcoes funcao 
     | funcao;
 
-/* ----- UTILS ----------- */
-tipo:
-     TK_PR_INT | TK_PR_FLOAT;
-
 
 /* =========== funcao ================ */
 funcao: cabecalho corpo;
 
-cabecalho: TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo | 
-           TK_IDENTIFICADOR '=' '>' tipo; 
+cabecalho: 
+    TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo | 
+    TK_IDENTIFICADOR '=' '>' tipo; 
+
+
 lista_de_parametros: lista_de_parametros TK_OC_OR parametro | parametro;
+
+
 parametro: TK_IDENTIFICADOR '<' '-' tipo;
 
 corpo: bloco_comandos;
@@ -79,23 +85,27 @@ lista_de_identificadores:
 
 identificador: 
     TK_IDENTIFICADOR 
-    | TK_IDENTIFICADOR TK_OC_LE literal; //PERGUNTAR SE TIPO DA ATRIBUIÇÃO = TIPO VARIAVEL {int X = 1.2}
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT;
     
-//3.3.2 comando de atribuicao
+/* [3.3.2] comando de atribuicao ===================*/
 comando_atribuicao: TK_IDENTIFICADOR '=' expressao;
 
-    //3.3.3 chamada de funcao
+/* [3.3.3] chamada de funcao ========================*/
 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')';
-lista_argumentos: lista_argumentos ',' argumento | argumento;
-argumento: expressao;
 
-    //3.3.4 comando de retorno
+lista_argumentos:
+    expressao ',' lista_argumentos 
+    | expressao;
+
+/* [3.3.4] comando de retorno ===================== */
 comando_retorno: TK_PR_RETURN expressao;
 
-//3.3.5 comando de controle de fluxo
-comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos |
-                        TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos |
-                        TK_PR_WHILE '(' expressao ')' bloco_comandos;
+/* [3.3.5] comando de controle de fluxo ======================== */
+comando_controle_fluxo: 
+    TK_PR_IF '(' expressao ')' bloco_comandos 
+    | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos 
+    | TK_PR_WHILE '(' expressao ')' bloco_comandos;
 
 
 
