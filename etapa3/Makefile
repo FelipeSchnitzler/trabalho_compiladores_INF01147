@@ -6,23 +6,36 @@ else ifeq ($(UNAME_S), Linux)  # Linux
     LFLAGS = -lfl 
 endif
 
-etapa3: middle
-	gcc main.c lex.yy.c parser.tab.c asd.c valor_lexico.c -o etapa3  $(LFLAGS)
+## ========================================================================== ##
+ETAPA=etapa3
+CFLAGS=-Iinclude
+BISON_FLAGS = -d -v -Wcounterexamples
+
+LEX_SRC=src/scanner.l
+LEX_C=lex.yy.c
+
+BISON_SRC=src/parser.y
+BISON_C=parser.tab.c
+SRC_FILES := $(filter-out src/main.c, $(wildcard src/*.c))
+
+
+$(ETAPA): middle  
+	gcc src/main.c $(LEX_C) $(BISON_C)  $(SRC_FILES)  -o $@  $(LFLAGS) $(CFLAGS)
 	rm -f *.o
 
-middle: scanner.l lex.yy.c parser.y main.c parser.tab.c asd.c valor_lexico.c 
-	gcc -c lex.yy.c parser.tab.c asd.c valor_lexico.c 
+middle: $(LEX_SRC) $(LEX_C)   
+	gcc -c $(LEX_C) $(BISON_C)  $(SRC_FILES) $(CFLAGS)
 
-lex.yy.c: scanner.l parser.y parser.tab.c
-	flex scanner.l
+$(LEX_C): $(LEX_SRC)  src/parser.y  $(BISON_C) 
+	flex $(LEX_SRC)
 
-parser.tab.c: parser.y
-	bison -d parser.y -Wcounterexamples
+$(BISON_C) : src/parser.y clean
+	bison -d src/parser.y $(BISON_FLAGS)
 
 #==============================================================================
 entrega: entrega_dir all 
 	echo "Empacotando arquivos..."
-	tar -cvzf entrega/etapa3.tgz scanner.l parser.y main.c asd.c valor_lexico.c asd.h valor_lexico.h Makefile
+	tar -cvzf entrega/$(ETAPA).tgz $(LEX_SRC) parser.y main.c asd.c valor_lexico.c asd.h valor_lexico.h Makefile
 	
 entrega_dir: clean_entrega
 	echo "Criando diretório de entrega..."
