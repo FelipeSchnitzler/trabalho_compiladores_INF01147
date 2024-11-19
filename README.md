@@ -14,3 +14,7 @@ If you need to have bison first in your PATH, run:
 
 For compilers to find bison you may need to set:
   export LDFLAGS="-L/opt/homebrew/opt/bison/lib"
+
+
+## Command Line 
+./etapa3 < tests/foo.ee ; dot saida.dot -Tpng -o grafo.png ; open grafo.png

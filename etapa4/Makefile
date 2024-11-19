@@ -61,7 +61,7 @@ clean_entrega:
 	rm -rf entrega
 #==============================================================================
 clean:
-	rm -f lex.yy.* etapa3 parser.tab.* etapa3.tgz *.o saida.dot grafo* parser.output
+	rm -f lex.yy.* etapa3 parser.tab.* etapa3.tgz *.o saida.dot grafo parser.output
 all:
 	make clean
 	make etapa3
