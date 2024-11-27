@@ -130,7 +130,19 @@ comando_simples:
 /* ============================== [3.3.1] declaracao de variavel ==============================*/
 declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
 
+
+
 lista_de_identificadores: 
+    identificador ',' lista_de_identificadores  {
+        $$ = ($1 != NULL) ? $1 : $3;
+        if ($1 != NULL) asd_add_child($$, $3);
+    }
+
+    | identificador { if($1 != NULL){$$ = $1;} }
+;
+
+/* ============ [OLD] ========================= */
+/* lista_de_identificadores: 
     identificador { if($1 != NULL){$$ = $1;} }
     | identificador ',' lista_de_identificadores 
 { //THIS LOOKS WRONG AS THE SUN RISING IN THE WEST
@@ -148,15 +160,32 @@ lista_de_identificadores:
     {
         $$ = NULL;
     }
-};
+}; */
+/* ============ [OLD] ========================= */
 
 identificador: 
     TK_IDENTIFICADOR { $$ = NULL; }
-    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);}
-    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);};
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
+            $$ = asd_new("<="); 
+            asd_add_child($$, asd_new($1->valor));
+             asd_add_child($$, asd_new($3->valor));
+              valor_lexico_free($1); valor_lexico_free($3);}
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { 
+            $$ = asd_new("<="); 
+            asd_add_child($$, asd_new($1->valor)); 
+            asd_add_child($$, asd_new($3->valor));
+            valor_lexico_free($1); valor_lexico_free($3);
+    };
     
+
+
 /* ============================== [3.3.2] comando de atribuicao ============================== */
-comando_atribuicao: TK_IDENTIFICADOR '=' expressao { $$ = asd_new("="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
+comando_atribuicao: 
+    TK_IDENTIFICADOR '=' expressao { 
+            $$ = asd_new("=");
+            asd_add_child($$, asd_new($1->valor)); 
+            asd_add_child($$,$3); valor_lexico_free($1);
+    };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
