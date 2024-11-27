@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include"valor_lexico.h"
+#include "valor_lexico.h"
 
 valor_lexico_t *valor_lexico_new(int linha, tipo_lexico_t tipo, char *valor)
 {

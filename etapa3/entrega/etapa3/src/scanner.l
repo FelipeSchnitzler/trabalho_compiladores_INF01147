@@ -10,12 +10,8 @@
 %option yylineno
 %option noyywrap
 
-space [ \t\n\r\s]
-digit [0-9]
 wspc [ \t\n]+
 comentarios "//".*
-
-
 tokens_especiais [\- \! \* \/ \% \+ \- \< \> \{ \} \( \) \= \, \;] 
 
 %%
@@ -40,7 +36,6 @@ return  return TK_PR_RETURN;
 
 [0-9]+          { yylval.valor_lexico = valor_lexico_new(get_line_number(),LIT,strdup(yytext)); return TK_LIT_INT;}
 [0-9]*[.][0-9]+ { yylval.valor_lexico = valor_lexico_new(get_line_number(),LIT,strdup(yytext)); return TK_LIT_FLOAT;}
-
 [a-z_]+[a-z0-9_]* { yylval.valor_lexico = valor_lexico_new(get_line_number(),ID,strdup(yytext)); return TK_IDENTIFICADOR;}
 
 . return TK_ERRO;
