@@ -101,13 +101,10 @@ bloco_comandos: '{' '}' { $$ = NULL; }|
 sequencia_de_comandos: 
     comando_simples ';' { $$ = $1; }
     | comando_simples ';' sequencia_de_comandos { 
-        $$ = $1;  
-        if($$ != NULL)
-        { if($3 != NULL) { asd_add_child($$,$3); } 
-        
+        $$ = ($1 != NULL) ? $1 : $3;
+        if ($1 != NULL && $3 != NULL) {
+            asd_add_child($$, $3);
         }
-            else{  if($3 != NULL) { $$ = $3;} else  {$$ = NULL;} 
-        } 
     }; 
 
 /* ============================== [3.3] Comandos ============================== */
