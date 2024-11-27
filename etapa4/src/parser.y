@@ -1,10 +1,12 @@
 %{
     #include <string.h>
     #include <stdio.h>
+    #include "table.h"
     int yylex(void);
     void yyerror (char const *mensagem);
     int get_line_number();
     extern void *arvore;
+    extern SymbolTableStack *stack;
     char *cria_label_func(char *identificador);
 %}
 
@@ -12,6 +14,7 @@
     #include "asd.h" 
     #include "valor_lexico.h" 
     #include "table.h"
+    #include "errors.h"
 }
 
 %union{
@@ -66,14 +69,37 @@
 %define parse.error verbose
 
 %%
+main: cria_escopo_global programa destroi_escopo_global;
+
+cria_escopo_global: /**/
+{
+    stack = create_stack();
+    push_table(&stack);
+};
+
+destroi_escopo_global: /**/ 
+{
+    free_stack(stack);
+};
+
+empilha_tabela: /**/ 
+{
+    push_table(&stack);
+};
+
+desempilha_tabela: /**/ 
+{
+    pop_table(&stack);
+};
 
 programa: 
     lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
     | /* vazio */ { $$ = NULL; arvore = $$; asd_print_graphviz(arvore); };
 
 lista_de_funcoes: 
-    funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$2); }
+    funcao desempilha_tabela lista_de_funcoes {$$ = $1; asd_add_child($$,$3); }
     | funcao { $$ = $1; };
+
 
 // utils
 tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frente
@@ -82,8 +108,22 @@ tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frent
 funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
 
 cabecalho: 
-    TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1);}
-    | TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1); };
+    TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
+        $$ = asd_new($1->valor); 
+        valor_lexico_free($1);
+        
+        if(!insert_symbol(stack->next->table,$1->valor,FUNCAO)){
+            return ERR_DECLARED;
+        } //assume pilha tem profundidade = 2
+    }
+    | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
+        $$ = asd_new($1->valor); 
+        valor_lexico_free($1);
+
+        if(!insert_symbol(stack->next->table,$1->valor,FUNCAO)){
+            return ERR_DECLARED;
+        } //assume pilha tem profundidade = 2 
+    };
  
 lista_de_parametros: 
     lista_de_parametros TK_OC_OR parametro { $$ = NULL; }

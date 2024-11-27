@@ -1,9 +1,15 @@
 #include "asd.h"
 #include <stdio.h>
+#include "table.h"
+#include "errors.h"
+
 extern int yyparse(void);
 extern int yylex_destroy(void);
-void *arvore = NULL;
 void exporta (void *arvore);
+
+void *arvore = NULL;
+SymbolTableStack *stack = NULL;
+
 int main (int argc, char **argv)
 {
   int ret = yyparse(); 

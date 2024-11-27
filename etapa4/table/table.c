@@ -27,7 +27,6 @@ bool insert_symbol(SymbolTable *table, const char *name, TipoDado type) {
     Symbol *symbol = NULL;
     symbol = calloc(1,sizeof(Symbol));
     symbol->nome = strdup(name);
-    // symbol->tipo = strdup(type);
     symbol->tipo = type;
     symbol->next = table->head;
     table->head = symbol;
@@ -48,7 +47,7 @@ SymbolTableStack *create_stack() {
 }
 
 void push_table(SymbolTableStack **stack) {
-    SymbolTableStack *new_node = (SymbolTableStack *)malloc(sizeof(SymbolTableStack));
+    SymbolTableStack *new_node =  calloc(1,sizeof(SymbolTableStack));
     new_node->table = create_table();
     new_node->next = *stack;
     *stack = new_node;
