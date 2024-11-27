@@ -78,3 +78,51 @@ void free_stack(SymbolTableStack *stack) {
         free(temp);
     }
 }
+
+// Imprime os símbolos de uma tabela
+void print_table(SymbolTable *table) {
+    if (!table || !table->head) {
+        printf("Tabela de símbolos vazia.\n");
+        return;
+    }
+
+    // printf("---------------------------------------------------------------\n");
+    // printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo");
+    // printf("---------------------------------------------------------------\n");
+
+    Symbol *current = table->head;
+    while (current) {
+        printf("%-20s %-10d %-15s %-10s\n",
+               current->nome,
+               current->linha,
+               current->natureza == IDENTIFICADOR ? "IDENTIFICADOR" : "FUNCAO",
+               current->tipo == INT ? "INT" : "FLOAT");
+        current = current->next;
+    }
+    // printf("---------------------------------------------------------------\n");
+}
+
+// Imprime a pilha de tabelas de símbolos
+void print_stack(SymbolTableStack *stack) {
+    if (!stack) {
+        printf("Pilha de tabelas vazia.\n");
+        return;
+    }
+
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo"); // Cabeçalho
+    printf("===============================================================\n");
+
+    int i = 1; // Contador para os escopos
+    while (stack) {
+        // Imprime uma linha separadora entre os escopos
+        // printf("\n<<<< Escopo %d >>>>\n", i++);
+        printf("---------------------------------------------------------------\n");
+
+        // Imprime a tabela de símbolos para o escopo atual
+        print_table(stack->table);  // Assume que print_table já é implementada corretamente
+        stack = stack->next;
+    }
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    // printf("===============================================================\n");
+}
