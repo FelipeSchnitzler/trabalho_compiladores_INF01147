@@ -4,7 +4,8 @@
 #include "table.h"
 
 SymbolTable *create_table() {
-    SymbolTable *table = (SymbolTable *)malloc(sizeof(SymbolTable));
+    SymbolTable *table = NULL;
+    table = calloc(1,sizeof(SymbolTable));
     table->head = NULL;
     return table;
 }
@@ -14,8 +15,8 @@ void free_table(SymbolTable *table) {
     while (current) {
         Symbol *temp = current;
         current = current->next;
-        free(temp->name);
-        free(temp->type);
+        free(temp->nome);
+        free(temp->tipo);
         free(temp);
     }
     free(table);
@@ -23,9 +24,10 @@ void free_table(SymbolTable *table) {
 
 bool insert_symbol(SymbolTable *table, const char *name, const char *type) {
     if (!table || find_symbol(table, name)) return false;
-    Symbol *symbol = (Symbol *)malloc(sizeof(Symbol));
-    symbol->name = strdup(name);
-    symbol->type = strdup(type);
+    Symbol *symbol = NULL;
+    symbol = calloc(1,sizeof(Symbol));
+    symbol->nome = strdup(name);
+    symbol->tipo = strdup(type);
     symbol->next = table->head;
     table->head = symbol;
     return true;
@@ -34,7 +36,7 @@ bool insert_symbol(SymbolTable *table, const char *name, const char *type) {
 Symbol *find_symbol(SymbolTable *table, const char *name) {
     Symbol *current = table->head;
     while (current) {
-        if (strcmp(current->name, name) == 0) return current;
+        if (strcmp(current->nome, name) == 0) return current;
         current = current->next;
     }
     return NULL;
