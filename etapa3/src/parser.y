@@ -93,32 +93,24 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo { $$ = NULL; };
 
 corpo: bloco_comandos { $$ = $1; };
 
-//3.2
+/* ============================== [3.2] ============================== */
 bloco_comandos: '{' '}' { $$ = NULL; }| 
                 '{' sequencia_de_comandos '}' { $$ = $2; };
 
+/* ACHO QUE EH AQUI QUE ESTA O PROBLEMA DO TESTE E3/z07 */
 sequencia_de_comandos: 
-comando_simples ';' { $$ = $1; }
-| comando_simples ';' sequencia_de_comandos { 
-    $$ = $1;  
-    if($$ != NULL)
-    {
-        if($3 != NULL)
-        {
-            asd_add_child($$,$3); 
+    comando_simples ';' { $$ = $1; }
+    | comando_simples ';' sequencia_de_comandos { 
+        $$ = $1;  
+        if($$ != NULL)
+        { if($3 != NULL) { asd_add_child($$,$3); } 
+        
+        }
+            else{  if($3 != NULL) { $$ = $3;} else  {$$ = NULL;} 
         } 
-    }else{ 
-        if($3 != NULL)
-        {
-            $$ = $3;
-        } else 
-        {
-            $$ = NULL;
-        } 
-    } 
-};
+    }; 
 
-//3.3
+/* ============================== [3.3] Comandos ============================== */
 comando_simples: 
     bloco_comandos { $$ = $1; }
     | declaracao_variavel { $$ = $1; }
@@ -168,8 +160,8 @@ identificador:
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
             $$ = asd_new("<="); 
             asd_add_child($$, asd_new($1->valor));
-             asd_add_child($$, asd_new($3->valor));
-              valor_lexico_free($1); valor_lexico_free($3);}
+            asd_add_child($$, asd_new($3->valor));
+            valor_lexico_free($1); valor_lexico_free($3);}
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { 
             $$ = asd_new("<="); 
             asd_add_child($$, asd_new($1->valor)); 
