@@ -35,44 +35,45 @@
 %token<valor_lexico> TK_LIT_FLOAT
 %token TK_ERRO
 
-%type<arvore> programa
-%type<arvore> lista_de_funcoes
-%type<arvore> funcao
-%type<arvore> cabecalho
-%type<arvore> lista_de_parametros
-%type<arvore> parametro
-%type<arvore> corpo
-%type<arvore> bloco_comandos
-%type<arvore> sequencia_de_comandos
-%type<arvore> comando_simples
-%type<arvore> declaracao_variavel
-%type<arvore> lista_de_identificadores
-%type<arvore> identificador
-%type<arvore> comando_atribuicao
-%type<arvore> chamada_funcao
-%type<arvore> lista_argumentos
-%type<arvore> comando_retorno
-%type<arvore> comando_controle_fluxo
-%type<arvore> expressao
-%type<arvore> expr7
-%type<arvore> expr6
-%type<arvore> expr5
-%type<arvore> expr4
-%type<arvore> expr3
-%type<arvore> expr2
-%type<arvore> expr1
+%type<arvore> 
+    programa
+    lista_de_funcoes
+    funcao
+    cabecalho
+    lista_de_parametros
+    parametro
+    corpo
+    bloco_comandos
+    sequencia_de_comandos
+    comando_simples
+    declaracao_variavel
+    lista_de_identificadores
+    identificador
+    comando_atribuicao
+    chamada_funcao
+    lista_argumentos
+    comando_retorno
+    comando_controle_fluxo
+    expressao
+    expr7
+    expr6
+    expr5
+    expr4
+    expr3
+    expr2
+    expr1
 
 %define parse.error verbose
 
 %%
 
 programa: 
-lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
-| /* vazio */ { $$ = NULL; arvore = $$; };
+    lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
+    | /* vazio */ { $$ = NULL; arvore = $$; };
 
 lista_de_funcoes: 
-funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$2); }
-| funcao { $$ = $1; };
+    funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$2); }
+    | funcao { $$ = $1; };
 
 // utils
 tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frente
@@ -81,12 +82,13 @@ tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frent
 funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
 
 cabecalho: 
-TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1);}
-| TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1); };
+    TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1);}
+    | TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1); };
  
 lista_de_parametros: 
-lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
-| parametro { $$ = NULL; };
+    lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
+    | parametro { $$ = NULL; };
+
 parametro: TK_IDENTIFICADOR '<' '-' tipo { $$ = NULL; };
 
 corpo: bloco_comandos { $$ = $1; };
@@ -118,19 +120,19 @@ comando_simples ';' { $$ = $1; }
 
 //3.3
 comando_simples: 
-bloco_comandos { $$ = $1; }
-| declaracao_variavel { $$ = $1; }
-| comando_atribuicao { $$ = $1; }
-| chamada_funcao { $$ = $1; }
-| comando_retorno { $$ = $1; }
-| comando_controle_fluxo { $$ = $1; };
+    bloco_comandos { $$ = $1; }
+    | declaracao_variavel { $$ = $1; }
+    | comando_atribuicao { $$ = $1; }
+    | chamada_funcao { $$ = $1; }
+    | comando_retorno { $$ = $1; }
+    | comando_controle_fluxo { $$ = $1; };
 
-    //3.3.1 declaracao de variavel
+/* ============================== [3.3.1] declaracao de variavel ==============================*/
 declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
 
 lista_de_identificadores: 
-identificador { if($1 != NULL){$$ = $1;} }
-| identificador ',' lista_de_identificadores 
+    identificador { if($1 != NULL){$$ = $1;} }
+    | identificador ',' lista_de_identificadores 
 { //THIS LOOKS WRONG AS THE SUN RISING IN THE WEST
     if($1 != NULL)
     { 
@@ -149,28 +151,28 @@ identificador { if($1 != NULL){$$ = $1;} }
 };
 
 identificador: 
-TK_IDENTIFICADOR { $$ = NULL; }
-| TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);}
-| TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);};
+    TK_IDENTIFICADOR { $$ = NULL; }
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);}
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);};
     
-    //3.3.2 comando de atribuicao
+/* ============================== [3.3.2] comando de atribuicao ============================== */
 comando_atribuicao: TK_IDENTIFICADOR '=' expressao { $$ = asd_new("="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
 
-    //3.3.3 chamada de funcao
+/* ============================== [3.3.3] chamada de funcao ============================== */
 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
 
 lista_argumentos: 
-expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
-| expressao { $$ = $1; };
+    expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
+    | expressao { $$ = $1; };
 
-    //3.3.4 comando de retorno
+//3.3.4 comando de retorno
 comando_retorno: TK_PR_RETURN expressao { $$ = asd_new("return"); asd_add_child($$,$2); };
 
-    //3.3.5 comando de controle de fluxo
+//3.3.5 comando de controle de fluxo
 comando_controle_fluxo: 
-TK_PR_IF '(' expressao ')' bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}}
-| TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);} if($7 != NULL){asd_add_child($$,$7);}}
-| TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
+    TK_PR_IF '(' expressao ')' bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}}
+    | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);} if($7 != NULL){asd_add_child($$,$7);}}
+    | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
 
 
 //expr
