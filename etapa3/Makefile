@@ -43,9 +43,20 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR) $(ETAPA)
 
+## [Testes] ====================================================================
+## Criados de maneira experimental para ajudar no debug manual
+TESTE = testes/E3/z07
+REF = $(TESTE).ref.dot
+
+tst: png
+	./etapa3 < $(TESTE)
+	dot $(REF) -Tpng -o outputs/ref.png
+	xdg-open outputs/ref.png
+
 png: 
 	mkdir -p outputs
 	dot saida.dot -Tpng -o outputs/grafo.png
 	xdg-open outputs/grafo.png
+## ==============================================================================
 
 .PHONY: clean
