@@ -116,8 +116,8 @@ comando_simples:
     | comando_controle_fluxo { $$ = $1; };
 
 /* ============================== [3.3.1] declaracao de variavel ==============================*/
-declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
-
+declaracao_variavel: 
+    tipo lista_de_identificadores { $$ = $2; };
 
 
 lista_de_identificadores: 
@@ -176,7 +176,11 @@ comando_atribuicao:
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
-chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
+chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ 
+    $$ = asd_new(cria_label_func($1->valor)); 
+    asd_add_child($$,$3); 
+    valor_lexico_free($1);
+};
 
 lista_argumentos: 
     expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
@@ -225,24 +229,24 @@ expr4:
     | expr3 { $$ = $1; };
 
 expr3: 
-expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr2 { $$ = $1; };
+    expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr2 { $$ = $1; };
 
 expr2: 
-expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr2 '/' expr1 { $$ = asd_new("/"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr1 { $$ = $1;};
+    expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr2 '/' expr1 { $$ = asd_new("/"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr1 { $$ = $1;};
 
 expr1: 
-'-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); }
-| '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); }
-| TK_IDENTIFICADOR { $$ = asd_new($1->valor); valor_lexico_free($1); }
-| TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); }
-| TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); }
-| chamada_funcao  { $$ = $1; }
-|'(' expressao ')' { $$ = $2; };
+    '-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); }
+    | '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); }
+    | TK_IDENTIFICADOR { $$ = asd_new($1->valor); valor_lexico_free($1); }
+    | TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); }
+    | TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); }
+    | chamada_funcao  { $$ = $1; }
+    |'(' expressao ')' { $$ = $2; };
 
 %%
 

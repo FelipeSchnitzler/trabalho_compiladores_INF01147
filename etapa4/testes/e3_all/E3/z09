@@ -1,8 +1,0 @@
-g = > int {
-  int v;
-}
-f = > int {
-  int b;
-  int z;
-  int k;
-}
