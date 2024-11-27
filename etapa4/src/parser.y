@@ -122,8 +122,26 @@ declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
 
 lista_de_identificadores: 
     identificador ',' lista_de_identificadores  {
-        $$ = ($1 != NULL) ? $1 : $3;
-        if ($1 != NULL) asd_add_child($$, $3);
+        // $$ = ($1 != NULL) ? $1 : $3;  
+        // if ($1 != NULL) asd_add_child($$, $3); 
+        //pode dar errado, pq acontece de tanto $1 quanto o $3 serem nulos
+        // qualquer combinação de nulos é possivel
+        // por isso tinha feito esses ifs horrorosos
+
+        if($1 != NULL)
+        { 
+            $$ = $1; 
+            if($3 != NULL)
+            {
+                asd_add_child($$,$3);
+            }
+        }else if($3 != NULL)
+        {
+            $$ = $3;
+        }else
+        {
+            $$ = NULL;
+        }
     }
 
     | identificador { if($1 != NULL){$$ = $1;} }
