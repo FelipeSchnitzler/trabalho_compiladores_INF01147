@@ -41,19 +41,19 @@ $(BUILD_DIR):
 	mkdir -p $@
 
 clean:
-	rm -rf $(BUILD_DIR) $(ETAPA)
+	rm -rf $(BUILD_DIR) $(ETAPA) outputs/*.png saida.dot
 
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
-TESTE = testes/E3/z07
+TESTE = testes/E3/z00
 REF = $(TESTE).ref.dot
 
-tst: png
+tst: 
 	./etapa3 < $(TESTE)
 	dot $(REF) -Tpng -o outputs/ref.png
 	xdg-open outputs/ref.png
 
-png: 
+png: $(ETAPA) 
 	mkdir -p outputs
 	dot saida.dot -Tpng -o outputs/grafo.png
 	xdg-open outputs/grafo.png

@@ -35,33 +35,32 @@
 %token<valor_lexico> TK_LIT_FLOAT
 %token TK_ERRO
 
-%type<arvore> 
-    programa
-    lista_de_funcoes
-    funcao
-    cabecalho
-    lista_de_parametros
-    parametro
-    corpo
-    bloco_comandos
-    sequencia_de_comandos
-    comando_simples
-    declaracao_variavel
-    lista_de_identificadores
-    identificador
-    comando_atribuicao
-    chamada_funcao
-    lista_argumentos
-    comando_retorno
-    comando_controle_fluxo
-    expressao
-    expr7
-    expr6
-    expr5
-    expr4
-    expr3
-    expr2
-    expr1
+%type<arvore>  programa
+%type<arvore>  lista_de_funcoes
+%type<arvore>  funcao
+%type<arvore>  cabecalho
+%type<arvore>  lista_de_parametros
+%type<arvore>  parametro
+%type<arvore>  corpo
+%type<arvore>  bloco_comandos
+%type<arvore>  sequencia_de_comandos
+%type<arvore>  comando_simples
+%type<arvore>  declaracao_variavel
+%type<arvore>  lista_de_identificadores
+%type<arvore>  identificador
+%type<arvore>  comando_atribuicao
+%type<arvore>  chamada_funcao
+%type<arvore>  lista_argumentos
+%type<arvore>  comando_retorno
+%type<arvore>  comando_controle_fluxo
+%type<arvore>  expressao
+%type<arvore>  expr7
+%type<arvore>  expr6
+%type<arvore>  expr5
+%type<arvore>  expr4
+%type<arvore>  expr3
+%type<arvore>  expr2
+%type<arvore>  expr1
 
 %define parse.error verbose
 
@@ -188,8 +187,17 @@ comando_retorno: TK_PR_RETURN expressao { $$ = asd_new("return"); asd_add_child(
 
 /* ============================== [3.3.5] comando de controle de fluxo ============================== */
 comando_controle_fluxo: 
-    TK_PR_IF '(' expressao ')' bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}}
-    | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);} if($7 != NULL){asd_add_child($$,$7);}}
+    TK_PR_IF '(' expressao ')' bloco_comandos { 
+        $$ = asd_new("if");
+        asd_add_child($$,$3);
+        if($5 != NULL){asd_add_child($$,$5);}
+    }
+    | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
+        $$ = asd_new("if");
+        asd_add_child($$,$3);
+        if($5 != NULL){asd_add_child($$,$5);} 
+        if($7 != NULL){asd_add_child($$,$7);}
+    }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
 
 

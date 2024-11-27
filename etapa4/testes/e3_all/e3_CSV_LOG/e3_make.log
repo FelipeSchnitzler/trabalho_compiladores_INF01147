@@ -1,0 +1,405 @@
+
+GrupoA
+
+~/GrupoA ~
+bison -d parser.y
+gcc -Wall -g -lfl -c parser.tab.c parser.tab.h 
+parser.y: In function 'yyparse':
+parser.y:107:9: warning: implicit declaration of function 'strcmp' [-Wimplicit-function-declaration]
+  107 |     if(!strcmp($1->label,"if")){
+      |         ^~~~~~
+In file included from parser.tab.c:104:
+parser.y:18:1: note: include '<string.h>' or provide a declaration of 'strcmp'
+   17 | %code requires { #include "asd.h" }
+  +++ |+#include <string.h>
+   18 | 
+flex scanner.l
+gcc -Wall -g -lfl -c lex.yy.c
+lex.yy.c:1361:16: warning: 'input' defined but not used [-Wunused-function]
+ 1361 |     static int input  (void)
+      |                ^~~~~
+lex.yy.c:1314:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1314 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -Wall -g -lfl -c main.c
+gcc -Wall -g -lfl -c asd.h asd.c
+asd.c: In function 'asd_add_child_list':
+asd.c:52:11: warning: suggest parentheses around comparison in operand of '&' [-Wparentheses]
+   52 |   if(tree != NULL & child != NULL){
+      |           ^
+gcc -Wall -g -lfl parser.tab.o lex.yy.o main.o asd.o -o etapa3
+~
+
+GrupoB
+
+~/GrupoB ~
+diff: extra operand './src/main.c'
+diff: Try 'diff --help' for more information.
+Building the project in Release mode...
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found FLEX: /usr/bin/flex (found version "2.6.4")
+-- Found BISON: /usr/bin/bison (found version "3.8.2")
+-- Configuring done (0.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/user/GrupoB/build
+cmake --build build --config Release
+gmake[1]: Entering directory '/home/user/GrupoB/build'
+gmake[2]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[  8%] [FLEX][Scanner] Building scanner with flex 2.6.4
+[ 16%] [BISON][Parser] Building parser with bison 3.8.2
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 25%] Building C object src/CMakeFiles/Utils.dir/utils.c.o
+[ 33%] Building C object src/CMakeFiles/Utils.dir/asd.c.o
+[ 41%] Building C object src/CMakeFiles/Utils.dir/lex.c.o
+[ 50%] Building C object src/CMakeFiles/Utils.dir/scanner.c.o
+[ 58%] Building C object src/CMakeFiles/Utils.dir/parser.tab.c.o
+[ 66%] Linking C static library libUtils.a
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[ 66%] Built target Utils
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 75%] Building C object src/CMakeFiles/Compiler.dir/main.c.o
+[ 83%] Linking C executable Compiler
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[ 83%] Built target Compiler
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 91%] Building C object tests/CMakeFiles/TestCompiler.dir/test_utils.c.o
+[100%] Linking C executable TestCompiler
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[100%] Built target TestCompiler
+gmake[2]: Leaving directory '/home/user/GrupoB/build'
+gmake[1]: Leaving directory '/home/user/GrupoB/build'
+Copying the executable to the current directory...
+cp build/src/Compiler etapa3
+~
+
+GrupoC
+
+~/GrupoC ~
+diff: main.c: No such file or directory
+bison -d -o obj/parser.tab.c src/parser.y
+gcc -lfl -g -Iobj -Iinclude -c src/asd.c -o obj/asd.o
+gcc -lfl -g -Iobj -Iinclude -c src/main.c -o obj/main.o
+flex -o obj/lex.yy.c src/scanner.l
+gcc -lfl -g -Iobj -Iinclude -c obj/lex.yy.c -o obj/lex.yy.o
+gcc -lfl -g -Iobj -Iinclude -c obj/parser.tab.c -o obj/parser.tab.o
+gcc -lfl -g -Iobj -Iinclude -o etapa3 obj/asd.o obj/main.o obj/lex.yy.o obj/parser.tab.o
+~
+
+GrupoD
+
+~/GrupoD ~
+bison -d parser.y
+gcc -c parser.tab.c 
+flex scanner.l
+gcc -c lex.yy.c 
+gcc asd.c -c
+gcc main.c -c
+gcc lex.yy.o parser.tab.o asd.o main.o -o etapa3
+~
+
+GrupoE
+
+~/GrupoE ~
+diff: main.c: No such file or directory
+mkdir -p build
+mkdir -p logs
+bison -d -v -o src/parser.tab.c src/parser.y
+mv src/parser.tab.h include
+mv src/parser.output logs
+gcc -c -o build/main.o src/main.c -Iinclude
+gcc -c -o build/util.o src/util.c -Iinclude
+flex -o src/lex.yy.c src/scanner.l
+gcc -c -o build/lex.yy.o src/lex.yy.c -Iinclude
+gcc -c -o build/parser.tab.o src/parser.tab.c -Iinclude
+gcc -c -o build/asd.o src/asd.c -Iinclude
+gcc -c -o build/lex_value.o src/lex_value.c -Iinclude
+gcc -o etapa3 build/main.o build/util.o build/lex.yy.o build/parser.tab.o build/asd.o build/lex_value.o -Iinclude -lfl
+~
+
+GrupoF
+
+~/GrupoF ~
+bison -d parser.y -Wcounterexamples
+gcc -c parser.tab.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c main.c
+gcc -c asd.c
+gcc -o etapa3 parser.tab.o lex.yy.o main.o asd.o
+~
+
+GrupoG
+
+~/GrupoG ~
+diff: main.c: No such file or directory
+bison -o build/parser.tab.c  --header=include/parser.tab.h bison/parser.y
+flex -o build/lex.yy.c flex/scanner.l
+gcc -Iinclude   -c -o build/lex.yy.o build/lex.yy.c
+gcc -Iinclude   -c -o build/parser.tab.o build/parser.tab.c
+gcc -c -o build/main.o src/main.c -Iinclude
+gcc -c -o build/asd.o src/asd.c -Iinclude
+gcc -o etapa3 build/lex.yy.o build/parser.tab.o build/main.o build/asd.o -Iinclude
+~
+
+GrupoH
+
+~/GrupoH ~
+diff: main.c: No such file or directory
+bison -d -b build/code/parser src/parser.y -Wall
+flex -o build/code/lex.yy.c src/scanner.l
+cc -MMD -MF build/deps/main.d -Iinclude -Ibuild/code -c src/main.c -o build/obj/main.o -Wall -Wextra
+cc -MMD -MF build/deps/tree.d -Iinclude -Ibuild/code -c src/tree.c -o build/obj/tree.o -Wall -Wextra
+cc -MMD -MF build/deps/lex.yy.d -Iinclude -Ibuild/code -c build/code/lex.yy.c -o build/obj/lex.yy.o -Wall -Wextra
+cc -MMD -MF build/deps/parser.tab.d -Iinclude -Ibuild/code -c build/code/parser.tab.c -o build/obj/parser.tab.o -Wall -Wextra
+cc build/obj/main.o build/obj/tree.o build/obj/lex.yy.o build/obj/parser.tab.o -o etapa3 -lfl -Wall -Wextra
+~
+
+GrupoJ
+
+~/GrupoJ ~
+diff: extra operand './src/main.c'
+diff: Try 'diff --help' for more information.
+rm -f etapa3 etapa3.tgz ./src/bison/parser.tab.c ./src/bison/parser.tab.h ./src/flex/lex.yy.c
+flex -o ./src/flex/lex.yy.c ./src/flex/scanner.l
+bison -Wall -Werror -Wcounterexamples -Wother -Wconflicts-sr -Wconflicts-rr -o ./src/bison/parser.tab.c -d ./src/bison/parser.y
+gcc -I./src -I./src/bison -I./src/asd -I./src/lexema -o etapa3 ./src/main.c ./src/flex/lex.yy.c ./src/bison/parser.tab.c ./src/asd/asd.c ./src/lexema/lexema.c
+~
+
+GrupoK
+
+~/GrupoK ~
+bison -d --report=all --report-file=parser.output parser.y
+gcc -Wall -g -c main.c
+gcc -Wall -g -c parser.tab.c
+flex scanner.l
+gcc -Wall -g -c lex.yy.c
+lex.yy.c:1296:16: warning: 'input' defined but not used [-Wunused-function]
+ 1296 |     static int input  (void)
+      |                ^~~~~
+lex.yy.c:1249:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1249 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -Wall -g   -c -o asd.o asd.c
+gcc -Wall -g -o etapa3 main.o parser.tab.o lex.yy.o asd.o
+~
+
+GrupoL
+
+~/GrupoL ~
+rm -f lex.yy.* etapa3 parser.tab.* etapa3.tgz *.o saida.dot
+bison -d parser.y -Wcounterexamples
+flex scanner.l
+gcc -c lex.yy.c parser.tab.c asd.c valor_lexico.c 
+gcc main.c lex.yy.c parser.tab.c asd.c valor_lexico.c -o etapa3  -lfl 
+rm -f *.o
+~
+
+GrupoM
+
+~/GrupoM ~
+diff: main.c: No such file or directory
+bison -o src/parser.tab.c -d parser.y
+gcc -o bin/main.o -c src/main.c -O0 -Wall -g -lfl
+flex -o src/lex.yy.c scanner.l
+gcc -o bin/lex.yy.o -c src/lex.yy.c -O0 -g
+gcc -o bin/parser.tab.o -c src/parser.tab.c -O0 -Wall -g -lfl
+gcc -o bin/arvore.o -c src/arvore.c
+gcc -o bin/valLex.o -c src/valLex.c
+gcc -o etapa3 bin/*.o -O0 -Wall -g -lfl 
+~
+
+GrupoN
+
+~/GrupoN ~
+bison -d -v parser.y
+parser.y:132.10-24: warning: type clash on default action: <node> != <> [-Wother]
+  132 | cmdblck: '{' cmdlist '}'
+      |          ^~~~~~~~~~~~~~~
+gcc -c parser.tab.c
+parser.y: In function 'yyparse':
+parser.y:99:59: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+   99 |                      asd_tree_t* node = asd_new($1);
+      |                                                 ~~~~      ^     
+      |                                                           |
+      |                                                           asd_tree_t * {aka struct asd_tree *}
+In file included from parser.y:14:
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+parser.y:114:59: warning: passing argument 2 of 'asd_add_child' from incompatible pointer type [-Wincompatible-pointer-types]
+  114 |                      asd_add_child($$,$5);
+      |                                                           ^             
+      |                                                           |
+      |                                                           LexValue *
+asd.h:23:50: note: expected 'asd_tree_t *' {aka 'struct asd_tree *'} but argument is of type 'LexValue *'
+   23 | void asd_add_child(asd_tree_t *tree, asd_tree_t *child);
+      |                                      ~~~~~~~~~~~~^~~~~
+parser.y:125:78: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+  125 | parlist: parlist TK_OC_OR param           { $$ = asd_new($1); asd_add_child($$,$3); };
+      |                                                                    ~~~~~~~~~~^~~~~~
+      |                                                                              |
+      |                                                                              asd_tree_t * {aka struct asd_tree *}
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+parser.y:129:131: warning: passing argument 2 of 'asd_add_child' from incompatible pointer type [-Wincompatible-pointer-types]
+  129 | param  : TK_IDENTIFICADOR '<' '-' type    { $$ = asd_new($1); asd_add_child($$,$4); };
+      |                                                                                                                                   ^             
+      |                                                                                                                                   |
+      |                                                                                                                                   LexValue *
+asd.h:23:50: note: expected 'asd_tree_t *' {aka 'struct asd_tree *'} but argument is of type 'LexValue *'
+   23 | void asd_add_child(asd_tree_t *tree, asd_tree_t *child);
+      |                                      ~~~~~~~~~~~~^~~~~
+parser.y:137:55: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+  137 |                      $$ = asd_new($1);
+      |                                                       ^     
+      |                                                       |
+      |                                                       asd_tree_t * {aka struct asd_tree *}
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+parser.y:158:61: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+  158 |                             $$ = asd_new($2);
+      |                                                             ^     
+      |                                                             |
+      |                                                             asd_tree_t * {aka struct asd_tree *}
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+parser.y:178:61: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+  178 |                             $$ = asd_new($3);
+      |                                                             ^     
+      |                                                             |
+      |                                                             asd_tree_t * {aka struct asd_tree *}
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+parser.y:211:78: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+  211 | arglst : express arglst2                  { $$ = asd_new($1); if($2 != NULL) asd_add_child($$,$2); };
+      |                                                                    ~~~~~~~~~~^~~~~~
+      |                                                                              |
+      |                                                                              asd_tree_t * {aka struct asd_tree *}
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+parser.y:214:78: warning: passing argument 1 of 'asd_new' from incompatible pointer type [-Wincompatible-pointer-types]
+  214 | arglst2: ',' express arglst2              { $$ = asd_new($2); if($3 != NULL) asd_add_child($$,$3); };
+      |                                                                    ~~~~~~~~~~^~~~~~
+      |                                                                              |
+      |                                                                              asd_tree_t * {aka struct asd_tree *}
+asd.h:13:38: note: expected 'struct LexValue *' but argument is of type 'asd_tree_t *' {aka 'struct asd_tree *'}
+   13 | asd_tree_t *asd_new(struct LexValue *label);
+      |                     ~~~~~~~~~~~~~~~~~^~~~~
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c -Wno-error=implicit-function-declaration main.c
+gcc -c asd.c
+gcc -o etapa3 parser.tab.o lex.yy.o main.o asd.o
+~
+
+GrupoO
+
+~/GrupoO ~
+gcc -c type_lex.c
+gcc -c tree.c
+bison -d parser.y -Wcounterexamples
+gcc -g -Wall -c parser.tab.c
+flex scanner.l
+gcc -g -Wall -c lex.yy.c
+lex.yy.c:1287:16: warning: 'input' defined but not used [-Wunused-function]
+ 1287 |     static int input  (void)
+      |                ^~~~~
+lex.yy.c:1240:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1240 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -g -Wall -c main.c
+gcc -o etapa3 type_lex.o tree.o parser.tab.o lex.yy.o main.o -lfl
+~
+
+GrupoP
+
+~/GrupoP ~
+bison -d parser.y
+flex scanner.l
+gcc -c main.c lex.yy.c parser.tab.c asd.c
+gcc -o etapa3 main.o lex.yy.o parser.tab.o asd.o -lfl
+~
+
+GrupoR
+
+~/GrupoR ~
+bison -d -Wcounterexamples parser.y
+gcc -c main.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c parser.tab.c
+gcc -o etapa3 main.o lex.yy.o parser.tab.o asd.c
+~
+
+GrupoS
+
+~/GrupoS ~
+flex scanner.l
+bison -d parser.y
+mkdir -p obj
+gcc -c -o obj/lex.yy.o lex.yy.c
+mkdir -p obj
+gcc -c -o obj/parser.tab.o parser.tab.c
+mkdir -p obj
+gcc -c -o obj/main.o main.c
+mkdir -p obj
+gcc -c -o obj/asd.o asd.c
+gcc -o etapa3 obj/lex.yy.o obj/parser.tab.o obj/main.o obj/asd.o
+~
+
+GrupoT
+
+~/GrupoT ~
+diff: main.c: No such file or directory
+mkdir -p obj
+bison -d src/parser.y -o src/parser.tab.c
+gcc -c src/main.c -o obj/main.o -Iinclude
+gcc -c src/parser.tab.c -o obj/parser.tab.o -Iinclude
+flex -o src/lex.yy.c src/scanner.l
+gcc -c src/lex.yy.c -o obj/lex.yy.o -Iinclude
+gcc -c src/data_structures.c -o obj/data_structures.o -Iinclude
+gcc -c src/aux.c -o obj/aux.o -Iinclude
+gcc -o etapa3 obj/main.o obj/parser.tab.o obj/lex.yy.o obj/data_structures.o obj/aux.o -lfl
+~
+
+GrupoZ
+
+~/GrupoZ ~
+diff: main.c: No such file or directory
+bison -d -v -o src/parser.tab.c src/parser.y
+mv src/parser.tab.h include/parser.tab.h
+mkdir -p build
+gcc -c -o build/main.o src/main.c -Iinclude
+flex -o src/lex.yy.c src/scanner.l
+mkdir -p build
+gcc -c -o build/lex.yy.o src/lex.yy.c -Iinclude
+gcc -c -o build/parser.tab.o src/parser.tab.c -Iinclude
+mkdir -p build
+gcc -c -o build/ast.o src/ast.c -Iinclude
+mkdir -p build
+gcc -c -o build/lex_value.o src/lex_value.c -Iinclude
+gcc -o etapa3 build/main.o build/lex.yy.o build/parser.tab.o build/ast.o build/lex_value.o -Iinclude 
+~

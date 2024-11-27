@@ -35,44 +35,44 @@
 %token<valor_lexico> TK_LIT_FLOAT
 %token TK_ERRO
 
-%type<arvore> programa
-%type<arvore> lista_de_funcoes
-%type<arvore> funcao
-%type<arvore> cabecalho
-%type<arvore> lista_de_parametros
-%type<arvore> parametro
-%type<arvore> corpo
-%type<arvore> bloco_comandos
-%type<arvore> sequencia_de_comandos
-%type<arvore> comando_simples
-%type<arvore> declaracao_variavel
-%type<arvore> lista_de_identificadores
-%type<arvore> identificador
-%type<arvore> comando_atribuicao
-%type<arvore> chamada_funcao
-%type<arvore> lista_argumentos
-%type<arvore> comando_retorno
-%type<arvore> comando_controle_fluxo
-%type<arvore> expressao
-%type<arvore> expr7
-%type<arvore> expr6
-%type<arvore> expr5
-%type<arvore> expr4
-%type<arvore> expr3
-%type<arvore> expr2
-%type<arvore> expr1
+%type<arvore>  programa
+%type<arvore>  lista_de_funcoes
+%type<arvore>  funcao
+%type<arvore>  cabecalho
+%type<arvore>  lista_de_parametros
+%type<arvore>  parametro
+%type<arvore>  corpo
+%type<arvore>  bloco_comandos
+%type<arvore>  sequencia_de_comandos
+%type<arvore>  comando_simples
+%type<arvore>  declaracao_variavel
+%type<arvore>  lista_de_identificadores
+%type<arvore>  identificador
+%type<arvore>  comando_atribuicao
+%type<arvore>  chamada_funcao
+%type<arvore>  lista_argumentos
+%type<arvore>  comando_retorno
+%type<arvore>  comando_controle_fluxo
+%type<arvore>  expressao
+%type<arvore>  expr7
+%type<arvore>  expr6
+%type<arvore>  expr5
+%type<arvore>  expr4
+%type<arvore>  expr3
+%type<arvore>  expr2
+%type<arvore>  expr1
 
 %define parse.error verbose
 
 %%
 
 programa: 
-lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
-| /* vazio */ { $$ = NULL; arvore = $$; };
+    lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
+    | /* vazio */ { $$ = NULL; arvore = $$; };
 
 lista_de_funcoes: 
-funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$2); }
-| funcao { $$ = $1; };
+    funcao lista_de_funcoes {$$ = $1; asd_add_child($$,$2); }
+    | funcao { $$ = $1; };
 
 // utils
 tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frente
@@ -81,56 +81,58 @@ tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frent
 funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
 
 cabecalho: 
-TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1);}
-| TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1); };
+    TK_IDENTIFICADOR '=' lista_de_parametros '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1);}
+    | TK_IDENTIFICADOR '=' '>' tipo {$$ = asd_new($1->valor); valor_lexico_free($1); };
  
 lista_de_parametros: 
-lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
-| parametro { $$ = NULL; };
+    lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
+    | parametro { $$ = NULL; };
+
 parametro: TK_IDENTIFICADOR '<' '-' tipo { $$ = NULL; };
 
 corpo: bloco_comandos { $$ = $1; };
 
-//3.2
+/* ============================== [3.2] ============================== */
 bloco_comandos: '{' '}' { $$ = NULL; }| 
                 '{' sequencia_de_comandos '}' { $$ = $2; };
 
+/* ACHO QUE EH AQUI QUE ESTA O PROBLEMA DO TESTE E3/z07 */
 sequencia_de_comandos: 
-comando_simples ';' { $$ = $1; }
-| comando_simples ';' sequencia_de_comandos { 
-    $$ = $1;  
-    if($$ != NULL)
-    {
-        if($3 != NULL)
-        {
-            asd_add_child($$,$3); 
-        } 
-    }else{ 
-        if($3 != NULL)
-        {
-            $$ = $3;
-        } else 
-        {
-            $$ = NULL;
-        } 
-    } 
-};
+    comando_simples ';' { $$ = $1; }
+    | comando_simples ';' sequencia_de_comandos { 
+        $$ = ($1 != NULL) ? $1 : $3;
+        if ($1 != NULL && $3 != NULL) {
+            asd_add_child($$, $3);
+        }
+    }; 
 
-//3.3
+/* ============================== [3.3] Comandos ============================== */
 comando_simples: 
-bloco_comandos { $$ = $1; }
-| declaracao_variavel { $$ = $1; }
-| comando_atribuicao { $$ = $1; }
-| chamada_funcao { $$ = $1; }
-| comando_retorno { $$ = $1; }
-| comando_controle_fluxo { $$ = $1; };
+    bloco_comandos { $$ = $1; }
+    | declaracao_variavel { $$ = $1; }
+    | comando_atribuicao { $$ = $1; }
+    | chamada_funcao { $$ = $1; }
+    | comando_retorno { $$ = $1; }
+    | comando_controle_fluxo { $$ = $1; };
 
-    //3.3.1 declaracao de variavel
+/* ============================== [3.3.1] declaracao de variavel ==============================*/
 declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
 
+
+
 lista_de_identificadores: 
-identificador { if($1 != NULL){$$ = $1;} }
-| identificador ',' lista_de_identificadores 
+    identificador ',' lista_de_identificadores  {
+        $$ = ($1 != NULL) ? $1 : $3;
+        if ($1 != NULL) asd_add_child($$, $3);
+    }
+
+    | identificador { if($1 != NULL){$$ = $1;} }
+;
+
+/* ============ [OLD] ========================= */
+/* lista_de_identificadores: 
+    identificador { if($1 != NULL){$$ = $1;} }
+    | identificador ',' lista_de_identificadores 
 { //THIS LOOKS WRONG AS THE SUN RISING IN THE WEST
     if($1 != NULL)
     { 
@@ -146,55 +148,81 @@ identificador { if($1 != NULL){$$ = $1;} }
     {
         $$ = NULL;
     }
-};
+}; */
+/* ============ [OLD] ========================= */
 
 identificador: 
-TK_IDENTIFICADOR { $$ = NULL; }
-| TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);}
-| TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { $$ = asd_new("<="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$, asd_new($3->valor)); valor_lexico_free($1); valor_lexico_free($3);};
+    TK_IDENTIFICADOR { $$ = NULL; }
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
+            $$ = asd_new("<="); 
+            asd_add_child($$, asd_new($1->valor));
+            asd_add_child($$, asd_new($3->valor));
+            valor_lexico_free($1); valor_lexico_free($3);}
+    | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { 
+            $$ = asd_new("<="); 
+            asd_add_child($$, asd_new($1->valor)); 
+            asd_add_child($$, asd_new($3->valor));
+            valor_lexico_free($1); valor_lexico_free($3);
+    };
     
-    //3.3.2 comando de atribuicao
-comando_atribuicao: TK_IDENTIFICADOR '=' expressao { $$ = asd_new("="); asd_add_child($$, asd_new($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
 
-    //3.3.3 chamada de funcao
+
+/* ============================== [3.3.2] comando de atribuicao ============================== */
+comando_atribuicao: 
+    TK_IDENTIFICADOR '=' expressao { 
+            $$ = asd_new("=");
+            asd_add_child($$, asd_new($1->valor)); 
+            asd_add_child($$,$3); valor_lexico_free($1);
+    };
+
+/* ============================== [3.3.3] chamada de funcao ============================== */
 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
 
 lista_argumentos: 
-expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
-| expressao { $$ = $1; };
+    expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
+    | expressao { $$ = $1; };
 
-    //3.3.4 comando de retorno
+/* ============================== [3.3.4] comando de retorno ============================== */
 comando_retorno: TK_PR_RETURN expressao { $$ = asd_new("return"); asd_add_child($$,$2); };
 
-    //3.3.5 comando de controle de fluxo
+/* ============================== [3.3.5] comando de controle de fluxo ============================== */
 comando_controle_fluxo: 
-TK_PR_IF '(' expressao ')' bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}}
-| TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);} if($7 != NULL){asd_add_child($$,$7);}}
-| TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
+    TK_PR_IF '(' expressao ')' bloco_comandos { 
+        $$ = asd_new("if");
+        asd_add_child($$,$3);
+        if($5 != NULL){asd_add_child($$,$5);}
+    }
+    | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
+        $$ = asd_new("if");
+        asd_add_child($$,$3);
+        if($5 != NULL){asd_add_child($$,$5);} 
+        if($7 != NULL){asd_add_child($$,$7);}
+    }
+    | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
 
 
-//expr
+/* ============================== EXPRESSOES ============================== */
 expressao: expr7 { $$ = $1; };
 
 expr7: 
-expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);}
-| expr6 { $$ = $1; };
+    expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);}
+    | expr6 { $$ = $1; };
 
 expr6: 
-expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr5 { $$ = $1; };
+    expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr5 { $$ = $1; };
 
 expr5: 
-expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 { $$ = $1; };
+    expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 { $$ = $1; };
 
 expr4: 
-expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr3 { $$ = $1; };
+    expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr3 { $$ = $1; };
 
 expr3: 
 expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); }

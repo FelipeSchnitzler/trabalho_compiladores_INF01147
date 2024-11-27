@@ -1,0 +1,4 @@
+//CORRECT
+main = > int {
+  case(245 == 3);
+}
