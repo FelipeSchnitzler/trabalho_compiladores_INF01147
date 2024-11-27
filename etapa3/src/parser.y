@@ -165,38 +165,38 @@ lista_argumentos:
     expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
     | expressao { $$ = $1; };
 
-//3.3.4 comando de retorno
+/* ============================== [3.3.4] comando de retorno ============================== */
 comando_retorno: TK_PR_RETURN expressao { $$ = asd_new("return"); asd_add_child($$,$2); };
 
-//3.3.5 comando de controle de fluxo
+/* ============================== [3.3.5] comando de controle de fluxo ============================== */
 comando_controle_fluxo: 
     TK_PR_IF '(' expressao ')' bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}}
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { $$ = asd_new("if"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);} if($7 != NULL){asd_add_child($$,$7);}}
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
 
 
-//expr
+/* ============================== EXPRESSOES ============================== */
 expressao: expr7 { $$ = $1; };
 
 expr7: 
-expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);}
-| expr6 { $$ = $1; };
+    expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);}
+    | expr6 { $$ = $1; };
 
 expr6: 
-expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr5 { $$ = $1; };
+    expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr5 { $$ = $1; };
 
 expr5: 
-expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 { $$ = $1; };
+    expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 { $$ = $1; };
 
 expr4: 
-expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr3 { $$ = $1; };
+    expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    | expr3 { $$ = $1; };
 
 expr3: 
 expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); }
