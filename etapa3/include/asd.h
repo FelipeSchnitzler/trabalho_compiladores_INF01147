@@ -31,4 +31,8 @@ void asd_print(asd_tree_t *tree);
  * Função asd_print_graphviz, idem, em formato DOT
  */
 void asd_print_graphviz (asd_tree_t *tree);
+/*
+ * Função que pega quem deve ser o pai do prox comando
+ */
+asd_tree_t *asd_get_last_child(asd_tree_t *tree, int expected_children_count);
 #endif //_ARVORE_H_

@@ -45,16 +45,16 @@ clean:
 
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
-TESTE = testes/E3/z00
+TESTE = testes/E3/z07
 REF = $(TESTE).ref.dot
 
-tst: 
-	./etapa3 < $(TESTE)
+tst: png
 	dot $(REF) -Tpng -o outputs/ref.png
-	xdg-open outputs/ref.png
+	xdg-open outputs/ref.png 
 
 png: $(ETAPA) 
 	mkdir -p outputs
+	./etapa3 < $(TESTE)
 	dot saida.dot -Tpng -o outputs/grafo.png
 	xdg-open outputs/grafo.png
 ## ==============================================================================

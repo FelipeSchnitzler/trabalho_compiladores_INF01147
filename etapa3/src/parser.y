@@ -104,12 +104,18 @@ sequencia_de_comandos:
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
         }
-    }; 
+    } 
+    | declaracao_variavel  ';' sequencia_de_comandos { 
+        $$ = ($1 != NULL) ? $1 : $3; 
+        if ($1 != NULL && $3 != NULL) {
+            asd_add_child(asd_get_last_child($$, 2), $3);
+        }
+    }
+    | declaracao_variavel  ';' { $$ = $1; };
 
 /* ============================== [3.3] Comandos ============================== */
 comando_simples: 
     bloco_comandos { $$ = $1; }
-    | declaracao_variavel { $$ = $1; }
     | comando_atribuicao { $$ = $1; }
     | chamada_funcao { $$ = $1; }
     | comando_retorno { $$ = $1; }
@@ -123,7 +129,7 @@ declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
 lista_de_identificadores: 
     identificador ',' lista_de_identificadores  {
         $$ = ($1 != NULL) ? $1 : $3;
-        if ($1 != NULL) asd_add_child($$, $3);
+        if ($1 != NULL && $3 != NULL) {asd_add_child($$, $3);}
     }
 
     | identificador { if($1 != NULL){$$ = $1;} }
