@@ -20,7 +20,7 @@
 %union{
     asd_tree_t *arvore;
     valor_lexico_t *valor_lexico;
-    TipoDado_t tiposvar;
+    TipoDado tiposvar;
 }
 
 %token TK_PR_INT
@@ -106,8 +106,8 @@ lista_de_funcoes:
 
 // utils
 tipo: 
-    TK_PR_INT {$$ = GeraDado(INT);}
-    | TK_PR_FLOAT{$$ = GeraDado(FLOAT);}; //Nao importa pq sempre é ignorado mais na frente
+    TK_PR_INT {$$ = INT;}
+    | TK_PR_FLOAT{$$ = FLOAT;}; //Nao importa pq sempre é ignorado mais na frente
 
 //funcao
 funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
@@ -116,7 +116,7 @@ cabecalho:
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
         $$ = asd_new($1->valor); 
         
-        if(!insert_symbol(stack->next->table,$1->valor,get_line_number(),FUNCAO,$6.tipo)){
+        if(!insert_symbol(stack->next->table,$1->valor,get_line_number(),FUNCAO,$6)){
             return ERR_DECLARED;
         } //assume pilha tem profundidade = 2
         // printf("cabecalho com coisas\n");
@@ -135,7 +135,7 @@ cabecalho:
         // insert_symbol(stack->table,"foo",2,FUNCAO,INT);
         // print_stack(stack);
         
-        Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5.tipo);
+        Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
         // printf("DEPOIS insert");
         if(retorno != NULL){
 
@@ -154,7 +154,7 @@ lista_de_parametros:
 parametro: TK_IDENTIFICADOR '<' '-' tipo { 
         $$ = NULL;
         Symbol *retorno;
-        retorno = insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4.tipo);
+        retorno = insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
         if(retorno != NULL){
             yyerror("MENSAGEM ERRO");
         }
@@ -178,6 +178,7 @@ sequencia_de_comandos:
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
         }
+        
     } 
     | declaracao_variavel  ';' sequencia_de_comandos { 
         $$ = ($1 != NULL) ? $1 : $3; 
@@ -197,10 +198,12 @@ comando_simples:
 
 /* ============================== [3.3.1] declaracao de variavel ==============================*/
 declaracao_variavel: tipo lista_de_identificadores { 
+    if($2 != NULL) {$2->tipo = $1;  printf("$2 NÃO É NULL\n");}
     $$ = $2; 
-    $$->tipo = $1.tipo; 
-    // print_stack(stack);
-    set_symbol_type(stack->table, $$->tipo);
+    printf("TIPO CABECA:%d\n",(int)$1);
+    // $$->tipo = $1.tipo; 
+    printf("LKSJSHDLKAJH\n");
+    set_symbol_type(stack->table, $1);
 };
 
 
@@ -238,14 +241,15 @@ lista_de_identificadores:
 
 identificador: 
     TK_IDENTIFICADOR { $$ = NULL; 
-        printf("NÂO ERRO\n");
+        // print_table(stack->table);
         Symbol *identificador = find_symbol(stack->table,$1->valor);
-        print_stack(stack);
+        // print_stack(stack);
 
         if(identificador != NULL){
             printf("ERRO");
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+        print_stack(stack);
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
         $$ = asd_new("<="); 

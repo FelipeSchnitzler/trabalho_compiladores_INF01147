@@ -98,6 +98,7 @@ void asd_print_graphviz(asd_tree_t *tree)
 }
 
 asd_tree_t *asd_get_last_child(asd_tree_t *tree){
+  printf("AAAA\n");
   asd_tree_t *last = tree;
   
   if (last != NULL){

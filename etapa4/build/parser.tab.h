@@ -91,7 +91,7 @@ union YYSTYPE
 
     asd_tree_t *arvore;
     valor_lexico_t *valor_lexico;
-    TipoDado_t tiposvar;
+    TipoDado tiposvar;
 
 #line 97 "build/parser.tab.h"
 
