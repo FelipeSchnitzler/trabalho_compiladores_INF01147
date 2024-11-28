@@ -9,6 +9,7 @@
     extern void *arvore;
     extern SymbolTableStack *stack;
     char *cria_label_func(char *identificador);
+    TipoDado type_inference(TipoDado tipo1, TipoDado tipo2);
 %}
 
 %code requires { 
@@ -288,7 +289,22 @@ comando_atribuicao:
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
-chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'{ $$ = asd_new(cria_label_func($1->valor)); asd_add_child($$,$3); valor_lexico_free($1);};
+chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
+{ 
+    Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
+    if(symbol == NULL){
+        printf("Erro na linha %d, funcao '%s' nao declarada\n",get_line_number(), $1->valor);
+        exit(ERR_UNDECLARED);
+    }
+    if(symbol->natureza != FUNCAO) {
+        printf("Erro na linha %d, funcao '%s' na verdade é uma variavel declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
+        exit(ERR_VARIABLE);
+    }
+
+    $$ = asd_new(cria_label_func($1->valor));
+    asd_add_child($$,$3); 
+    valor_lexico_free($1);
+};
 
 lista_argumentos: 
     expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
@@ -342,19 +358,32 @@ expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3);
 | expr2 { $$ = $1; };
 
 expr2: 
-expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr2 '/' expr1 { $$ = asd_new("/"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); }
+expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
+| expr2 '/' expr1 { $$ = asd_new("/"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
+| expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
 | expr1 { $$ = $1;};
 
 expr1: 
-'-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); }
-| '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); }
-| TK_IDENTIFICADOR { $$ = asd_new($1->valor); valor_lexico_free($1); }
+'-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
+| '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
 | TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = FLOAT;}
 | TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = INT;}
 | chamada_funcao  { $$ = $1; }
 |'(' expressao ')' { $$ = $2; };
+| TK_IDENTIFICADOR { 
+    Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
+    if(symbol == NULL){
+        printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
+        exit(ERR_UNDECLARED);
+    }
+    if(symbol->natureza != IDENTIFICADOR) {
+        printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
+        exit(ERR_FUNCTION);
+    }
+    $$ = asd_new($1->valor); 
+    $$->tipo = symbol->tipo;
+    valor_lexico_free($1); 
+}
 
 %%
 
@@ -376,4 +405,12 @@ char *cria_label_func(char *identificador)
     strcat(ret, identificador);
 
     return ret;
+}
+
+TipoDado type_inference(TipoDado tipo1, TipoDado tipo2) {
+    if(tipo1 == FLOAT || tipo2 == FLOAT) {return FLOAT;}
+
+    else if(tipo1 == INT && tipo2 == INT) {return INT;}
+
+    return INDEFINIDO;
 }
