@@ -116,9 +116,12 @@ cabecalho:
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
         $$ = asd_new($1->valor); 
         
-        if(!insert_symbol(stack->next->table,$1->valor,get_line_number(),FUNCAO,$6)){
+        Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
+        // printf("DEPOIS insert");
+        if(retorno != NULL){
+
             return ERR_DECLARED;
-        } //assume pilha tem profundidade = 2
+        } //assume pilha tem profundidade = 2 
         // printf("cabecalho com coisas\n");
         // print_stack(stack);
         valor_lexico_free($1);
@@ -156,10 +159,10 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo {
         Symbol *retorno;
         retorno = insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
         if(retorno != NULL){
-            yyerror("MENSAGEM ERRO");
+            printf("EROOOOOOO");
         }
         // printf("definiu um parametro\n");
-        // print_stack(stack);
+        print_stack(stack);
     };
 
 corpo: bloco_comandos_Func { $$ = $1; };
@@ -204,6 +207,7 @@ declaracao_variavel: tipo lista_de_identificadores {
     // $$->tipo = $1.tipo; 
     printf("LKSJSHDLKAJH\n");
     set_symbol_type(stack->table, $1);
+    print_stack(stack);
 };
 
 

@@ -1,8 +1,9 @@
-// g = i <- int | j <- int | k <- int > int {
-// }
+g = i <- int | j <- int | k <- int > int {
+    int y,z;
+}
 f = > int{
     int a,z;
     int b;
     int c;
-    //g(a, b, c);
+    g(a, b, c);
 }
