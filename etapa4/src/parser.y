@@ -76,23 +76,23 @@
 %%
 main: cria_escopo_global programa destroi_escopo_global;
 
-cria_escopo_global: /**/
+cria_escopo_global:
 {
     stack = create_stack();
     push_table(&stack);
 };
 
-destroi_escopo_global: /**/ 
+destroi_escopo_global: 
 {
     free_stack(stack);
 };
 
-empilha_tabela: /**/ 
+empilha_tabela: 
 {
     push_table(&stack);
 };
 
-desempilha_tabela: /**/ 
+desempilha_tabela: 
 {
     pop_table(&stack);
 };

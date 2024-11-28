@@ -43,6 +43,22 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR) $(ETAPA) outputs/*.png saida.dot
 
+## [Entrega] ==================================================================
+entrega: entrega_dir 
+	
+	# Cria um arquivo tar.gz contendo src, includes e Makefile
+	tar -cvzf entrega/$(ETAPA).tgz src/ include/ Makefile
+	
+entrega_dir: clean_entrega
+	echo "Criando diretório de entrega..."
+	mkdir -p entrega
+
+clean_entrega:
+	echo "Limpando diretório de entrega..."
+	rm -rf entrega
+	echo "Diretório de entrega limpo."
+	sleep 2 # Espera 2 segundos para garantir que o diretório foi removido
+
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
 TESTE = testes/E3/z00
