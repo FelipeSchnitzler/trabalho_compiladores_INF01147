@@ -151,11 +151,12 @@ lista_de_parametros:
 parametro: TK_IDENTIFICADOR '<' '-' tipo { 
         $$ = NULL;
         Symbol *retorno;
-        retorno = insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
+        retorno = find_symbol(stack->table,$1->valor);
         if(retorno != NULL){
-            printf("parâmetro %s já declarado na linha %d", $1->valor, get_line_number());
+            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         } 
+        insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
         // printf("definiu um parametro\n");
         print_stack(stack);
     };
@@ -245,7 +246,8 @@ identificador:
         // print_stack(stack);
 
         if(identificador != NULL){
-            printf("ERRO");
+            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
+            exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
         print_stack(stack);
@@ -256,7 +258,8 @@ identificador:
         asd_add_child($$, asd_new($3->valor));
         Symbol *identificador = find_symbol(stack->table,$1->valor);
         if(identificador != NULL){
-            printf("ERRO");
+            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
+            exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
         valor_lexico_free($1); valor_lexico_free($3);
@@ -267,8 +270,8 @@ identificador:
         asd_add_child($$, asd_new($3->valor));
         Symbol *identificador = find_symbol(stack->table,$1->valor);
         if(identificador != NULL){
-            printf("ERRO");
-
+            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
+            exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
         valor_lexico_free($1); valor_lexico_free($3);
