@@ -119,28 +119,22 @@ cabecalho:
         $$ = asd_new($1->valor); 
         
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
-        // printf("DEPOIS insert");
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         } //assume pilha tem profundidade = 2 
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
-        // printf("cabecalho com coisas\n");
-        // print_stack(stack);
         valor_lexico_free($1);
     }
     | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
         $$ = asd_new($1->valor); 
         
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
-        // printf("DEPOIS insert");
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         }  //assume pilha tem profundidade = 2 
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
-        // printf("cabecalho vazio\n");
-        // print_stack(stack);
         valor_lexico_free($1);
 
     };
@@ -158,8 +152,6 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo {
             exit(ERR_DECLARED);
         } 
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
-        // printf("definiu um parametro\n");
-        // print_stack(stack);
     };
 
 corpo: bloco_comandos_Func { $$ = $1; };
@@ -200,11 +192,7 @@ comando_simples:
 declaracao_variavel: tipo lista_de_identificadores { 
     if($2 != NULL) {$2->tipo = $1;}
     $$ = $2; 
-    // printf("TIPO CABECA:%d\n",(int)$1);
-    // $$->tipo = $1.tipo; 
-    // printf("LKSJSHDLKAJH\n");
     set_symbol_type(stack->table, $1);
-    // print_stack(stack);
 };
 
 
@@ -218,40 +206,15 @@ lista_de_identificadores:
     | identificador { if($1 != NULL){$$ = $1;} }
 ;
 
-/* ============ [OLD] ========================= */
-/* lista_de_identificadores: 
-    identificador { if($1 != NULL){$$ = $1;} }
-    | identificador ',' lista_de_identificadores 
-{ //THIS LOOKS WRONG AS THE SUN RISING IN THE WEST
-    if($1 != NULL)
-    { 
-        $$ = $1; 
-        if($3 != NULL)
-        {
-            asd_add_child($$,$3);
-        }
-    }else if($3 != NULL)
-    {
-        $$ = $3;
-    }else
-    {
-        $$ = NULL;
-    }
-}; */
-/* ============ [OLD] ========================= */
-
 identificador: 
     TK_IDENTIFICADOR { $$ = NULL; 
-        // print_table(stack->table);
         Symbol *identificador = find_symbol(stack->table,$1->valor);
-        // print_stack(stack);
 
         if(identificador != NULL){
             printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
             exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
-        // print_stack(stack);
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
         $$ = asd_new("<="); 
