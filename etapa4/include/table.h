@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
@@ -13,6 +14,14 @@ typedef enum {
     INT,
     FLOAT,
 } TipoDado;
+
+typedef struct Dado
+{
+    TipoDado tipo;
+} TipoDado_t;
+
+TipoDado_t GeraDado(TipoDado tipo);
+
 
 typedef struct Symbol {
     char *nome;             
@@ -36,7 +45,7 @@ SymbolTable *create_table();
 
 void free_table(SymbolTable *table);
 
-bool insert_symbol(SymbolTable *table, const char *name, TipoDado type);
+Symbol *insert_symbol(SymbolTable *table, const char *name, int linha, Natureza natureza, TipoDado type);
 
 Symbol *find_symbol(SymbolTable *table, const char *name);
 
@@ -52,4 +61,6 @@ Symbol *find_symbol_in_stack(SymbolTableStack *stack, const char *name);
 
 void free_stack(SymbolTableStack *stack);
 
+void print_table(SymbolTable *table);
+void print_stack(SymbolTableStack *stack);
 #endif

@@ -20,6 +20,7 @@
 %union{
     asd_tree_t *arvore;
     valor_lexico_t *valor_lexico;
+    TipoDado_t tiposvar;
 }
 
 %token TK_PR_INT
@@ -46,6 +47,7 @@
 %type<arvore>  lista_de_parametros
 %type<arvore>  parametro
 %type<arvore>  corpo
+%type<arvore>  bloco_comandos_Func
 %type<arvore>  bloco_comandos
 %type<arvore>  sequencia_de_comandos
 %type<arvore>  comando_simples
@@ -65,6 +67,7 @@
 %type<arvore>  expr3
 %type<arvore>  expr2
 %type<arvore>  expr1
+%type<tiposvar> tipo
 
 %define parse.error verbose
 
@@ -98,11 +101,13 @@ programa:
 
 lista_de_funcoes: 
     funcao desempilha_tabela lista_de_funcoes {$$ = $1; asd_add_child($$,$3); }
-    | funcao { $$ = $1; };
+    | funcao { $$ = $1;};
 
 
 // utils
-tipo: TK_PR_INT | TK_PR_FLOAT; //Nao importa pq sempre é ignorado mais na frente
+tipo: 
+    TK_PR_INT {$$ = GeraDado(INT);}
+    | TK_PR_FLOAT{$$ = GeraDado(FLOAT);}; //Nao importa pq sempre é ignorado mais na frente
 
 //funcao
 funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
@@ -110,34 +115,54 @@ funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
 cabecalho: 
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
         $$ = asd_new($1->valor); 
-        valor_lexico_free($1);
         
-        if(!insert_symbol(stack->next->table,$1->valor,FUNCAO)){
+        if(!insert_symbol(stack->next->table,$1->valor,get_line_number(),FUNCAO,$6.tipo)){
             return ERR_DECLARED;
         } //assume pilha tem profundidade = 2
+        // printf("cabecalho com coisas\n");
+        print_stack(stack);
+        valor_lexico_free($1);
     }
     | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
         $$ = asd_new($1->valor); 
         valor_lexico_free($1);
+        
+        // printf("%s\n",$1->valor);
+        Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5.tipo);
+        // printf("DEPOIS insert");
+        if(retorno != NULL){
 
-        if(!insert_symbol(stack->next->table,$1->valor,FUNCAO)){
             return ERR_DECLARED;
         } //assume pilha tem profundidade = 2 
+        // printf("cabecalho vazio\n");
+        print_stack(stack);
+
     };
  
 lista_de_parametros: 
     lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
     | parametro { $$ = NULL; };
 
-parametro: TK_IDENTIFICADOR '<' '-' tipo { $$ = NULL; };
+parametro: TK_IDENTIFICADOR '<' '-' tipo { 
+        $$ = NULL;
+        Symbol *retorno;
+        retorno = insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4.tipo);
+        if(retorno != NULL){
+            yyerror("MENSAGEM ERRO");
+        }
+        printf("definiu um parametro\n");
+        print_stack(stack);
+    };
 
-corpo: bloco_comandos { $$ = $1; };
+corpo: bloco_comandos_Func { $$ = $1; };
 
 /* ============================== [3.2] ============================== */
+bloco_comandos_Func: '{' '}' { $$ = NULL; }| 
+                '{' sequencia_de_comandos '}' { $$ = $2; };
+
 bloco_comandos: '{' '}' { $$ = NULL; }| 
                 '{' sequencia_de_comandos '}' { $$ = $2; };
 
-/* ACHO QUE EH AQUI QUE ESTA O PROBLEMA DO TESTE E3/z07 */
 sequencia_de_comandos: 
     comando_simples ';' { $$ = $1; }
     | comando_simples ';' sequencia_de_comandos { 

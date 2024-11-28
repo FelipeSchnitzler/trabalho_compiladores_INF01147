@@ -3,6 +3,12 @@
 #include <string.h>
 #include "table.h"
 
+TipoDado_t GeraDado(TipoDado tipo){
+    TipoDado_t dado;
+    dado.tipo = tipo;
+    return dado;
+}
+
 SymbolTable *create_table() {
     SymbolTable *table = NULL;
     table = calloc(1,sizeof(SymbolTable));
@@ -22,16 +28,29 @@ void free_table(SymbolTable *table) {
     free(table);
 }
 
-bool insert_symbol(SymbolTable *table, const char *name, TipoDado type) {
-    if (!table || find_symbol(table, name)) return false;
+Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza natureza, TipoDado type) {
+    // printf("insert_symbol\n");
+    Symbol *simbolo = find_symbol(table, name);
+    if (!table || (simbolo != NULL)) return simbolo;
+    // printf("devia insert_symbol\n");
     Symbol *symbol = NULL;
-    symbol = calloc(1,sizeof(Symbol));
+    // printf("AAAAAAAAAAAAAAAAAAAAAAAa\n");
+    symbol = (Symbol*) malloc(sizeof(Symbol));
+    // printf("BBBBBBBBBBBBBBBBBBBBBBBB\n");
+    if (symbol == NULL)
+    {
+        fprintf(stderr, "Erro de alocação de memória!\n");
+        exit(1);
+    }
+    printf("%s\n",name);
     symbol->nome = strdup(name);
-    // symbol->tipo = strdup(type);
+    // printf("DDDDDDDDDDDDDDDDDDDDDDDDD\n");
+    symbol->linha = linha;
+    symbol->natureza = natureza;
     symbol->tipo = type;
     symbol->next = table->head;
     table->head = symbol;
-    return true;
+    return NULL;
 }
 
 Symbol *find_symbol(SymbolTable *table, const char *name) {
@@ -78,4 +97,52 @@ void free_stack(SymbolTableStack *stack) {
         free_table(temp->table);
         free(temp);
     }
+}
+
+// Imprime os símbolos de uma tabela
+void print_table(SymbolTable *table) {
+    if (!table || !table->head) {
+        printf("Tabela de símbolos vazia.\n");
+        return;
+    }
+
+    // printf("---------------------------------------------------------------\n");
+    // printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo");
+    // printf("---------------------------------------------------------------\n");
+
+    Symbol *current = table->head;
+    while (current) {
+        printf("%-20s %-10d %-15s %-10s\n",
+               current->nome,
+               current->linha,
+               current->natureza == IDENTIFICADOR ? "IDENTIFICADOR" : "FUNCAO",
+               current->tipo == INT ? "INT" : "FLOAT");
+        current = current->next;
+    }
+    // printf("---------------------------------------------------------------\n");
+}
+
+// Imprime a pilha de tabelas de símbolos
+void print_stack(SymbolTableStack *stack) {
+    if (!stack) {
+        printf("Pilha de tabelas vazia.\n");
+        return;
+    }
+
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo"); // Cabeçalho
+    printf("===============================================================\n");
+
+    // int i = 1; // Contador para os escopos
+    while (stack) {
+        // Imprime uma linha separadora entre os escopos
+        // printf("\n<<<< Escopo %d >>>>\n", i++);
+        printf("---------------------------------------------------------------\n");
+
+        // Imprime a tabela de símbolos para o escopo atual
+        print_table(stack->table);  // Assume que print_table já é implementada corretamente
+        stack = stack->next;
+    }
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n\n");
+    // printf("===============================================================\n");
 }

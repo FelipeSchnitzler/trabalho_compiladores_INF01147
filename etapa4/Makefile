@@ -6,10 +6,10 @@ else ifeq ($(UNAME_S), Linux)  # Linux
 endif
 
 ## ==============================================================================
-ETAPA = etapa3
+ETAPA = etapa4
 ## ==============================================================================
 CC = gcc
-CFLAGS = -Iinclude
+CFLAGS = -Iinclude -g -Wall -Wextra
 BISON_FLAGS = -d -v -Wcounterexamples
 
 LEX_SRC = src/scanner.l
