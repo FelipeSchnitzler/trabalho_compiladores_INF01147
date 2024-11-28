@@ -121,7 +121,7 @@ cabecalho:
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         // printf("DEPOIS insert");
         if(retorno != NULL){
-            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, retorno->linha);
+            printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         } //assume pilha tem profundidade = 2 
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
@@ -135,7 +135,7 @@ cabecalho:
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         // printf("DEPOIS insert");
         if(retorno != NULL){
-            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, retorno->linha);
+            printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         }  //assume pilha tem profundidade = 2 
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
@@ -247,7 +247,7 @@ identificador:
         // print_stack(stack);
 
         if(identificador != NULL){
-            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
+            printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
             exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
@@ -259,7 +259,7 @@ identificador:
         asd_add_child($$, asd_new($3->valor));
         Symbol *identificador = find_symbol(stack->table,$1->valor);
         if(identificador != NULL){
-            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
+            printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
             exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
@@ -271,7 +271,7 @@ identificador:
         asd_add_child($$, asd_new($3->valor));
         Symbol *identificador = find_symbol(stack->table,$1->valor);
         if(identificador != NULL){
-            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
+            printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
             exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
