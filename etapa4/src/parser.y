@@ -1,5 +1,6 @@
 %{
     #include <string.h>
+    #include <stdlib.h>
     #include <stdio.h>
     #include "table.h"
     int yylex(void);
@@ -116,12 +117,13 @@ cabecalho:
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
         $$ = asd_new($1->valor); 
         
-        Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
+        Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         // printf("DEPOIS insert");
         if(retorno != NULL){
-
-            return ERR_DECLARED;
+            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, retorno->linha);
+            exit(ERR_DECLARED);
         } //assume pilha tem profundidade = 2 
+        insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
         // printf("cabecalho com coisas\n");
         // print_stack(stack);
         valor_lexico_free($1);
@@ -129,21 +131,13 @@ cabecalho:
     | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
         $$ = asd_new($1->valor); 
         
-        // print_table(stack->next->table);
-        // printf("%s\n",$1->valor);
-        // printf("linha:%d\n",get_line_number());
-        // printf("natureza: %d\n",(int)FUNCAO);
-        // printf("tipo: %d\n",(int)$5.tipo);
-        // print_stack(stack);
-        // insert_symbol(stack->table,"foo",2,FUNCAO,INT);
-        // print_stack(stack);
-        
-        Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
+        Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         // printf("DEPOIS insert");
         if(retorno != NULL){
-
-            return ERR_DECLARED;
-        } //assume pilha tem profundidade = 2 
+            printf("Erro na linha %d, parâmetro '%s' já declarado na linha %d\n",get_line_number(), $1->valor, retorno->linha);
+            exit(ERR_DECLARED);
+        }  //assume pilha tem profundidade = 2 
+        insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
         // printf("cabecalho vazio\n");
         // print_stack(stack);
         valor_lexico_free($1);
@@ -159,8 +153,9 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo {
         Symbol *retorno;
         retorno = insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
         if(retorno != NULL){
-            printf("EROOOOOOO");
-        }
+            printf("parâmetro %s já declarado na linha %d", $1->valor, get_line_number());
+            exit(ERR_DECLARED);
+        } 
         // printf("definiu um parametro\n");
         print_stack(stack);
     };
@@ -273,6 +268,7 @@ identificador:
         Symbol *identificador = find_symbol(stack->table,$1->valor);
         if(identificador != NULL){
             printf("ERRO");
+
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
         valor_lexico_free($1); valor_lexico_free($3);
