@@ -13,6 +13,7 @@ typedef enum {
 typedef enum {
     INT,
     FLOAT,
+    INDEFINIDO,
 } TipoDado;
 
 typedef struct Dado
@@ -49,6 +50,7 @@ Symbol *insert_symbol(SymbolTable *table, const char *name, int linha, Natureza 
 
 Symbol *find_symbol(SymbolTable *table, const char *name);
 
+void set_symbol_type(SymbolTable *table, TipoDado type);
 
 SymbolTableStack *create_stack();
 

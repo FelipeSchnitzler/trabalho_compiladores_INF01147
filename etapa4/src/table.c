@@ -31,7 +31,7 @@ void free_table(SymbolTable *table) {
 Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza natureza, TipoDado type) {
     // printf("insert_symbol\n");
     Symbol *simbolo = find_symbol(table, name);
-    if (!table || (simbolo != NULL)) return simbolo;
+    // if (!table || (simbolo != NULL)) return simbolo;
     // printf("devia insert_symbol\n");
     Symbol *symbol = NULL;
     // printf("AAAAAAAAAAAAAAAAAAAAAAAa\n");
@@ -50,6 +50,7 @@ Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza n
     symbol->tipo = type;
     symbol->next = table->head;
     table->head = symbol;
+    // print_table(table);
     return NULL;
 }
 
@@ -60,6 +61,18 @@ Symbol *find_symbol(SymbolTable *table, const char *name) {
         current = current->next;
     }
     return NULL;
+}
+
+void set_symbol_type(SymbolTable *table, TipoDado type){
+    Symbol *tmp = table->head;
+
+    for (; tmp != NULL; tmp = tmp->next)
+    {
+        if (tmp->tipo == INDEFINIDO)
+        {
+            tmp->tipo = type;
+        }
+    }
 }
 
 SymbolTableStack *create_stack() {
@@ -129,9 +142,9 @@ void print_stack(SymbolTableStack *stack) {
         return;
     }
 
-    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo"); // Cabeçalho
     printf("===============================================================\n");
+    printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo"); // Cabeçalho
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
     // int i = 1; // Contador para os escopos
     while (stack) {
@@ -143,6 +156,6 @@ void print_stack(SymbolTableStack *stack) {
         print_table(stack->table);  // Assume que print_table já é implementada corretamente
         stack = stack->next;
     }
-    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n\n");
-    // printf("===============================================================\n");
+    printf("===============================================================\n\n\n");
+    // printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n\n");
 }

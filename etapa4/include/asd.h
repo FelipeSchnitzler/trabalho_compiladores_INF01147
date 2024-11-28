@@ -1,9 +1,12 @@
 #ifndef _ARVORE_H_
 #define _ARVORE_H_
 
+#include "table.h"
+
 typedef struct asd_tree {
   char *label;
   int number_of_children;
+  TipoDado tipo;
   struct asd_tree **children;
 } asd_tree_t;
 

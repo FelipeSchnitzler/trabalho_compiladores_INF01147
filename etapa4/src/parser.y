@@ -120,14 +120,21 @@ cabecalho:
             return ERR_DECLARED;
         } //assume pilha tem profundidade = 2
         // printf("cabecalho com coisas\n");
-        print_stack(stack);
+        // print_stack(stack);
         valor_lexico_free($1);
     }
     | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
         $$ = asd_new($1->valor); 
-        valor_lexico_free($1);
         
+        // print_table(stack->next->table);
         // printf("%s\n",$1->valor);
+        // printf("linha:%d\n",get_line_number());
+        // printf("natureza: %d\n",(int)FUNCAO);
+        // printf("tipo: %d\n",(int)$5.tipo);
+        // print_stack(stack);
+        // insert_symbol(stack->table,"foo",2,FUNCAO,INT);
+        // print_stack(stack);
+        
         Symbol *retorno = insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5.tipo);
         // printf("DEPOIS insert");
         if(retorno != NULL){
@@ -135,7 +142,8 @@ cabecalho:
             return ERR_DECLARED;
         } //assume pilha tem profundidade = 2 
         // printf("cabecalho vazio\n");
-        print_stack(stack);
+        // print_stack(stack);
+        valor_lexico_free($1);
 
     };
  
@@ -150,8 +158,8 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo {
         if(retorno != NULL){
             yyerror("MENSAGEM ERRO");
         }
-        printf("definiu um parametro\n");
-        print_stack(stack);
+        // printf("definiu um parametro\n");
+        // print_stack(stack);
     };
 
 corpo: bloco_comandos_Func { $$ = $1; };
@@ -161,7 +169,7 @@ bloco_comandos_Func: '{' '}' { $$ = NULL; }|
                 '{' sequencia_de_comandos '}' { $$ = $2; };
 
 bloco_comandos: '{' '}' { $$ = NULL; }| 
-                '{' sequencia_de_comandos '}' { $$ = $2; };
+                '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' { $$ = $3; };
 
 sequencia_de_comandos: 
     comando_simples ';' { $$ = $1; }
@@ -188,7 +196,12 @@ comando_simples:
     | comando_controle_fluxo { $$ = $1; };
 
 /* ============================== [3.3.1] declaracao de variavel ==============================*/
-declaracao_variavel: tipo lista_de_identificadores { $$ = $2; };
+declaracao_variavel: tipo lista_de_identificadores { 
+    $$ = $2; 
+    $$->tipo = $1.tipo; 
+    // print_stack(stack);
+    set_symbol_type(stack->table, $$->tipo);
+};
 
 
 
@@ -224,17 +237,37 @@ lista_de_identificadores:
 /* ============ [OLD] ========================= */
 
 identificador: 
-    TK_IDENTIFICADOR { $$ = NULL; }
+    TK_IDENTIFICADOR { $$ = NULL; 
+        printf("NÂO ERRO\n");
+        Symbol *identificador = find_symbol(stack->table,$1->valor);
+        print_stack(stack);
+
+        if(identificador != NULL){
+            printf("ERRO");
+        }
+        insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+    }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
-            $$ = asd_new("<="); 
-            asd_add_child($$, asd_new($1->valor));
-            asd_add_child($$, asd_new($3->valor));
-            valor_lexico_free($1); valor_lexico_free($3);}
+        $$ = asd_new("<="); 
+        asd_add_child($$, asd_new($1->valor));
+        asd_add_child($$, asd_new($3->valor));
+        Symbol *identificador = find_symbol(stack->table,$1->valor);
+        if(identificador != NULL){
+            printf("ERRO");
+        }
+        insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+        valor_lexico_free($1); valor_lexico_free($3);
+    }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { 
-            $$ = asd_new("<="); 
-            asd_add_child($$, asd_new($1->valor)); 
-            asd_add_child($$, asd_new($3->valor));
-            valor_lexico_free($1); valor_lexico_free($3);
+        $$ = asd_new("<="); 
+        asd_add_child($$, asd_new($1->valor)); 
+        asd_add_child($$, asd_new($3->valor));
+        Symbol *identificador = find_symbol(stack->table,$1->valor);
+        if(identificador != NULL){
+            printf("ERRO");
+        }
+        insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+        valor_lexico_free($1); valor_lexico_free($3);
     };
     
 
@@ -311,8 +344,8 @@ expr1:
 '-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); }
 | '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); }
 | TK_IDENTIFICADOR { $$ = asd_new($1->valor); valor_lexico_free($1); }
-| TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); }
-| TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); }
+| TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = FLOAT;}
+| TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = INT;}
 | chamada_funcao  { $$ = $1; }
 |'(' expressao ')' { $$ = $2; };
 

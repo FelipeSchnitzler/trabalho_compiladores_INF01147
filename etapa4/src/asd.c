@@ -12,6 +12,7 @@ asd_tree_t *asd_new(const char *label)
   if (ret != NULL){
     ret->label = strdup(label);
     ret->number_of_children = 0;
+    // ret->tipo = INDEFINIDO;
     ret->children = NULL;
   }
   return ret;
