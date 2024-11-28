@@ -30,7 +30,7 @@ void free_table(SymbolTable *table) {
 
 Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza natureza, TipoDado type) {
     // printf("insert_symbol\n");
-    Symbol *simbolo = find_symbol(table, name);
+    // Symbol *simbolo = find_symbol(table, name);
     // if (!table || (simbolo != NULL)) return simbolo;
     // printf("devia insert_symbol\n");
     Symbol *symbol = NULL;
@@ -42,7 +42,7 @@ Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza n
         fprintf(stderr, "Erro de alocação de memória!\n");
         exit(1);
     }
-    printf("%s\n",name);
+    // printf("%s\n",name);
     symbol->nome = strdup(name);
     // printf("DDDDDDDDDDDDDDDDDDDDDDDDD\n");
     symbol->linha = linha;

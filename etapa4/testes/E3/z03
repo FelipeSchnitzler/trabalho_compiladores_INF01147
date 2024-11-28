@@ -6,4 +6,9 @@ f = > int{
     int b;
     int c;
     g(a, b, c);
+
+    a = -a;
+    a = b/c;
+    a = a-a;
+    c = c+a;
 }

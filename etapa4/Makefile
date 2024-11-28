@@ -45,7 +45,7 @@ clean:
 
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
-TESTE = testes/E3/z19
+TESTE = testes/E3/z00
 REF = $(TESTE).ref.dot
 
 tst: png
@@ -54,7 +54,7 @@ tst: png
 
 png: $(ETAPA) 
 	mkdir -p outputs
-	./etapa3 < $(TESTE)
+	./etapa4 < $(TESTE)
 	dot saida.dot -Tpng -o outputs/grafo.png
 	xdg-open outputs/grafo.png
 ## ==============================================================================

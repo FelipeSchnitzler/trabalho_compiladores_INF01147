@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "asd.h": "c",
         "table.h": "c",
-        "errors.h": "c"
+        "errors.h": "c",
+        "z03": "cpp"
     }
 }

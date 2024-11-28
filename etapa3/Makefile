@@ -45,7 +45,7 @@ clean:
 
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
-TESTE = testes/E3/z07
+TESTE = testes/E3/z03
 REF = $(TESTE).ref.dot
 
 tst: png

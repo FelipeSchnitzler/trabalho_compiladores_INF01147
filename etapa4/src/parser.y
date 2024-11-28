@@ -159,7 +159,7 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo {
         } 
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
         // printf("definiu um parametro\n");
-        print_stack(stack);
+        // print_stack(stack);
     };
 
 corpo: bloco_comandos_Func { $$ = $1; };
@@ -198,13 +198,13 @@ comando_simples:
 
 /* ============================== [3.3.1] declaracao de variavel ==============================*/
 declaracao_variavel: tipo lista_de_identificadores { 
-    if($2 != NULL) {$2->tipo = $1;  printf("$2 NÃO É NULL\n");}
+    if($2 != NULL) {$2->tipo = $1;}
     $$ = $2; 
-    printf("TIPO CABECA:%d\n",(int)$1);
+    // printf("TIPO CABECA:%d\n",(int)$1);
     // $$->tipo = $1.tipo; 
-    printf("LKSJSHDLKAJH\n");
+    // printf("LKSJSHDLKAJH\n");
     set_symbol_type(stack->table, $1);
-    print_stack(stack);
+    // print_stack(stack);
 };
 
 
@@ -251,7 +251,7 @@ identificador:
             exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
-        print_stack(stack);
+        // print_stack(stack);
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
         $$ = asd_new("<="); 
@@ -283,6 +283,15 @@ identificador:
 /* ============================== [3.3.2] comando de atribuicao ============================== */
 comando_atribuicao: 
     TK_IDENTIFICADOR '=' expressao { 
+            Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
+            if(symbol == NULL){
+                printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
+                exit(ERR_UNDECLARED);
+            }
+            if(symbol->natureza != IDENTIFICADOR) {
+                printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
+                exit(ERR_FUNCTION);
+            }
             $$ = asd_new("=");
             asd_add_child($$, asd_new($1->valor)); 
             asd_add_child($$,$3); valor_lexico_free($1);
@@ -333,28 +342,28 @@ comando_controle_fluxo:
 expressao: expr7 { $$ = $1; };
 
 expr7: 
-    expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);}
+    expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
     | expr6 { $$ = $1; };
 
 expr6: 
-    expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3); }
+    expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
     | expr5 { $$ = $1; };
 
 expr5: 
-    expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3); }
-    | expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
+    | expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
     | expr4 { $$ = $1; };
 
 expr4: 
-    expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); }
-    | expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); }
-    | expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); }
-    | expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); }
+    expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
+    | expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
+    | expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
+    | expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
     | expr3 { $$ = $1; };
 
 expr3: 
-expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); }
-| expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); }
+expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
+| expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
 | expr2 { $$ = $1; };
 
 expr2: 

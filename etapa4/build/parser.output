@@ -1,0 +1,1650 @@
+Terminais sem uso na gramática
+
+    TK_ERRO
+
+
+Gramática
+
+    0 $accept: main $end
+
+    1 main: cria_escopo_global programa destroi_escopo_global
+
+    2 cria_escopo_global: ε
+
+    3 destroi_escopo_global: ε
+
+    4 empilha_tabela: ε
+
+    5 desempilha_tabela: ε
+
+    6 programa: lista_de_funcoes
+    7         | ε
+
+    8 lista_de_funcoes: funcao desempilha_tabela lista_de_funcoes
+    9                 | funcao
+
+   10 tipo: TK_PR_INT
+   11     | TK_PR_FLOAT
+
+   12 funcao: cabecalho corpo
+
+   13 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo
+   14          | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo
+
+   15 lista_de_parametros: lista_de_parametros TK_OC_OR parametro
+   16                    | parametro
+
+   17 parametro: TK_IDENTIFICADOR '<' '-' tipo
+
+   18 corpo: bloco_comandos_Func
+
+   19 bloco_comandos_Func: '{' '}'
+   20                    | '{' sequencia_de_comandos '}'
+
+   21 bloco_comandos: '{' '}'
+   22               | '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}'
+
+   23 sequencia_de_comandos: comando_simples ';'
+   24                      | comando_simples ';' sequencia_de_comandos
+   25                      | declaracao_variavel ';' sequencia_de_comandos
+   26                      | declaracao_variavel ';'
+
+   27 comando_simples: bloco_comandos
+   28                | comando_atribuicao
+   29                | chamada_funcao
+   30                | comando_retorno
+   31                | comando_controle_fluxo
+
+   32 declaracao_variavel: tipo lista_de_identificadores
+
+   33 lista_de_identificadores: identificador ',' lista_de_identificadores
+   34                         | identificador
+
+   35 identificador: TK_IDENTIFICADOR
+   36              | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT
+   37              | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT
+
+   38 comando_atribuicao: TK_IDENTIFICADOR '=' expressao
+
+   39 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
+
+   40 lista_argumentos: expressao ',' lista_argumentos
+   41                 | expressao
+
+   42 comando_retorno: TK_PR_RETURN expressao
+
+   43 comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos
+   44                       | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos
+   45                       | TK_PR_WHILE '(' expressao ')' bloco_comandos
+
+   46 expressao: expr7
+
+   47 expr7: expr7 TK_OC_OR expr6
+   48      | expr6
+
+   49 expr6: expr6 TK_OC_AND expr5
+   50      | expr5
+
+   51 expr5: expr5 TK_OC_NE expr4
+   52      | expr5 TK_OC_EQ expr4
+   53      | expr4
+
+   54 expr4: expr4 '<' expr3
+   55      | expr4 '>' expr3
+   56      | expr4 TK_OC_LE expr3
+   57      | expr4 TK_OC_GE expr3
+   58      | expr3
+
+   59 expr3: expr3 '+' expr2
+   60      | expr3 '-' expr2
+   61      | expr2
+
+   62 expr2: expr2 '*' expr1
+   63      | expr2 '/' expr1
+   64      | expr2 '%' expr1
+   65      | expr1
+
+   66 expr1: '-' expr1
+   67      | '!' expr1
+   68      | TK_LIT_FLOAT
+   69      | TK_LIT_INT
+   70      | chamada_funcao
+   71      | '(' expressao ')'
+   72      | TK_IDENTIFICADOR
+
+
+Terminais, com as regras onde eles aparecem
+
+    $end (0) 0
+    '!' (33) 67
+    '%' (37) 64
+    '(' (40) 39 43 44 45 71
+    ')' (41) 39 43 44 45 71
+    '*' (42) 62
+    '+' (43) 59
+    ',' (44) 33 40
+    '-' (45) 17 60 66
+    '/' (47) 63
+    ';' (59) 23 24 25 26
+    '<' (60) 17 54
+    '=' (61) 13 14 38
+    '>' (62) 13 14 55
+    '{' (123) 19 20 21 22
+    '}' (125) 19 20 21 22
+    error (256)
+    TK_PR_INT (258) 10
+    TK_PR_FLOAT (259) 11
+    TK_PR_IF (260) 43 44
+    TK_PR_ELSE (261) 44
+    TK_PR_WHILE (262) 45
+    TK_PR_RETURN (263) 42
+    TK_OC_LE (264) 36 37 56
+    TK_OC_GE (265) 57
+    TK_OC_EQ (266) 52
+    TK_OC_NE (267) 51
+    TK_OC_AND (268) 49
+    TK_OC_OR (269) 15 47
+    TK_IDENTIFICADOR <valor_lexico> (270) 13 14 17 35 36 37 38 39 72
+    TK_LIT_INT <valor_lexico> (271) 37 69
+    TK_LIT_FLOAT <valor_lexico> (272) 36 68
+    TK_ERRO (273)
+
+
+Não terminais com as regras onde eles aparecem
+
+    $accept (34)
+        à esquerda: 0
+    main (35)
+        à esquerda: 1
+        à direita: 0
+    cria_escopo_global (36)
+        à esquerda: 2
+        à direita: 1
+    destroi_escopo_global (37)
+        à esquerda: 3
+        à direita: 1
+    empilha_tabela (38)
+        à esquerda: 4
+        à direita: 13 14 22
+    desempilha_tabela (39)
+        à esquerda: 5
+        à direita: 8 22
+    programa <arvore> (40)
+        à esquerda: 6 7
+        à direita: 1
+    lista_de_funcoes <arvore> (41)
+        à esquerda: 8 9
+        à direita: 6 8
+    tipo <tiposvar> (42)
+        à esquerda: 10 11
+        à direita: 13 14 17 32
+    funcao <arvore> (43)
+        à esquerda: 12
+        à direita: 8 9
+    cabecalho <arvore> (44)
+        à esquerda: 13 14
+        à direita: 12
+    lista_de_parametros <arvore> (45)
+        à esquerda: 15 16
+        à direita: 13 15
+    parametro <arvore> (46)
+        à esquerda: 17
+        à direita: 15 16
+    corpo <arvore> (47)
+        à esquerda: 18
+        à direita: 12
+    bloco_comandos_Func <arvore> (48)
+        à esquerda: 19 20
+        à direita: 18
+    bloco_comandos <arvore> (49)
+        à esquerda: 21 22
+        à direita: 27 43 44 45
+    sequencia_de_comandos <arvore> (50)
+        à esquerda: 23 24 25 26
+        à direita: 20 22 24 25
+    comando_simples <arvore> (51)
+        à esquerda: 27 28 29 30 31
+        à direita: 23 24
+    declaracao_variavel <arvore> (52)
+        à esquerda: 32
+        à direita: 25 26
+    lista_de_identificadores <arvore> (53)
+        à esquerda: 33 34
+        à direita: 32 33
+    identificador <arvore> (54)
+        à esquerda: 35 36 37
+        à direita: 33 34
+    comando_atribuicao <arvore> (55)
+        à esquerda: 38
+        à direita: 28
+    chamada_funcao <arvore> (56)
+        à esquerda: 39
+        à direita: 29 70
+    lista_argumentos <arvore> (57)
+        à esquerda: 40 41
+        à direita: 39 40
+    comando_retorno <arvore> (58)
+        à esquerda: 42
+        à direita: 30
+    comando_controle_fluxo <arvore> (59)
+        à esquerda: 43 44 45
+        à direita: 31
+    expressao <arvore> (60)
+        à esquerda: 46
+        à direita: 38 40 41 42 43 44 45 71
+    expr7 <arvore> (61)
+        à esquerda: 47 48
+        à direita: 46 47
+    expr6 <arvore> (62)
+        à esquerda: 49 50
+        à direita: 47 48 49
+    expr5 <arvore> (63)
+        à esquerda: 51 52 53
+        à direita: 49 50 51 52
+    expr4 <arvore> (64)
+        à esquerda: 54 55 56 57 58
+        à direita: 51 52 53 54 55 56 57
+    expr3 <arvore> (65)
+        à esquerda: 59 60 61
+        à direita: 54 55 56 57 58 59 60
+    expr2 <arvore> (66)
+        à esquerda: 62 63 64 65
+        à direita: 59 60 61 62 63 64
+    expr1 <arvore> (67)
+        à esquerda: 66 67 68 69 70 71 72
+        à direita: 62 63 64 65 66 67
+
+
+Estado 0
+
+    0 $accept: • main $end
+
+    $padrão  reduzir usando a regra 2 (cria_escopo_global)
+
+    main                ir ao estado 1
+    cria_escopo_global  ir ao estado 2
+
+
+Estado 1
+
+    0 $accept: main • $end
+
+    $end  deslocar, e ir ao estado 3
+
+
+Estado 2
+
+    1 main: cria_escopo_global • programa destroi_escopo_global
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 4
+
+    $padrão  reduzir usando a regra 7 (programa)
+
+    programa          ir ao estado 5
+    lista_de_funcoes  ir ao estado 6
+    funcao            ir ao estado 7
+    cabecalho         ir ao estado 8
+
+
+Estado 3
+
+    0 $accept: main $end •
+
+    $padrão  aceitar
+
+
+Estado 4
+
+   13 cabecalho: TK_IDENTIFICADOR • '=' empilha_tabela lista_de_parametros '>' tipo
+   14          | TK_IDENTIFICADOR • '=' empilha_tabela '>' tipo
+
+    '='  deslocar, e ir ao estado 9
+
+
+Estado 5
+
+    1 main: cria_escopo_global programa • destroi_escopo_global
+
+    $padrão  reduzir usando a regra 3 (destroi_escopo_global)
+
+    destroi_escopo_global  ir ao estado 10
+
+
+Estado 6
+
+    6 programa: lista_de_funcoes •
+
+    $padrão  reduzir usando a regra 6 (programa)
+
+
+Estado 7
+
+    8 lista_de_funcoes: funcao • desempilha_tabela lista_de_funcoes
+    9                 | funcao •
+
+    $end     reduzir usando a regra 9 (lista_de_funcoes)
+    $padrão  reduzir usando a regra 5 (desempilha_tabela)
+
+    desempilha_tabela  ir ao estado 11
+
+
+Estado 8
+
+   12 funcao: cabecalho • corpo
+
+    '{'  deslocar, e ir ao estado 12
+
+    corpo                ir ao estado 13
+    bloco_comandos_Func  ir ao estado 14
+
+
+Estado 9
+
+   13 cabecalho: TK_IDENTIFICADOR '=' • empilha_tabela lista_de_parametros '>' tipo
+   14          | TK_IDENTIFICADOR '=' • empilha_tabela '>' tipo
+
+    $padrão  reduzir usando a regra 4 (empilha_tabela)
+
+    empilha_tabela  ir ao estado 15
+
+
+Estado 10
+
+    1 main: cria_escopo_global programa destroi_escopo_global •
+
+    $padrão  reduzir usando a regra 1 (main)
+
+
+Estado 11
+
+    8 lista_de_funcoes: funcao desempilha_tabela • lista_de_funcoes
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 4
+
+    lista_de_funcoes  ir ao estado 16
+    funcao            ir ao estado 7
+    cabecalho         ir ao estado 8
+
+
+Estado 12
+
+   19 bloco_comandos_Func: '{' • '}'
+   20                    | '{' • sequencia_de_comandos '}'
+
+    TK_PR_INT         deslocar, e ir ao estado 17
+    TK_PR_FLOAT       deslocar, e ir ao estado 18
+    TK_PR_IF          deslocar, e ir ao estado 19
+    TK_PR_WHILE       deslocar, e ir ao estado 20
+    TK_PR_RETURN      deslocar, e ir ao estado 21
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 22
+    '{'               deslocar, e ir ao estado 23
+    '}'               deslocar, e ir ao estado 24
+
+    tipo                    ir ao estado 25
+    bloco_comandos          ir ao estado 26
+    sequencia_de_comandos   ir ao estado 27
+    comando_simples         ir ao estado 28
+    declaracao_variavel     ir ao estado 29
+    comando_atribuicao      ir ao estado 30
+    chamada_funcao          ir ao estado 31
+    comando_retorno         ir ao estado 32
+    comando_controle_fluxo  ir ao estado 33
+
+
+Estado 13
+
+   12 funcao: cabecalho corpo •
+
+    $padrão  reduzir usando a regra 12 (funcao)
+
+
+Estado 14
+
+   18 corpo: bloco_comandos_Func •
+
+    $padrão  reduzir usando a regra 18 (corpo)
+
+
+Estado 15
+
+   13 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela • lista_de_parametros '>' tipo
+   14          | TK_IDENTIFICADOR '=' empilha_tabela • '>' tipo
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 34
+    '>'               deslocar, e ir ao estado 35
+
+    lista_de_parametros  ir ao estado 36
+    parametro            ir ao estado 37
+
+
+Estado 16
+
+    8 lista_de_funcoes: funcao desempilha_tabela lista_de_funcoes •
+
+    $padrão  reduzir usando a regra 8 (lista_de_funcoes)
+
+
+Estado 17
+
+   10 tipo: TK_PR_INT •
+
+    $padrão  reduzir usando a regra 10 (tipo)
+
+
+Estado 18
+
+   11 tipo: TK_PR_FLOAT •
+
+    $padrão  reduzir usando a regra 11 (tipo)
+
+
+Estado 19
+
+   43 comando_controle_fluxo: TK_PR_IF • '(' expressao ')' bloco_comandos
+   44                       | TK_PR_IF • '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos
+
+    '('  deslocar, e ir ao estado 38
+
+
+Estado 20
+
+   45 comando_controle_fluxo: TK_PR_WHILE • '(' expressao ')' bloco_comandos
+
+    '('  deslocar, e ir ao estado 39
+
+
+Estado 21
+
+   42 comando_retorno: TK_PR_RETURN • expressao
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expressao       ir ao estado 47
+    expr7           ir ao estado 48
+    expr6           ir ao estado 49
+    expr5           ir ao estado 50
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 22
+
+   38 comando_atribuicao: TK_IDENTIFICADOR • '=' expressao
+   39 chamada_funcao: TK_IDENTIFICADOR • '(' lista_argumentos ')'
+
+    '='  deslocar, e ir ao estado 55
+    '('  deslocar, e ir ao estado 56
+
+
+Estado 23
+
+   21 bloco_comandos: '{' • '}'
+   22               | '{' • empilha_tabela sequencia_de_comandos desempilha_tabela '}'
+
+    '}'  deslocar, e ir ao estado 57
+
+    $padrão  reduzir usando a regra 4 (empilha_tabela)
+
+    empilha_tabela  ir ao estado 58
+
+
+Estado 24
+
+   19 bloco_comandos_Func: '{' '}' •
+
+    $padrão  reduzir usando a regra 19 (bloco_comandos_Func)
+
+
+Estado 25
+
+   32 declaracao_variavel: tipo • lista_de_identificadores
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 59
+
+    lista_de_identificadores  ir ao estado 60
+    identificador             ir ao estado 61
+
+
+Estado 26
+
+   27 comando_simples: bloco_comandos •
+
+    $padrão  reduzir usando a regra 27 (comando_simples)
+
+
+Estado 27
+
+   20 bloco_comandos_Func: '{' sequencia_de_comandos • '}'
+
+    '}'  deslocar, e ir ao estado 62
+
+
+Estado 28
+
+   23 sequencia_de_comandos: comando_simples • ';'
+   24                      | comando_simples • ';' sequencia_de_comandos
+
+    ';'  deslocar, e ir ao estado 63
+
+
+Estado 29
+
+   25 sequencia_de_comandos: declaracao_variavel • ';' sequencia_de_comandos
+   26                      | declaracao_variavel • ';'
+
+    ';'  deslocar, e ir ao estado 64
+
+
+Estado 30
+
+   28 comando_simples: comando_atribuicao •
+
+    $padrão  reduzir usando a regra 28 (comando_simples)
+
+
+Estado 31
+
+   29 comando_simples: chamada_funcao •
+
+    $padrão  reduzir usando a regra 29 (comando_simples)
+
+
+Estado 32
+
+   30 comando_simples: comando_retorno •
+
+    $padrão  reduzir usando a regra 30 (comando_simples)
+
+
+Estado 33
+
+   31 comando_simples: comando_controle_fluxo •
+
+    $padrão  reduzir usando a regra 31 (comando_simples)
+
+
+Estado 34
+
+   17 parametro: TK_IDENTIFICADOR • '<' '-' tipo
+
+    '<'  deslocar, e ir ao estado 65
+
+
+Estado 35
+
+   14 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela '>' • tipo
+
+    TK_PR_INT    deslocar, e ir ao estado 17
+    TK_PR_FLOAT  deslocar, e ir ao estado 18
+
+    tipo  ir ao estado 66
+
+
+Estado 36
+
+   13 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros • '>' tipo
+   15 lista_de_parametros: lista_de_parametros • TK_OC_OR parametro
+
+    TK_OC_OR  deslocar, e ir ao estado 67
+    '>'       deslocar, e ir ao estado 68
+
+
+Estado 37
+
+   16 lista_de_parametros: parametro •
+
+    $padrão  reduzir usando a regra 16 (lista_de_parametros)
+
+
+Estado 38
+
+   43 comando_controle_fluxo: TK_PR_IF '(' • expressao ')' bloco_comandos
+   44                       | TK_PR_IF '(' • expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expressao       ir ao estado 69
+    expr7           ir ao estado 48
+    expr6           ir ao estado 49
+    expr5           ir ao estado 50
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 39
+
+   45 comando_controle_fluxo: TK_PR_WHILE '(' • expressao ')' bloco_comandos
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expressao       ir ao estado 70
+    expr7           ir ao estado 48
+    expr6           ir ao estado 49
+    expr5           ir ao estado 50
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 40
+
+   39 chamada_funcao: TK_IDENTIFICADOR • '(' lista_argumentos ')'
+   72 expr1: TK_IDENTIFICADOR •
+
+    '('  deslocar, e ir ao estado 56
+
+    $padrão  reduzir usando a regra 72 (expr1)
+
+
+Estado 41
+
+   69 expr1: TK_LIT_INT •
+
+    $padrão  reduzir usando a regra 69 (expr1)
+
+
+Estado 42
+
+   68 expr1: TK_LIT_FLOAT •
+
+    $padrão  reduzir usando a regra 68 (expr1)
+
+
+Estado 43
+
+   66 expr1: '-' • expr1
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr1           ir ao estado 71
+
+
+Estado 44
+
+   71 expr1: '(' • expressao ')'
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expressao       ir ao estado 72
+    expr7           ir ao estado 48
+    expr6           ir ao estado 49
+    expr5           ir ao estado 50
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 45
+
+   67 expr1: '!' • expr1
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr1           ir ao estado 73
+
+
+Estado 46
+
+   70 expr1: chamada_funcao •
+
+    $padrão  reduzir usando a regra 70 (expr1)
+
+
+Estado 47
+
+   42 comando_retorno: TK_PR_RETURN expressao •
+
+    $padrão  reduzir usando a regra 42 (comando_retorno)
+
+
+Estado 48
+
+   46 expressao: expr7 •
+   47 expr7: expr7 • TK_OC_OR expr6
+
+    TK_OC_OR  deslocar, e ir ao estado 74
+
+    $padrão  reduzir usando a regra 46 (expressao)
+
+
+Estado 49
+
+   48 expr7: expr6 •
+   49 expr6: expr6 • TK_OC_AND expr5
+
+    TK_OC_AND  deslocar, e ir ao estado 75
+
+    $padrão  reduzir usando a regra 48 (expr7)
+
+
+Estado 50
+
+   50 expr6: expr5 •
+   51 expr5: expr5 • TK_OC_NE expr4
+   52      | expr5 • TK_OC_EQ expr4
+
+    TK_OC_EQ  deslocar, e ir ao estado 76
+    TK_OC_NE  deslocar, e ir ao estado 77
+
+    $padrão  reduzir usando a regra 50 (expr6)
+
+
+Estado 51
+
+   53 expr5: expr4 •
+   54 expr4: expr4 • '<' expr3
+   55      | expr4 • '>' expr3
+   56      | expr4 • TK_OC_LE expr3
+   57      | expr4 • TK_OC_GE expr3
+
+    TK_OC_LE  deslocar, e ir ao estado 78
+    TK_OC_GE  deslocar, e ir ao estado 79
+    '>'       deslocar, e ir ao estado 80
+    '<'       deslocar, e ir ao estado 81
+
+    $padrão  reduzir usando a regra 53 (expr5)
+
+
+Estado 52
+
+   58 expr4: expr3 •
+   59 expr3: expr3 • '+' expr2
+   60      | expr3 • '-' expr2
+
+    '-'  deslocar, e ir ao estado 82
+    '+'  deslocar, e ir ao estado 83
+
+    $padrão  reduzir usando a regra 58 (expr4)
+
+
+Estado 53
+
+   61 expr3: expr2 •
+   62 expr2: expr2 • '*' expr1
+   63      | expr2 • '/' expr1
+   64      | expr2 • '%' expr1
+
+    '*'  deslocar, e ir ao estado 84
+    '/'  deslocar, e ir ao estado 85
+    '%'  deslocar, e ir ao estado 86
+
+    $padrão  reduzir usando a regra 61 (expr3)
+
+
+Estado 54
+
+   65 expr2: expr1 •
+
+    $padrão  reduzir usando a regra 65 (expr2)
+
+
+Estado 55
+
+   38 comando_atribuicao: TK_IDENTIFICADOR '=' • expressao
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expressao       ir ao estado 87
+    expr7           ir ao estado 48
+    expr6           ir ao estado 49
+    expr5           ir ao estado 50
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 56
+
+   39 chamada_funcao: TK_IDENTIFICADOR '(' • lista_argumentos ')'
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao    ir ao estado 46
+    lista_argumentos  ir ao estado 88
+    expressao         ir ao estado 89
+    expr7             ir ao estado 48
+    expr6             ir ao estado 49
+    expr5             ir ao estado 50
+    expr4             ir ao estado 51
+    expr3             ir ao estado 52
+    expr2             ir ao estado 53
+    expr1             ir ao estado 54
+
+
+Estado 57
+
+   21 bloco_comandos: '{' '}' •
+
+    $padrão  reduzir usando a regra 21 (bloco_comandos)
+
+
+Estado 58
+
+   22 bloco_comandos: '{' empilha_tabela • sequencia_de_comandos desempilha_tabela '}'
+
+    TK_PR_INT         deslocar, e ir ao estado 17
+    TK_PR_FLOAT       deslocar, e ir ao estado 18
+    TK_PR_IF          deslocar, e ir ao estado 19
+    TK_PR_WHILE       deslocar, e ir ao estado 20
+    TK_PR_RETURN      deslocar, e ir ao estado 21
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 22
+    '{'               deslocar, e ir ao estado 23
+
+    tipo                    ir ao estado 25
+    bloco_comandos          ir ao estado 26
+    sequencia_de_comandos   ir ao estado 90
+    comando_simples         ir ao estado 28
+    declaracao_variavel     ir ao estado 29
+    comando_atribuicao      ir ao estado 30
+    chamada_funcao          ir ao estado 31
+    comando_retorno         ir ao estado 32
+    comando_controle_fluxo  ir ao estado 33
+
+
+Estado 59
+
+   35 identificador: TK_IDENTIFICADOR •
+   36              | TK_IDENTIFICADOR • TK_OC_LE TK_LIT_FLOAT
+   37              | TK_IDENTIFICADOR • TK_OC_LE TK_LIT_INT
+
+    TK_OC_LE  deslocar, e ir ao estado 91
+
+    $padrão  reduzir usando a regra 35 (identificador)
+
+
+Estado 60
+
+   32 declaracao_variavel: tipo lista_de_identificadores •
+
+    $padrão  reduzir usando a regra 32 (declaracao_variavel)
+
+
+Estado 61
+
+   33 lista_de_identificadores: identificador • ',' lista_de_identificadores
+   34                         | identificador •
+
+    ','  deslocar, e ir ao estado 92
+
+    $padrão  reduzir usando a regra 34 (lista_de_identificadores)
+
+
+Estado 62
+
+   20 bloco_comandos_Func: '{' sequencia_de_comandos '}' •
+
+    $padrão  reduzir usando a regra 20 (bloco_comandos_Func)
+
+
+Estado 63
+
+   23 sequencia_de_comandos: comando_simples ';' •
+   24                      | comando_simples ';' • sequencia_de_comandos
+
+    TK_PR_INT         deslocar, e ir ao estado 17
+    TK_PR_FLOAT       deslocar, e ir ao estado 18
+    TK_PR_IF          deslocar, e ir ao estado 19
+    TK_PR_WHILE       deslocar, e ir ao estado 20
+    TK_PR_RETURN      deslocar, e ir ao estado 21
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 22
+    '{'               deslocar, e ir ao estado 23
+
+    $padrão  reduzir usando a regra 23 (sequencia_de_comandos)
+
+    tipo                    ir ao estado 25
+    bloco_comandos          ir ao estado 26
+    sequencia_de_comandos   ir ao estado 93
+    comando_simples         ir ao estado 28
+    declaracao_variavel     ir ao estado 29
+    comando_atribuicao      ir ao estado 30
+    chamada_funcao          ir ao estado 31
+    comando_retorno         ir ao estado 32
+    comando_controle_fluxo  ir ao estado 33
+
+
+Estado 64
+
+   25 sequencia_de_comandos: declaracao_variavel ';' • sequencia_de_comandos
+   26                      | declaracao_variavel ';' •
+
+    TK_PR_INT         deslocar, e ir ao estado 17
+    TK_PR_FLOAT       deslocar, e ir ao estado 18
+    TK_PR_IF          deslocar, e ir ao estado 19
+    TK_PR_WHILE       deslocar, e ir ao estado 20
+    TK_PR_RETURN      deslocar, e ir ao estado 21
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 22
+    '{'               deslocar, e ir ao estado 23
+
+    $padrão  reduzir usando a regra 26 (sequencia_de_comandos)
+
+    tipo                    ir ao estado 25
+    bloco_comandos          ir ao estado 26
+    sequencia_de_comandos   ir ao estado 94
+    comando_simples         ir ao estado 28
+    declaracao_variavel     ir ao estado 29
+    comando_atribuicao      ir ao estado 30
+    chamada_funcao          ir ao estado 31
+    comando_retorno         ir ao estado 32
+    comando_controle_fluxo  ir ao estado 33
+
+
+Estado 65
+
+   17 parametro: TK_IDENTIFICADOR '<' • '-' tipo
+
+    '-'  deslocar, e ir ao estado 95
+
+
+Estado 66
+
+   14 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela '>' tipo •
+
+    $padrão  reduzir usando a regra 14 (cabecalho)
+
+
+Estado 67
+
+   15 lista_de_parametros: lista_de_parametros TK_OC_OR • parametro
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 34
+
+    parametro  ir ao estado 96
+
+
+Estado 68
+
+   13 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' • tipo
+
+    TK_PR_INT    deslocar, e ir ao estado 17
+    TK_PR_FLOAT  deslocar, e ir ao estado 18
+
+    tipo  ir ao estado 97
+
+
+Estado 69
+
+   43 comando_controle_fluxo: TK_PR_IF '(' expressao • ')' bloco_comandos
+   44                       | TK_PR_IF '(' expressao • ')' bloco_comandos TK_PR_ELSE bloco_comandos
+
+    ')'  deslocar, e ir ao estado 98
+
+
+Estado 70
+
+   45 comando_controle_fluxo: TK_PR_WHILE '(' expressao • ')' bloco_comandos
+
+    ')'  deslocar, e ir ao estado 99
+
+
+Estado 71
+
+   66 expr1: '-' expr1 •
+
+    $padrão  reduzir usando a regra 66 (expr1)
+
+
+Estado 72
+
+   71 expr1: '(' expressao • ')'
+
+    ')'  deslocar, e ir ao estado 100
+
+
+Estado 73
+
+   67 expr1: '!' expr1 •
+
+    $padrão  reduzir usando a regra 67 (expr1)
+
+
+Estado 74
+
+   47 expr7: expr7 TK_OC_OR • expr6
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr6           ir ao estado 101
+    expr5           ir ao estado 50
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 75
+
+   49 expr6: expr6 TK_OC_AND • expr5
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr5           ir ao estado 102
+    expr4           ir ao estado 51
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 76
+
+   52 expr5: expr5 TK_OC_EQ • expr4
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr4           ir ao estado 103
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 77
+
+   51 expr5: expr5 TK_OC_NE • expr4
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr4           ir ao estado 104
+    expr3           ir ao estado 52
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 78
+
+   56 expr4: expr4 TK_OC_LE • expr3
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr3           ir ao estado 105
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 79
+
+   57 expr4: expr4 TK_OC_GE • expr3
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr3           ir ao estado 106
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 80
+
+   55 expr4: expr4 '>' • expr3
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr3           ir ao estado 107
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 81
+
+   54 expr4: expr4 '<' • expr3
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr3           ir ao estado 108
+    expr2           ir ao estado 53
+    expr1           ir ao estado 54
+
+
+Estado 82
+
+   60 expr3: expr3 '-' • expr2
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr2           ir ao estado 109
+    expr1           ir ao estado 54
+
+
+Estado 83
+
+   59 expr3: expr3 '+' • expr2
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr2           ir ao estado 110
+    expr1           ir ao estado 54
+
+
+Estado 84
+
+   62 expr2: expr2 '*' • expr1
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr1           ir ao estado 111
+
+
+Estado 85
+
+   63 expr2: expr2 '/' • expr1
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr1           ir ao estado 112
+
+
+Estado 86
+
+   64 expr2: expr2 '%' • expr1
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao  ir ao estado 46
+    expr1           ir ao estado 113
+
+
+Estado 87
+
+   38 comando_atribuicao: TK_IDENTIFICADOR '=' expressao •
+
+    $padrão  reduzir usando a regra 38 (comando_atribuicao)
+
+
+Estado 88
+
+   39 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos • ')'
+
+    ')'  deslocar, e ir ao estado 114
+
+
+Estado 89
+
+   40 lista_argumentos: expressao • ',' lista_argumentos
+   41                 | expressao •
+
+    ','  deslocar, e ir ao estado 115
+
+    $padrão  reduzir usando a regra 41 (lista_argumentos)
+
+
+Estado 90
+
+   22 bloco_comandos: '{' empilha_tabela sequencia_de_comandos • desempilha_tabela '}'
+
+    $padrão  reduzir usando a regra 5 (desempilha_tabela)
+
+    desempilha_tabela  ir ao estado 116
+
+
+Estado 91
+
+   36 identificador: TK_IDENTIFICADOR TK_OC_LE • TK_LIT_FLOAT
+   37              | TK_IDENTIFICADOR TK_OC_LE • TK_LIT_INT
+
+    TK_LIT_INT    deslocar, e ir ao estado 117
+    TK_LIT_FLOAT  deslocar, e ir ao estado 118
+
+
+Estado 92
+
+   33 lista_de_identificadores: identificador ',' • lista_de_identificadores
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 59
+
+    lista_de_identificadores  ir ao estado 119
+    identificador             ir ao estado 61
+
+
+Estado 93
+
+   24 sequencia_de_comandos: comando_simples ';' sequencia_de_comandos •
+
+    $padrão  reduzir usando a regra 24 (sequencia_de_comandos)
+
+
+Estado 94
+
+   25 sequencia_de_comandos: declaracao_variavel ';' sequencia_de_comandos •
+
+    $padrão  reduzir usando a regra 25 (sequencia_de_comandos)
+
+
+Estado 95
+
+   17 parametro: TK_IDENTIFICADOR '<' '-' • tipo
+
+    TK_PR_INT    deslocar, e ir ao estado 17
+    TK_PR_FLOAT  deslocar, e ir ao estado 18
+
+    tipo  ir ao estado 120
+
+
+Estado 96
+
+   15 lista_de_parametros: lista_de_parametros TK_OC_OR parametro •
+
+    $padrão  reduzir usando a regra 15 (lista_de_parametros)
+
+
+Estado 97
+
+   13 cabecalho: TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo •
+
+    $padrão  reduzir usando a regra 13 (cabecalho)
+
+
+Estado 98
+
+   43 comando_controle_fluxo: TK_PR_IF '(' expressao ')' • bloco_comandos
+   44                       | TK_PR_IF '(' expressao ')' • bloco_comandos TK_PR_ELSE bloco_comandos
+
+    '{'  deslocar, e ir ao estado 23
+
+    bloco_comandos  ir ao estado 121
+
+
+Estado 99
+
+   45 comando_controle_fluxo: TK_PR_WHILE '(' expressao ')' • bloco_comandos
+
+    '{'  deslocar, e ir ao estado 23
+
+    bloco_comandos  ir ao estado 122
+
+
+Estado 100
+
+   71 expr1: '(' expressao ')' •
+
+    $padrão  reduzir usando a regra 71 (expr1)
+
+
+Estado 101
+
+   47 expr7: expr7 TK_OC_OR expr6 •
+   49 expr6: expr6 • TK_OC_AND expr5
+
+    TK_OC_AND  deslocar, e ir ao estado 75
+
+    $padrão  reduzir usando a regra 47 (expr7)
+
+
+Estado 102
+
+   49 expr6: expr6 TK_OC_AND expr5 •
+   51 expr5: expr5 • TK_OC_NE expr4
+   52      | expr5 • TK_OC_EQ expr4
+
+    TK_OC_EQ  deslocar, e ir ao estado 76
+    TK_OC_NE  deslocar, e ir ao estado 77
+
+    $padrão  reduzir usando a regra 49 (expr6)
+
+
+Estado 103
+
+   52 expr5: expr5 TK_OC_EQ expr4 •
+   54 expr4: expr4 • '<' expr3
+   55      | expr4 • '>' expr3
+   56      | expr4 • TK_OC_LE expr3
+   57      | expr4 • TK_OC_GE expr3
+
+    TK_OC_LE  deslocar, e ir ao estado 78
+    TK_OC_GE  deslocar, e ir ao estado 79
+    '>'       deslocar, e ir ao estado 80
+    '<'       deslocar, e ir ao estado 81
+
+    $padrão  reduzir usando a regra 52 (expr5)
+
+
+Estado 104
+
+   51 expr5: expr5 TK_OC_NE expr4 •
+   54 expr4: expr4 • '<' expr3
+   55      | expr4 • '>' expr3
+   56      | expr4 • TK_OC_LE expr3
+   57      | expr4 • TK_OC_GE expr3
+
+    TK_OC_LE  deslocar, e ir ao estado 78
+    TK_OC_GE  deslocar, e ir ao estado 79
+    '>'       deslocar, e ir ao estado 80
+    '<'       deslocar, e ir ao estado 81
+
+    $padrão  reduzir usando a regra 51 (expr5)
+
+
+Estado 105
+
+   56 expr4: expr4 TK_OC_LE expr3 •
+   59 expr3: expr3 • '+' expr2
+   60      | expr3 • '-' expr2
+
+    '-'  deslocar, e ir ao estado 82
+    '+'  deslocar, e ir ao estado 83
+
+    $padrão  reduzir usando a regra 56 (expr4)
+
+
+Estado 106
+
+   57 expr4: expr4 TK_OC_GE expr3 •
+   59 expr3: expr3 • '+' expr2
+   60      | expr3 • '-' expr2
+
+    '-'  deslocar, e ir ao estado 82
+    '+'  deslocar, e ir ao estado 83
+
+    $padrão  reduzir usando a regra 57 (expr4)
+
+
+Estado 107
+
+   55 expr4: expr4 '>' expr3 •
+   59 expr3: expr3 • '+' expr2
+   60      | expr3 • '-' expr2
+
+    '-'  deslocar, e ir ao estado 82
+    '+'  deslocar, e ir ao estado 83
+
+    $padrão  reduzir usando a regra 55 (expr4)
+
+
+Estado 108
+
+   54 expr4: expr4 '<' expr3 •
+   59 expr3: expr3 • '+' expr2
+   60      | expr3 • '-' expr2
+
+    '-'  deslocar, e ir ao estado 82
+    '+'  deslocar, e ir ao estado 83
+
+    $padrão  reduzir usando a regra 54 (expr4)
+
+
+Estado 109
+
+   60 expr3: expr3 '-' expr2 •
+   62 expr2: expr2 • '*' expr1
+   63      | expr2 • '/' expr1
+   64      | expr2 • '%' expr1
+
+    '*'  deslocar, e ir ao estado 84
+    '/'  deslocar, e ir ao estado 85
+    '%'  deslocar, e ir ao estado 86
+
+    $padrão  reduzir usando a regra 60 (expr3)
+
+
+Estado 110
+
+   59 expr3: expr3 '+' expr2 •
+   62 expr2: expr2 • '*' expr1
+   63      | expr2 • '/' expr1
+   64      | expr2 • '%' expr1
+
+    '*'  deslocar, e ir ao estado 84
+    '/'  deslocar, e ir ao estado 85
+    '%'  deslocar, e ir ao estado 86
+
+    $padrão  reduzir usando a regra 59 (expr3)
+
+
+Estado 111
+
+   62 expr2: expr2 '*' expr1 •
+
+    $padrão  reduzir usando a regra 62 (expr2)
+
+
+Estado 112
+
+   63 expr2: expr2 '/' expr1 •
+
+    $padrão  reduzir usando a regra 63 (expr2)
+
+
+Estado 113
+
+   64 expr2: expr2 '%' expr1 •
+
+    $padrão  reduzir usando a regra 64 (expr2)
+
+
+Estado 114
+
+   39 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')' •
+
+    $padrão  reduzir usando a regra 39 (chamada_funcao)
+
+
+Estado 115
+
+   40 lista_argumentos: expressao ',' • lista_argumentos
+
+    TK_IDENTIFICADOR  deslocar, e ir ao estado 40
+    TK_LIT_INT        deslocar, e ir ao estado 41
+    TK_LIT_FLOAT      deslocar, e ir ao estado 42
+    '-'               deslocar, e ir ao estado 43
+    '('               deslocar, e ir ao estado 44
+    '!'               deslocar, e ir ao estado 45
+
+    chamada_funcao    ir ao estado 46
+    lista_argumentos  ir ao estado 123
+    expressao         ir ao estado 89
+    expr7             ir ao estado 48
+    expr6             ir ao estado 49
+    expr5             ir ao estado 50
+    expr4             ir ao estado 51
+    expr3             ir ao estado 52
+    expr2             ir ao estado 53
+    expr1             ir ao estado 54
+
+
+Estado 116
+
+   22 bloco_comandos: '{' empilha_tabela sequencia_de_comandos desempilha_tabela • '}'
+
+    '}'  deslocar, e ir ao estado 124
+
+
+Estado 117
+
+   37 identificador: TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT •
+
+    $padrão  reduzir usando a regra 37 (identificador)
+
+
+Estado 118
+
+   36 identificador: TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT •
+
+    $padrão  reduzir usando a regra 36 (identificador)
+
+
+Estado 119
+
+   33 lista_de_identificadores: identificador ',' lista_de_identificadores •
+
+    $padrão  reduzir usando a regra 33 (lista_de_identificadores)
+
+
+Estado 120
+
+   17 parametro: TK_IDENTIFICADOR '<' '-' tipo •
+
+    $padrão  reduzir usando a regra 17 (parametro)
+
+
+Estado 121
+
+   43 comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos •
+   44                       | TK_PR_IF '(' expressao ')' bloco_comandos • TK_PR_ELSE bloco_comandos
+
+    TK_PR_ELSE  deslocar, e ir ao estado 125
+
+    $padrão  reduzir usando a regra 43 (comando_controle_fluxo)
+
+
+Estado 122
+
+   45 comando_controle_fluxo: TK_PR_WHILE '(' expressao ')' bloco_comandos •
+
+    $padrão  reduzir usando a regra 45 (comando_controle_fluxo)
+
+
+Estado 123
+
+   40 lista_argumentos: expressao ',' lista_argumentos •
+
+    $padrão  reduzir usando a regra 40 (lista_argumentos)
+
+
+Estado 124
+
+   22 bloco_comandos: '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' •
+
+    $padrão  reduzir usando a regra 22 (bloco_comandos)
+
+
+Estado 125
+
+   44 comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE • bloco_comandos
+
+    '{'  deslocar, e ir ao estado 23
+
+    bloco_comandos  ir ao estado 126
+
+
+Estado 126
+
+   44 comando_controle_fluxo: TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos •
+
+    $padrão  reduzir usando a regra 44 (comando_controle_fluxo)
