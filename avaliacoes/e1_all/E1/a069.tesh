@@ -1,0 +1,12 @@
+#! ./tesh
+! timeout 1
+$ ./main < tests/e1/i069
+> 1 TK_PR_INT [int]
+> 1 TK_IDENTIFICADOR [un_]
+> 1 TK_ESPECIAL [;]
+> 2 TK_PR_FLOAT [float]
+> 2 TK_IDENTIFICADOR [zebra_01]
+> 2 TK_ESPECIAL [;]
+> 3 TK_PR_INT [int]
+> 3 TK_IDENTIFICADOR [floa]
+> 3 TK_ERRO [T]

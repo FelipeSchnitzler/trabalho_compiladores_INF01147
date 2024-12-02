@@ -1,0 +1,6 @@
+#! ./tesh
+! timeout 1
+$ ./main < tests/e1/i070
+> 1 TK_IDENTIFICADOR [tab]
+> 3 TK_IDENTIFICADOR [tab2]
+

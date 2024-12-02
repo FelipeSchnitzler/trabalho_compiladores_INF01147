@@ -1,0 +1,12 @@
+//ERR_UNDECLARED
+f = > int {
+    int a;
+    {
+	{
+	   {
+	      g(a);
+ 	   };
+	};
+    };
+    return 0;
+}

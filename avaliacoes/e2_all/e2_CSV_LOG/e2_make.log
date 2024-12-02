@@ -1,0 +1,287 @@
+
+GrupoA
+
+~/GrupoA ~
+Group sent the binary already compiled :( , so remove it.
+removed 'etapa2'
+bison -d -Wcounterexamples parser.y
+gcc -Wall -g -lfl -c parser.tab.c parser.tab.h 
+flex scanner.l
+gcc -Wall -g -lfl -c lex.yy.c
+lex.yy.c:1361:16: warning: 'input' defined but not used [-Wunused-function]
+ 1361 |     static int input  (void)
+      |                ^~~~~
+lex.yy.c:1314:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1314 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -Wall -g -lfl -c main.c
+gcc -Wall -g -lfl parser.tab.o lex.yy.o main.o -o etapa2
+~
+
+GrupoB
+
+~/GrupoB ~
+Building the project in Release mode...
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found FLEX: /usr/bin/flex (found version "2.6.4")
+-- Found BISON: /usr/bin/bison (found version "3.8.2")
+-- Configuring done (0.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/user/GrupoB/build
+cmake --build build --config Release
+gmake[1]: Entering directory '/home/user/GrupoB/build'
+gmake[2]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 10%] [FLEX][Scanner] Building scanner with flex 2.6.4
+[ 20%] [BISON][Parser] Building parser with bison 3.8.2
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 30%] Building C object src/CMakeFiles/Utils.dir/utils.c.o
+[ 40%] Building C object src/CMakeFiles/Utils.dir/scanner.c.o
+[ 50%] Building C object src/CMakeFiles/Utils.dir/parser.tab.c.o
+[ 60%] Linking C static library libUtils.a
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[ 60%] Built target Utils
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 70%] Building C object src/CMakeFiles/Compiler.dir/main.c.o
+[ 80%] Linking C executable Compiler
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[ 80%] Built target Compiler
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 90%] Building C object tests/CMakeFiles/TestCompiler.dir/test_utils.c.o
+[100%] Linking C executable TestCompiler
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[100%] Built target TestCompiler
+gmake[2]: Leaving directory '/home/user/GrupoB/build'
+gmake[1]: Leaving directory '/home/user/GrupoB/build'
+Copying the executable to the current directory...
+cp build/src/Compiler etapa2
+~
+
+GrupoC
+
+~/GrupoC ~
+bison -d -o obj/parser.tab.c src/parser.y
+gcc -lfl -g -c src/main.c -o obj/main.o
+flex -o obj/lex.yy.c src/scanner.l
+gcc -lfl -g -c obj/lex.yy.c -o obj/lex.yy.o
+gcc -lfl -g -c obj/parser.tab.c -o obj/parser.tab.o
+gcc -lfl -g -o etapa2 obj/main.o obj/lex.yy.o obj/parser.tab.o
+~
+
+GrupoD
+
+~/GrupoD ~
+bison -d parser.y
+gcc -c parser.tab.c 
+flex scanner.l
+gcc -c lex.yy.c 
+gcc main.c -c
+gcc lex.yy.o parser.tab.o main.o -o etapa2
+~
+
+GrupoE
+
+~/GrupoE ~
+mkdir -p build
+mkdir -p logs
+bison -d -v -o src/parser.tab.c src/parser.y
+mv src/parser.tab.h include
+mv src/parser.output logs
+gcc -c -o build/main.o src/main.c -Iinclude
+gcc -c -o build/util.o src/util.c -Iinclude
+flex -o src/lex.yy.c src/scanner.l
+gcc -c -o build/lex.yy.o src/lex.yy.c -Iinclude
+gcc -c -o build/parser.tab.o src/parser.tab.c -Iinclude
+gcc -o etapa2 build/main.o build/util.o build/lex.yy.o build/parser.tab.o -Iinclude -lfl
+~
+
+GrupoF
+
+~/GrupoF ~
+bison -d parser.y -Wcounterexamples
+gcc -c parser.tab.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c main.c
+gcc -o etapa2 parser.tab.o lex.yy.o main.o
+~
+
+GrupoG
+
+~/GrupoG ~
+bison -o build/parser.tab.c  --header=include/parser.tab.h bison/parser.y
+bison/parser.y: warning: 3 shift/reduce conflicts [-Wconflicts-sr]
+bison/parser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+flex -o build/lex.yy.c flex/scanner.l
+gcc -Iinclude   -c -o build/lex.yy.o build/lex.yy.c
+gcc -Iinclude   -c -o build/parser.tab.o build/parser.tab.c
+gcc -c -o build/main.o src/main.c -Iinclude
+gcc -o etapa2 build/lex.yy.o build/parser.tab.o build/main.o -Iinclude
+~
+
+GrupoH
+
+~/GrupoH ~
+bison -d -b src/parser src/parser.y -Wall
+cc -Isrc -c src/main.c -o build/main.o
+flex -o src/lex.yy.c src/scanner.l
+cc -Isrc -c src/lex.yy.c -o build/lex.yy.o
+cc -Isrc -c src/parser.tab.c -o build/parser.tab.o
+cc build/main.o build/lex.yy.o build/parser.tab.o -o etapa2 -lfl
+~
+
+GrupoI
+
+~/GrupoI ~
+renamed 'etapa2/Makefile' -> './Makefile'
+renamed 'etapa2/README.md' -> './README.md'
+renamed 'etapa2/main.c' -> './main.c'
+renamed 'etapa2/parser.y' -> './parser.y'
+renamed 'etapa2/scanner.l' -> './scanner.l'
+bison -d parser.y
+gcc -c parser.tab.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c main.c
+gcc main.o lex.yy.o parser.tab.o -o etapa2
+~
+
+GrupoJ
+
+~/GrupoJ ~
+gcc -I ./src -c ./src/main.c ./src/flex/lex.yy.c ./src/bison/parser.tab.c
+gcc main.o lex.yy.o parser.tab.o  -o etapa2
+~
+
+GrupoK
+
+~/GrupoK ~
+mv: cannot stat 'etapa2/*': No such file or directory
+bison -d --report=all --report-file=parser.output parser.y
+gcc -Wall -g -c main.c
+gcc -Wall -g -c parser.tab.c
+flex scanner.l
+gcc -Wall -g -c lex.yy.c
+lex.yy.c:1293:16: warning: 'input' defined but not used [-Wunused-function]
+ 1293 |     static int input  (void)
+      |                ^~~~~
+lex.yy.c:1246:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1246 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -Wall -g -o etapa2 main.o parser.tab.o lex.yy.o
+~
+
+GrupoL
+
+~/GrupoL ~
+bison -d parser.y -Wcounterexamples
+flex scanner.l
+gcc -c lex.yy.c parser.tab.c
+gcc main.c lex.yy.c parser.tab.c -o etapa2  -lfl 
+~
+
+GrupoM
+
+~/GrupoM ~
+bison -o src/parser.tab.c -d parser.y
+gcc -o bin/main.o -c src/main.c -O0 -Wall -g -lfl
+flex -o src/lex.yy.c scanner.l
+gcc -o bin/lex.yy.o -c src/lex.yy.c -O0 -g
+gcc -o bin/parser.tab.o -c src/parser.tab.c -O0 -Wall -g -lfl
+gcc -o etapa2 bin/*.o -O0 -Wall -g -lfl 
+~
+
+GrupoN
+
+~/GrupoN ~
+bison -d -v parser.y
+flex scanner.l
+gcc -c lex.yy.c parser.tab.c
+gcc -o etapa2 main.c parser.tab.o lex.yy.o
+rm -f lex.yy* parser.tab* parser.output
+~
+
+GrupoO
+
+~/GrupoO ~
+bison -d parser.y -Wcounterexamples
+flex scanner.l
+gcc -c lex.yy.c parser.tab.c main.c
+gcc -o etapa2 parser.tab.o lex.yy.c main.o -lfl 
+~
+
+GrupoP
+
+~/GrupoP ~
+bison -d parser.y
+flex scanner.l
+gcc -c main.c lex.yy.c parser.tab.c
+gcc -o etapa2 main.o lex.yy.o parser.tab.o -lfl
+~
+
+GrupoR
+
+~/GrupoR ~
+bison -d -Wcounterexamples parser.y
+gcc -c main.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c parser.tab.c
+gcc -o etapa2 main.o lex.yy.o parser.tab.o 
+~
+
+GrupoS
+
+~/GrupoS ~
+flex scanner.l
+bison -d parser.y
+mkdir -p obj
+gcc -c -o obj/lex.yy.o lex.yy.c
+mkdir -p obj
+gcc -c -o obj/parser.tab.o parser.tab.c
+mkdir -p obj
+gcc -c -o obj/main.o main.c
+gcc -o etapa2 obj/lex.yy.o obj/parser.tab.o obj/main.o
+~
+
+GrupoT
+
+~/GrupoT ~
+bison -d src/parser.y -o src/parser.tab.c
+gcc -c src/main.c -o obj/main.o
+gcc -c src/parser.tab.c -o obj/parser.tab.o
+flex -o src/lex.yy.c src/scanner.l
+gcc -c src/lex.yy.c -o obj/lex.yy.o
+gcc -o etapa2 obj/main.o obj/parser.tab.o obj/lex.yy.o -lfl
+~
+
+GrupoZ
+
+~/GrupoZ ~
+bison -d -v -o src/parser.tab.c src/parser.y
+mv src/parser.tab.h include/parser.tab.h
+mkdir -p build
+gcc -c -o build/main.o src/main.c -Iinclude
+flex -o src/lex.yy.c src/scanner.l
+mkdir -p build
+gcc -c -o build/lex.yy.o src/lex.yy.c -Iinclude
+gcc -c -o build/parser.tab.o src/parser.tab.c -Iinclude
+gcc -o etapa2 build/main.o build/lex.yy.o build/parser.tab.o -Iinclude 
+~

@@ -1,0 +1,5 @@
+#! ./tesh
+! timeout 1
+$ ./main < tests/e1/i027
+> 1 TK_OC_AND [&]
+> 1 TK_OC_AND [&]

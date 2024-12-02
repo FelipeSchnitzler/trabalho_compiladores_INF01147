@@ -1,0 +1,11 @@
+#! ./tesh
+! timeout 1
+$ ./main < tests/e1/i041
+> 1 TK_LIT_INT [12]
+> 1 TK_ESPECIAL [/]
+> 1 TK_ESPECIAL [*]
+> 2 TK_LIT_INT [34]
+> 2 TK_LIT_INT [56]
+> 3 TK_ESPECIAL [*]
+> 3 TK_ESPECIAL [/]
+> 3 TK_LIT_INT [78]

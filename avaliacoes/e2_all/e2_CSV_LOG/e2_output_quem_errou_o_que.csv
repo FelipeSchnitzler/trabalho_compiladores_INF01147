@@ -1,0 +1,37 @@
+Grupo,Teste,Result,Esperado,Correto,Razao
+GrupoB,asl047,0,1,FALSE,NA
+GrupoC,asl014,1,0,FALSE,"Line 3: syntax error, unexpected '{' "
+GrupoC,asl015,1,0,FALSE,"Line 4: syntax error, unexpected '{' "
+GrupoC,asl037,1,0,FALSE,"Line 3: syntax error, unexpected '{' "
+GrupoC,asl038,1,0,FALSE,"Line 3: syntax error, unexpected '{' "
+GrupoF,asl006,1,0,FALSE,"Erro: syntax error, unexpected TK_OC_LE, expecting ';' "
+GrupoF,asl014,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl015,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl017,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl020,0,1,FALSE,NA
+GrupoF,asl027,1,0,FALSE,"Erro: syntax error, unexpected TK_OC_LE, expecting ';' "
+GrupoF,asl029,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl037,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl038,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl044,1,0,FALSE,"Erro: syntax error, unexpected TK_OC_LE, expecting ';' "
+GrupoF,asl047,0,1,FALSE,NA
+GrupoF,asl056,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl058,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl062,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoF,asl076,0,1,FALSE,NA
+GrupoF,asl081,1,0,FALSE,"Erro: syntax error, unexpected ';' "
+GrupoI,asl047,0,1,FALSE,NA
+GrupoK,asl047,0,1,FALSE,NA
+GrupoK,asl100,1,0,FALSE,"Error at line 4 : syntax error, unexpected ' ', expecting TK_IDENTIFICADOR or TK_LIT_INT or TK_LIT_FLOAT or '(' "
+GrupoK,asl101,1,0,FALSE,"Error at line 4 : syntax error, unexpected '!', expecting TK_IDENTIFICADOR or TK_LIT_INT or TK_LIT_FLOAT or '(' "
+GrupoL,asl100,1,0,FALSE,"syntax error, unexpected ' ', expecting TK_IDENTIFICADOR or TK_LIT_INT or TK_LIT_FLOAT or '(' on line 4 "
+GrupoL,asl101,1,0,FALSE,"syntax error, unexpected '!', expecting TK_IDENTIFICADOR or TK_LIT_INT or TK_LIT_FLOAT or '(' on line 4 "
+GrupoM,asl047,0,1,FALSE,NA
+GrupoN,asl047,0,1,FALSE,NA
+GrupoP,asl047,0,1,FALSE,NA
+GrupoR,asl047,0,1,FALSE,NA
+GrupoT,asl100,1,0,FALSE,"Erro syntax error, unexpected ' ', expecting TK_IDENTIFICADOR or TK_LIT_INT or TK_LIT_FLOAT or '(' na linha: 4 "
+GrupoT,asl101,1,0,FALSE,"Erro syntax error, unexpected '!', expecting TK_IDENTIFICADOR or TK_LIT_INT or TK_LIT_FLOAT or '(' na linha: 4 "
+GrupoZ,asl005,1,0,FALSE,"syntax error, unexpected TK_IDENTIFICADOR, expecting TK_PR_INT or TK_PR_FLOAT on line 3 "
+GrupoZ,asl006,1,0,FALSE,"syntax error, unexpected TK_IDENTIFICADOR, expecting TK_PR_INT or TK_PR_FLOAT on line 3 "
+GrupoZ,asl047,0,1,FALSE,NA

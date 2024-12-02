@@ -1,0 +1,5 @@
+//INCORRECT
+main = a <- int | b <- int > int {
+  int x;
+  f(x,);
+}

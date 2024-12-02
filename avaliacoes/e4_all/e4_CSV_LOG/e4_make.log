@@ -1,0 +1,367 @@
+
+GrupoA
+
+/home/user/GrupoA /home/user
+bison -d parser.y
+parser.y:127.2: warning: empty rule for typed nonterminal, and no action [-Wother]
+  127 | | /*nada*/ ;
+      |  ^
+gcc -Wall -g -c parser.tab.c parser.tab.h 
+In file included from parser.tab.c:106:
+parser.y:26:11: warning: "YYDEBUG" redefined
+   26 |   #define YYDEBUG 1
+      |           ^~~~~~~
+parser.tab.h:42:10: note: this is the location of the previous definition
+   42 | # define YYDEBUG 0
+      |          ^~~~~~~
+parser.y: In function 'yyparse':
+parser.y:244:173: error: implicit declaration of function 'tipagemDado' [-Wimplicit-function-declaration]
+  244 | e_7: e_7 or e_6           {$$ = $2; asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = tipagemDado($1->tipo, $3->tipo);} | e_6 {$$ = $1;};
+      |                                                                                                                                                                             ^          
+parser.y:259:26: error: implicit declaration of function 'obtemTipoOperando' [-Wimplicit-function-declaration]
+  259 |     $$->tipo = obtemTipoOperando(pilha, $1->valor);
+      |                          ^~~~~~~~~~~~~~~~~
+parser.y:26:11: warning: "YYDEBUG" redefined
+   26 |   #define YYDEBUG 1
+      |           ^~~~~~~
+parser.tab.h:42:10: note: this is the location of the previous definition
+   42 | # define YYDEBUG 0
+      |          ^~~~~~~
+make: *** [Makefile:15: parser.tab.o] Error 1
+/home/user
+
+GrupoB
+
+/home/user/GrupoB /home/user
+diff: extra operand './src/main.c'
+diff: Try 'diff --help' for more information.
+Building the project in Release mode...
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+-- The C compiler identification is GNU 14.2.0
+-- The CXX compiler identification is GNU 14.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found FLEX: /usr/bin/flex (found version "2.6.4")
+-- Found BISON: /usr/bin/bison (found version "3.8.2")
+-- Configuring done (0.5s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/user/GrupoB/build
+cmake --build build --config Release
+gmake[1]: Entering directory '/home/user/GrupoB/build'
+gmake[2]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[  5%] [FLEX][Scanner] Building scanner with flex 2.6.4
+[ 11%] [BISON][Parser] Building parser with bison 3.8.2
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 17%] Building C object src/CMakeFiles/Utils.dir/utils.c.o
+[ 23%] Building C object src/CMakeFiles/Utils.dir/asd.c.o
+[ 29%] Building C object src/CMakeFiles/Utils.dir/lex.c.o
+[ 35%] Building C object src/CMakeFiles/Utils.dir/table.c.o
+[ 41%] Building C object src/CMakeFiles/Utils.dir/stack.c.o
+[ 47%] Building C object src/CMakeFiles/Utils.dir/scope.c.o
+[ 52%] Building C object src/CMakeFiles/Utils.dir/errors.c.o
+[ 58%] Building C object src/CMakeFiles/Utils.dir/symbol.c.o
+[ 64%] Building C object src/CMakeFiles/Utils.dir/scanner.c.o
+[ 70%] Building C object src/CMakeFiles/Utils.dir/parser.tab.c.o
+[ 76%] Linking C static library libUtils.a
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[ 76%] Built target Utils
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 82%] Building C object src/CMakeFiles/Compiler.dir/main.c.o
+[ 88%] Linking C executable Compiler
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[ 88%] Built target Compiler
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+gmake[3]: Entering directory '/home/user/GrupoB/build'
+[ 94%] Building C object tests/CMakeFiles/TestCompiler.dir/test_utils.c.o
+[100%] Linking C executable TestCompiler
+gmake[3]: Leaving directory '/home/user/GrupoB/build'
+[100%] Built target TestCompiler
+gmake[2]: Leaving directory '/home/user/GrupoB/build'
+gmake[1]: Leaving directory '/home/user/GrupoB/build'
+Copying the executable to the current directory...
+cp build/src/Compiler etapa4
+/home/user
+
+GrupoC
+
+/home/user/GrupoC /home/user
+diff: main.c: No such file or directory
+bison -d -o obj/parser.tab.c src/parser.y
+gcc -lfl -g -Wall -Iobj -Iinclude -c src/asd.c -o obj/asd.o
+gcc -lfl -g -Wall -Iobj -Iinclude -c src/main.c -o obj/main.o
+gcc -lfl -g -Wall -Iobj -Iinclude -c src/stack.c -o obj/stack.o
+gcc -lfl -g -Wall -Iobj -Iinclude -c src/table.c -o obj/table.o
+flex -o obj/lex.yy.c src/scanner.l
+gcc -lfl -g -Iobj -Iinclude -c obj/lex.yy.c -o obj/lex.yy.o
+gcc -lfl -g -Wall -Iobj -Iinclude -c obj/parser.tab.c -o obj/parser.tab.o
+gcc -lfl -g -Wall -Iobj -Iinclude -o etapa4 obj/asd.o obj/main.o obj/stack.o obj/table.o obj/lex.yy.o obj/parser.tab.o
+/home/user
+
+GrupoD
+
+/home/user/GrupoD /home/user
+bison -d parser.y
+gcc -c parser.tab.c 
+flex scanner.l
+gcc -c lex.yy.c 
+gcc asd.c -c
+gcc util.c -c
+gcc stack.c -c
+gcc table.c -c
+gcc main.c -c
+gcc lex.yy.o parser.tab.o asd.o util.o stack.o table.o main.o -o etapa4
+/home/user
+
+GrupoE
+
+/home/user/GrupoE /home/user
+diff: main.c: No such file or directory
+mkdir -p build
+mkdir -p logs
+bison -d -v -o src/parser.tab.c src/parser.y 
+mv src/parser.tab.h include
+mv src/parser.output logs
+gcc -c -o build/main.o src/main.c -Iinclude 
+gcc -c -o build/util.o src/util.c -Iinclude 
+flex -o src/lex.yy.c src/scanner.l
+gcc -c -o build/lex.yy.o src/lex.yy.c -Iinclude 
+gcc -c -o build/parser.tab.o src/parser.tab.c -Iinclude 
+gcc -c -o build/asd.o src/asd.c -Iinclude 
+gcc -c -o build/lex_value.o src/lex_value.c -Iinclude 
+gcc -c -o build/pilha.o src/pilha.c -Iinclude 
+gcc -c -o build/tabela.o src/tabela.c -Iinclude 
+gcc -o etapa4 build/main.o build/util.o build/lex.yy.o build/parser.tab.o build/asd.o build/lex_value.o build/pilha.o build/tabela.o -Iinclude  -lfl
+/home/user
+
+GrupoF
+
+/home/user/GrupoF /home/user
+bison -d parser.y -Wcounterexamples
+gcc -c parser.tab.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c main.c
+gcc -c asd.c
+gcc -c symbol.c
+gcc -c symbol_list.c
+gcc -c scope.c
+gcc -c scope_stack.c
+gcc -o etapa4 parser.tab.o lex.yy.o main.o asd.o scope_stack.o symbol.o scope.o symbol_list.o
+/home/user
+
+GrupoG
+
+/home/user/GrupoG /home/user
+diff: main.c: No such file or directory
+bison -o build/parser.tab.c  --header=include/parser.tab.h bison/parser.y
+flex -o build/lex.yy.c flex/scanner.l
+gcc -Iinclude   -c -o build/lex.yy.o build/lex.yy.c
+gcc -Iinclude   -c -o build/parser.tab.o build/parser.tab.c
+gcc -c -o build/main.o src/main.c -Iinclude
+gcc -c -o build/asd.o src/asd.c -Iinclude
+gcc -c -o build/table_sym.o src/table_sym.c -Iinclude
+gcc -o etapa4 build/lex.yy.o build/parser.tab.o build/main.o build/asd.o build/table_sym.o -Iinclude
+/home/user
+
+GrupoH
+
+/home/user/GrupoH /home/user
+diff: main.c: No such file or directory
+bison -d -b build/code/parser src/parser.y -Wall
+flex -o build/code/lex.yy.c src/scanner.l
+cc -MMD -MF build/deps/data_types.d -Iinclude -Ibuild/code -c src/data_types.c -o build/obj/data_types.o -Wall -Wextra
+cc -MMD -MF build/deps/main.d -Iinclude -Ibuild/code -c src/main.c -o build/obj/main.o -Wall -Wextra
+cc -MMD -MF build/deps/table.d -Iinclude -Ibuild/code -c src/table.c -o build/obj/table.o -Wall -Wextra
+cc -MMD -MF build/deps/tree.d -Iinclude -Ibuild/code -c src/tree.c -o build/obj/tree.o -Wall -Wextra
+cc -MMD -MF build/deps/lex.yy.d -Iinclude -Ibuild/code -c build/code/lex.yy.c -o build/obj/lex.yy.o -Wall -Wextra
+cc -MMD -MF build/deps/parser.tab.d -Iinclude -Ibuild/code -c build/code/parser.tab.c -o build/obj/parser.tab.o -Wall -Wextra
+cc build/obj/data_types.o build/obj/main.o build/obj/table.o build/obj/tree.o build/obj/lex.yy.o build/obj/parser.tab.o -o etapa4 -lfl -Wall -Wextra
+/home/user
+
+GrupoJ
+
+/home/user/GrupoJ /home/user
+rm -f etapa4 etapa4.tgz ./src/main.o ./src/asd/asd.o ./src/lexema/lexema.o ./src/stack/stack.o ./src/symbol_table/symbol_table.o ./src/symbol_table/content.o ./src/flex/lex.yy.o ./src/bison/parser.tab.o ./src/bison/parser.tab.c ./src/bison/parser.tab.h ./src/flex/lex.yy.c
+diff: extra operand './src/main.c'
+diff: Try 'diff --help' for more information.
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/main.o src/main.c
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/asd/asd.o src/asd/asd.c
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/lexema/lexema.o src/lexema/lexema.c
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/stack/stack.o src/stack/stack.c
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/symbol_table/symbol_table.o src/symbol_table/symbol_table.c
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/symbol_table/content.o src/symbol_table/content.c
+bison -Wall -Werror -d -o ./src/bison/parser.tab.c src/bison/parser.y
+flex -o src/flex/lex.yy.c src/flex/scanner.l
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/flex/lex.yy.o src/flex/lex.yy.c
+gcc -I./src -I./src/errors -I./src/bison -I./src/asd -I./src/lexema -I./src/stack -I./src/symbol_table -c -o src/bison/parser.tab.o src/bison/parser.tab.c
+gcc -o etapa4 ./src/main.o ./src/asd/asd.o ./src/lexema/lexema.o ./src/stack/stack.o ./src/symbol_table/symbol_table.o ./src/symbol_table/content.o ./src/flex/lex.yy.o ./src/bison/parser.tab.o
+/home/user
+
+GrupoK
+
+/home/user/GrupoK /home/user
+bison -d --report=all --report-file=parser.output parser.y
+gcc -Wall -g -c main.c
+gcc -Wall -g -c parser.tab.c
+flex scanner.l
+gcc -Wall -g -c lex.yy.c
+lex.yy.c:1321:16: warning: 'input' defined but not used [-Wunused-function]
+ 1321 |     static int input  (void)
+      |                ^~~~~
+lex.yy.c:1274:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1274 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -Wall -g -c asd.c
+gcc -Wall -g -c tabela.c
+gcc -Wall -g -o etapa4 main.o parser.tab.o lex.yy.o asd.o tabela.o
+/home/user
+
+GrupoL
+
+/home/user/GrupoL /home/user
+diff: main.c: No such file or directory
+mkdir -p build
+gcc -c src/asd.c -o build/asd.o -Iinclude -g -Wall -Wextra
+src/asd.c: In function 'asd_get_last_child':
+src/asd.c:112:1: warning: control reaches end of non-void function [-Wreturn-type]
+  112 | }
+      | ^
+gcc -c src/main.c -o build/main.o -Iinclude -g -Wall -Wextra
+src/main.c: In function 'main':
+src/main.c:13:15: warning: unused parameter 'argc' [-Wunused-parameter]
+   13 | int main (int argc, char **argv)
+      |           ~~~~^~~~
+src/main.c:13:28: warning: unused parameter 'argv' [-Wunused-parameter]
+   13 | int main (int argc, char **argv)
+      |                     ~~~~~~~^~~~
+gcc -c src/table.c -o build/table.o -Iinclude -g -Wall -Wextra
+gcc -c src/valor_lexico.c -o build/valor_lexico.o -Iinclude -g -Wall -Wextra
+flex -o build/lex.yy.c src/scanner.l
+bison -d -v -Wcounterexamples -o build/parser.tab.c src/parser.y
+gcc  build/asd.o  build/main.o  build/table.o  build/valor_lexico.o build/lex.yy.c build/parser.tab.c -o etapa4 -lfl  -Iinclude -g -Wall -Wextra
+build/lex.yy.c:1289:16: warning: 'input' defined but not used [-Wunused-function]
+ 1289 |     static int input  (void)
+      |                ^~~~~
+build/lex.yy.c:1242:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1242 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+/home/user
+
+GrupoM
+
+/home/user/GrupoM /home/user
+diff: main.c: No such file or directory
+gcc -o bin/arvore.o -c src/arvore.c -O0 -Wall -g -lfl
+gcc -o bin/errors.o -c src/errors.c -O0 -Wall -g -lfl
+bison -o src/parser.tab.c -d parser.y
+gcc -o bin/main.o -c src/main.c -O0 -Wall -g -lfl
+gcc -o bin/tabela.o -c src/tabela.c -O0 -Wall -g -lfl
+gcc -o bin/types.o -c src/types.c -O0 -Wall -g -lfl
+gcc -o bin/valLex.o -c src/valLex.c -O0 -Wall -g -lfl
+flex -o src/lex.yy.c scanner.l
+gcc -o bin/lex.yy.o -c src/lex.yy.c -O0 -g
+gcc -o bin/parser.tab.o -c src/parser.tab.c -O0 -g
+gcc -o etapa4 bin/arvore.o bin/errors.o bin/main.o bin/tabela.o bin/types.o bin/valLex.o bin/lex.yy.o bin/parser.tab.o -O0 -Wall -g -lfl
+/home/user
+
+GrupoN
+
+/home/user/GrupoN /home/user
+diff: extra operand './main.c'
+diff: Try 'diff --help' for more information.
+bison -d -v parser.y
+gcc -g -Werror -c parser.tab.c
+flex scanner.l
+gcc -g -Werror -c lex.yy.c
+gcc -g -Werror -c comp_utils.c
+gcc -g -Werror -c main.c
+gcc -g -Werror -o etapa4 parser.tab.o lex.yy.o comp_utils.o main.o
+/home/user
+
+GrupoO
+
+/home/user/GrupoO /home/user
+diff: main.c: No such file or directory
+gcc -g -Wall -Iinclude -c src/type_lex.c -o src/type_lex.o
+gcc -g -Wall -Iinclude -c src/tree.c -o src/tree.o
+bison -d -o bison/parser.tab.c bison/parser.y -Wcounterexamples
+gcc -g -Wall -Iinclude -c bison/parser.tab.c -o bison/parser.tab.o
+flex -o flex/lex.yy.c flex/scanner.l
+gcc -g -Wall -Iinclude -c flex/lex.yy.c -o flex/lex.yy.o
+flex/lex.yy.c:1288:16: warning: 'input' defined but not used [-Wunused-function]
+ 1288 |     static int input  (void)
+      |                ^~~~~
+flex/lex.yy.c:1241:17: warning: 'yyunput' defined but not used [-Wunused-function]
+ 1241 |     static void yyunput (int c, char * yy_bp )
+      |                 ^~~~~~~
+gcc -g -Wall -Iinclude -c src/main.c -o src/main.o
+gcc -g -Wall -Iinclude -c src/stack.c -o src/stack.o
+gcc -g -Wall -Iinclude -c src/symbol_table.c -o src/symbol_table.o
+gcc -o etapa4 src/type_lex.o src/tree.o bison/parser.tab.o flex/lex.yy.o src/main.o src/stack.o src/symbol_table.o -lfl
+/home/user
+
+GrupoP
+
+/home/user/GrupoP /home/user
+bison -d parser.y
+flex scanner.l
+gcc -o etapa4 main.c lex.yy.c parser.tab.c asd.c semantics.c -lfl
+/home/user
+
+GrupoR
+
+/home/user/GrupoR /home/user
+bison -d -Wcounterexamples parser.y
+gcc -c main.c
+flex scanner.l
+gcc -c lex.yy.c
+gcc -c parser.tab.c
+gcc -o etapa4 main.o lex.yy.o parser.tab.o asd.c symbol_table.c symbol_stack.c
+/home/user
+
+GrupoS
+
+/home/user/GrupoS /home/user
+flex scanner.l
+bison -d -g -Dparse.trace parser.y
+mkdir -p obj
+gcc -c -o obj/lex.yy.o lex.yy.c
+mkdir -p obj
+gcc -c -o obj/parser.tab.o parser.tab.c
+mkdir -p obj
+gcc -c -o obj/main.o main.c
+mkdir -p obj
+gcc -c -o obj/ast.o ast.c
+mkdir -p obj
+gcc -c -o obj/table.o table.c
+gcc -g -o etapa4 obj/lex.yy.o obj/parser.tab.o obj/main.o obj/ast.o obj/table.o
+/home/user
+
+GrupoT
+
+/home/user/GrupoT /home/user
+diff: main.c: No such file or directory
+flex -o src/lex.yy.c src/scanner.l
+bison -d src/parser.y -o src/parser.tab.c
+mv src/parser.tab.h include/parser.tab.h
+mkdir -p obj
+gcc -c -o obj/lex.yy.o src/lex.yy.c -Iinclude
+gcc -c -o obj/parser.tab.o src/parser.tab.c -Iinclude
+gcc -c -o obj/main.o src/main.c -Iinclude
+gcc -c -o obj/data_structures.o src/data_structures.c -Iinclude
+gcc -c -o obj/aux.o src/aux.c -Iinclude
+gcc -g -o etapa4 obj/lex.yy.o obj/parser.tab.o obj/main.o obj/data_structures.o obj/aux.o -lfl
+/home/user

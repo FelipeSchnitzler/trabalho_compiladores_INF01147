@@ -1,0 +1,13 @@
+//ERR_UNDECLARED
+fa = > int {
+  int a;
+  return 0;
+}
+fb = > int {
+  int a1;
+  int b;
+  int c1;
+  g(b);
+  return 0;
+}
+

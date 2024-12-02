@@ -1,0 +1,11 @@
+g = i <- int | j <- int | k <- int > int {
+}
+f = > int{
+    int a;
+    int b;
+    int c;
+    a = 1;
+    b = 2;
+    c = 3;
+    g(a, b, c);
+}

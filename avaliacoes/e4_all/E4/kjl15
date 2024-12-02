@@ -1,0 +1,6 @@
+//ERR_UNDECLARED
+f = > int  {
+    float car;
+    a = car;
+    return 0;
+}

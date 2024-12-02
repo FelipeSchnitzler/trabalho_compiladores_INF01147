@@ -1,0 +1,18 @@
+//ERR_DECLARED
+f = > int  {
+  return 0;
+}
+
+g = > int  {
+  int a;
+  return 0;
+}
+
+h = > int  {
+  int a;
+  return 0;
+}
+
+f = > int  {
+  return 0;
+}

@@ -1,0 +1,9 @@
+#! ./tesh
+! timeout 1
+$ ./main < tests/e1/i066
+> 1 TK_ESPECIAL [/]
+> 1 TK_ESPECIAL [*]
+> 2 TK_IDENTIFICADOR [true]
+> 2 TK_IDENTIFICADOR [false]
+> 3 TK_ESPECIAL [*]
+> 3 TK_ESPECIAL [/]

@@ -1,0 +1,10 @@
+//ERR_UNDECLARED
+g = a <- int > int  {
+  h(a);
+  return 0;
+}
+f = > int  {
+  int a;
+  g(a);
+  return 0;
+}

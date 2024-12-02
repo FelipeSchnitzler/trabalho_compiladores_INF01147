@@ -1,0 +1,559 @@
+Grupo,Test,Res,Output,Code,TEST.WORKED
+GrupoA,kjl00,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl01,11,(ERRO) linha 4: ,11,TRUE
+GrupoA,kjl02,11,(ERRO) linha 4: ,11,TRUE
+GrupoA,kjl03,0,NA,0,TRUE
+GrupoA,kjl04,11,____________________________ ,11,TRUE
+GrupoA,kjl05,11,____________________________ ,11,TRUE
+GrupoA,kjl06,0,____________________________ ,0,TRUE
+GrupoA,kjl07,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl08,11,(ERRO) linha 3: ,11,TRUE
+GrupoA,kjl09,10,(ERRO) linha 4: ,10,TRUE
+GrupoA,kjl10,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl11,10,(ERRO) linha 4: ,10,TRUE
+GrupoA,kjl12,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl13,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl14,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl15,10,(ERRO) linha 4: ,10,TRUE
+GrupoA,kjl16,10,(ERRO) linha 4: ,10,TRUE
+GrupoA,kjl17,10,(ERRO) linha 3: ,10,TRUE
+GrupoA,kjl18,11,____________________________ ,11,TRUE
+GrupoA,kjl19,0,____________________________ ,0,TRUE
+GrupoA,kjl20,10,(ERRO) linha 6: ,10,TRUE
+GrupoA,kjl21,10,(ERRO) linha 6: ,10,TRUE
+GrupoA,kjl22,10,(ERRO) linha 7: ,10,TRUE
+GrupoA,kjl23,10,(ERRO) linha 6: ,10,TRUE
+GrupoA,kjl24,11,____________________________ ,11,TRUE
+GrupoA,kjl25,10,____________________________ ,10,TRUE
+GrupoA,kjl26,0,____________________________ ,0,TRUE
+GrupoA,kjl27,11,____________________________ ,11,TRUE
+GrupoA,kjl28,11,(ERRO) linha 2: ,11,TRUE
+GrupoA,kjl29,0,____________________________ ,0,TRUE
+GrupoA,kjl30,11,____________________________ ,11,TRUE
+GrupoB,kjl00,10,Error at line 3: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl01,11,Error at line 4: Variable  a  already declared at line 3 ,11,TRUE
+GrupoB,kjl02,11,Error at line 4: Variable  a  already declared at line 3 ,11,TRUE
+GrupoB,kjl03,0,Erro: asd_print_graphviz recebeu parâmetro tree = (nil). ,0,TRUE
+GrupoB,kjl04,11,Error at line 16: Function  f  already declared at line 2 ,11,TRUE
+GrupoB,kjl05,11,Error at line 10: Variable  a  already declared at line 3 ,11,TRUE
+GrupoB,kjl06,0,NA,0,TRUE
+GrupoB,kjl07,10,Error at line 3: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl08,11,Error at line 3: Variable  b  already declared at line 2 ,11,TRUE
+GrupoB,kjl09,10,Error at line 4: Undeclared variable  b  ,10,TRUE
+GrupoB,kjl10,10,Error at line 3: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl11,10,Error at line 4: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl12,10,Error at line 3: Undeclared variable  b  ,10,TRUE
+GrupoB,kjl13,10,Error at line 3: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl14,10,Error at line 3: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl15,10,Error at line 4: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl16,10,Error at line 4: Undeclared function  g  ,10,TRUE
+GrupoB,kjl17,10,Error at line 3: Undeclared function  h  ,10,TRUE
+GrupoB,kjl18,11,Error at line 11: Variable  a  already declared at line 5 ,11,TRUE
+GrupoB,kjl19,0,NA,0,TRUE
+GrupoB,kjl20,10,Error at line 6: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl21,10,Error at line 6: Undeclared variable  a  ,10,TRUE
+GrupoB,kjl22,10,Error at line 7: Undeclared function  g  ,10,TRUE
+GrupoB,kjl23,10,Error at line 6: Undeclared variable  v  ,10,TRUE
+GrupoB,kjl24,11,Error at line 7: Function  f  already declared at line 2 ,11,TRUE
+GrupoB,kjl25,10,Error at line 10: Undeclared function  g  ,10,TRUE
+GrupoB,kjl26,0,NA,0,TRUE
+GrupoB,kjl27,11,Error at line 8: Function  g  already declared at line 2 ,11,TRUE
+GrupoB,kjl28,11,Error at line 2: Variable  a  already declared at line 2 ,11,TRUE
+GrupoB,kjl29,0,NA,0,TRUE
+GrupoB,kjl30,11,Error at line 7: Function  main  already declared at line 2 ,11,TRUE
+GrupoC,kjl00,10,ERROR - Linha 3: Identificador  a  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl01,11,ERROR - Linha 4: Variável de nome  a  já declarada na linha 3. ,11,TRUE
+GrupoC,kjl02,11,ERROR - Linha 4: Variável de nome  a  já declarada na linha 3. ,11,TRUE
+GrupoC,kjl03,0,NA,0,TRUE
+GrupoC,kjl04,11,ERROR - Linha 16: Função de nome  f  já declarada na linha 2. ,11,TRUE
+GrupoC,kjl05,11,ERROR - Linha 10: Variável de nome  a  já declarada na linha 3. ,11,TRUE
+GrupoC,kjl06,0,NA,0,TRUE
+GrupoC,kjl07,10,ERROR - Linha 3: Identificador  a  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl08,11,ERROR - Linha 3: Variável de nome  b  já declarada na linha 2. ,11,TRUE
+GrupoC,kjl09,10,ERROR - Linha 4: Identificador  b  referido na linha 4 não declarado. ,10,TRUE
+GrupoC,kjl10,10,ERROR - Linha 3: Identificador  a  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl11,10,ERROR - Linha 4: Identificador  a  referido na linha 4 não declarado. ,10,TRUE
+GrupoC,kjl12,10,ERROR - Linha 3: Identificador  b  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl13,10,ERROR - Linha 3: Identificador  a  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl14,10,ERROR - Linha 3: Identificador  a  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl15,10,ERROR - Linha 4: Identificador  a  referido na linha 4 não declarado. ,10,TRUE
+GrupoC,kjl16,10,ERROR - Linha 4: Identificador  g  referido na linha 4 não declarado. ,10,TRUE
+GrupoC,kjl17,10,ERROR - Linha 3: Identificador  h  referido na linha 3 não declarado. ,10,TRUE
+GrupoC,kjl18,11,ERROR - Linha 11: Variável de nome  a  já declarada na linha 5. ,11,TRUE
+GrupoC,kjl19,0,NA,0,TRUE
+GrupoC,kjl20,10,ERROR - Linha 6: Identificador  a  referido na linha 6 não declarado. ,10,TRUE
+GrupoC,kjl21,10,ERROR - Linha 6: Identificador  a  referido na linha 6 não declarado. ,10,TRUE
+GrupoC,kjl22,10,ERROR - Linha 7: Identificador  g  referido na linha 7 não declarado. ,10,TRUE
+GrupoC,kjl23,10,ERROR - Linha 6: Identificador  v  referido na linha 6 não declarado. ,10,TRUE
+GrupoC,kjl24,11,ERROR - Linha 7: Função de nome  f  já declarada na linha 2. ,11,TRUE
+GrupoC,kjl25,10,ERROR - Linha 10: Identificador  g  referido na linha 10 não declarado. ,10,TRUE
+GrupoC,kjl26,0,NA,0,TRUE
+GrupoC,kjl27,11,ERROR - Linha 8: Função de nome  g  já declarada na linha 2. ,11,TRUE
+GrupoC,kjl28,0,NA,11,FALSE
+GrupoC,kjl29,0,NA,0,TRUE
+GrupoC,kjl30,11,ERROR - Linha 7: Função de nome  main  já declarada na linha 2. ,11,TRUE
+GrupoD,kjl00,10,"Erro semântico: O identificador a, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl01,11,"Erro semântico: O identificador a (natureza: IDENTIFICADOR), declarado na linha 4, já foi declarado anteriormente na linha 3. ",11,TRUE
+GrupoD,kjl02,11,"Erro semântico: O identificador a (natureza: IDENTIFICADOR), declarado na linha 4, já foi declarado anteriormente na linha 3. ",11,TRUE
+GrupoD,kjl03,0,NA,0,TRUE
+GrupoD,kjl04,11,"Erro semântico: O identificador f (natureza: FUNÇÃO), declarado na linha 16, já foi declarado anteriormente na linha 2. ",11,TRUE
+GrupoD,kjl05,11,"Erro semântico: O identificador a (natureza: IDENTIFICADOR), declarado na linha 10, já foi declarado anteriormente na linha 3. ",11,TRUE
+GrupoD,kjl06,0,0x55e1cf73f410 [label= g ]; ,0,TRUE
+GrupoD,kjl07,10,"Erro semântico: O identificador a, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl08,11,"Erro semântico: O identificador b (natureza: IDENTIFICADOR), declarado na linha 3, já foi declarado anteriormente na linha 2. ",11,TRUE
+GrupoD,kjl09,10,"Erro semântico: O identificador b, referenciado na linha 4, não foi declarado. ",10,TRUE
+GrupoD,kjl10,10,"Erro semântico: O identificador a, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl11,10,"Erro semântico: O identificador a, referenciado na linha 4, não foi declarado. ",10,TRUE
+GrupoD,kjl12,10,"Erro semântico: O identificador b, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl13,10,"Erro semântico: O identificador a, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl14,10,"Erro semântico: O identificador a, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl15,10,"Erro semântico: O identificador a, referenciado na linha 4, não foi declarado. ",10,TRUE
+GrupoD,kjl16,10,"Erro semântico: O identificador g, referenciado na linha 4, não foi declarado. ",10,TRUE
+GrupoD,kjl17,10,"Erro semântico: O identificador h, referenciado na linha 3, não foi declarado. ",10,TRUE
+GrupoD,kjl18,11,"Erro semântico: O identificador a (natureza: IDENTIFICADOR), declarado na linha 11, já foi declarado anteriormente na linha 5. ",11,TRUE
+GrupoD,kjl19,0,0x556ece138410 [label= f ]; ,0,TRUE
+GrupoD,kjl20,10,"Erro semântico: O identificador a, referenciado na linha 6, não foi declarado. ",10,TRUE
+GrupoD,kjl21,10,"Erro semântico: O identificador a, referenciado na linha 6, não foi declarado. ",10,TRUE
+GrupoD,kjl22,10,"Erro semântico: O identificador g, referenciado na linha 7, não foi declarado. ",10,TRUE
+GrupoD,kjl23,10,"Erro semântico: O identificador v, referenciado na linha 6, não foi declarado. ",10,TRUE
+GrupoD,kjl24,11,"Erro semântico: O identificador f (natureza: FUNÇÃO), declarado na linha 7, já foi declarado anteriormente na linha 2. ",11,TRUE
+GrupoD,kjl25,10,"Erro semântico: O identificador g, referenciado na linha 10, não foi declarado. ",10,TRUE
+GrupoD,kjl26,0,0x56239cee3430 [label= g ]; ,0,TRUE
+GrupoD,kjl27,11,"Erro semântico: O identificador g (natureza: FUNÇÃO), declarado na linha 8, já foi declarado anteriormente na linha 2. ",11,TRUE
+GrupoD,kjl28,11,"Erro semântico: O identificador a (natureza: IDENTIFICADOR), declarado na linha 2, já foi declarado anteriormente na linha 2. ",11,TRUE
+GrupoD,kjl29,0,0x56066d1ef410 [label= f ]; ,0,TRUE
+GrupoD,kjl30,11,"Erro semântico: O identificador main (natureza: FUNÇÃO), declarado na linha 7, já foi declarado anteriormente na linha 2. ",11,TRUE
+GrupoE,kjl00,10,semantic error: identificador a (variável) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl01,11,semantic error: identificador a (variável) na linha 4 já declarado na linha 3 ,11,TRUE
+GrupoE,kjl02,11,semantic error: identificador a (variável) na linha 4 já declarado na linha 3 ,11,TRUE
+GrupoE,kjl03,0,NA,0,TRUE
+GrupoE,kjl04,11,semantic error: identificador f (função) na linha 16 já declarado na linha 2 ,11,TRUE
+GrupoE,kjl05,11,semantic error: identificador a (variável) na linha 10 já declarado na linha 3 ,11,TRUE
+GrupoE,kjl06,0,NA,0,TRUE
+GrupoE,kjl07,10,semantic error: identificador a (variável) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl08,11,semantic error: identificador b (variável) na linha 3 já declarado na linha 2 ,11,TRUE
+GrupoE,kjl09,10,semantic error: identificador b (variável) na linha 4 não declarado ,10,TRUE
+GrupoE,kjl10,10,semantic error: identificador a (variável) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl11,10,semantic error: identificador a (variável) na linha 4 não declarado ,10,TRUE
+GrupoE,kjl12,10,semantic error: identificador b (variável) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl13,10,semantic error: identificador a (variável) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl14,10,semantic error: identificador a (variável) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl15,10,semantic error: identificador a (variável) na linha 4 não declarado ,10,TRUE
+GrupoE,kjl16,10,semantic error: identificador g (função) na linha 4 não declarado ,10,TRUE
+GrupoE,kjl17,10,semantic error: identificador h (função) na linha 3 não declarado ,10,TRUE
+GrupoE,kjl18,11,semantic error: identificador a (variável) na linha 11 já declarado na linha 5 ,11,TRUE
+GrupoE,kjl19,0,NA,0,TRUE
+GrupoE,kjl20,10,semantic error: identificador a (variável) na linha 6 não declarado ,10,TRUE
+GrupoE,kjl21,10,semantic error: identificador a (variável) na linha 6 não declarado ,10,TRUE
+GrupoE,kjl22,10,semantic error: identificador g (função) na linha 7 não declarado ,10,TRUE
+GrupoE,kjl23,10,semantic error: identificador v (variável) na linha 6 não declarado ,10,TRUE
+GrupoE,kjl24,11,semantic error: identificador f (função) na linha 7 já declarado na linha 2 ,11,TRUE
+GrupoE,kjl25,10,semantic error: identificador g (função) na linha 10 não declarado ,10,TRUE
+GrupoE,kjl26,0,NA,0,TRUE
+GrupoE,kjl27,11,semantic error: identificador g (função) na linha 8 já declarado na linha 2 ,11,TRUE
+GrupoE,kjl28,11,semantic error: identificador a (variável) na linha 2 já declarado na linha 2 ,11,TRUE
+GrupoE,kjl29,0,NA,0,TRUE
+GrupoE,kjl30,11,semantic error: identificador main (função) na linha 7 já declarado na linha 2 ,11,TRUE
+GrupoF,kjl00,10,Symbol Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl01,11,Duplicated Variable Declaration. Error in line 4 ,11,TRUE
+GrupoF,kjl02,11,Duplicated Variable Declaration. Error in line 4 ,11,TRUE
+GrupoF,kjl03,0,NA,0,TRUE
+GrupoF,kjl04,11,Duplicated Function Declaration. Error in line 16 ,11,TRUE
+GrupoF,kjl05,11,Duplicated Variable Declaration. Error in line 10 ,11,TRUE
+GrupoF,kjl06,0,NA,0,TRUE
+GrupoF,kjl07,10,Symbol Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl08,11,Duplicated Variable Declaration. Error in line 3 ,11,TRUE
+GrupoF,kjl09,10,Symbol Undeclared. Error in line 4 ,10,TRUE
+GrupoF,kjl10,10,Symbol Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl11,10,Symbol Undeclared. Error in line 4 ,10,TRUE
+GrupoF,kjl12,10,Symbol Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl13,10,Symbol Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl14,10,Symbol Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl15,10,Symbol Undeclared. Error in line 4 ,10,TRUE
+GrupoF,kjl16,10,Function Undeclared. Error in line 4 ,10,TRUE
+GrupoF,kjl17,10,Function Undeclared. Error in line 3 ,10,TRUE
+GrupoF,kjl18,11,Duplicated Variable Declaration. Error in line 11 ,11,TRUE
+GrupoF,kjl19,0,NA,0,TRUE
+GrupoF,kjl20,10,Symbol Undeclared. Error in line 6 ,10,TRUE
+GrupoF,kjl21,10,Symbol Undeclared. Error in line 6 ,10,TRUE
+GrupoF,kjl22,10,Function Undeclared. Error in line 7 ,10,TRUE
+GrupoF,kjl23,10,Symbol Undeclared. Error in line 6 ,10,TRUE
+GrupoF,kjl24,11,Duplicated Function Declaration. Error in line 7 ,11,TRUE
+GrupoF,kjl25,10,Function Undeclared. Error in line 10 ,10,TRUE
+GrupoF,kjl26,0,NA,0,TRUE
+GrupoF,kjl27,11,Duplicated Function Declaration. Error in line 8 ,11,TRUE
+GrupoF,kjl28,11,Error in line 2 ,11,TRUE
+GrupoF,kjl29,0,NA,0,TRUE
+GrupoF,kjl30,11,Duplicated Function Declaration. Error in line 7 ,11,TRUE
+GrupoG,kjl00,10,Declaração  do identificador [a] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl01,11,"Redeclaração  do identificador [a] detectada na linha [4], declaração prévia na linha [3] ",11,TRUE
+GrupoG,kjl02,11,"Redeclaração  do identificador [a] detectada na linha [4], declaração prévia na linha [3] ",11,TRUE
+GrupoG,kjl03,0,NA,0,TRUE
+GrupoG,kjl04,11,"Redeclaração  do identificador [f] detectada na linha [16], declaração prévia na linha [2] ",11,TRUE
+GrupoG,kjl05,11,"Redeclaração  do identificador [a] detectada na linha [10], declaração prévia na linha [3] ",11,TRUE
+GrupoG,kjl06,0,NA,0,TRUE
+GrupoG,kjl07,10,Declaração  do identificador [a] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl08,11,"Redeclaração  do identificador [b] detectada na linha [3], declaração prévia na linha [2] ",11,TRUE
+GrupoG,kjl09,10,Declaração  do identificador [b] usado na linha [4] não encontrada ,10,TRUE
+GrupoG,kjl10,10,Declaração  do identificador [a] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl11,10,Declaração  do identificador [a] usado na linha [4] não encontrada ,10,TRUE
+GrupoG,kjl12,10,Declaração  do identificador [b] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl13,10,Declaração  do identificador [a] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl14,10,Declaração  do identificador [a] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl15,10,Declaração  do identificador [a] usado na linha [4] não encontrada ,10,TRUE
+GrupoG,kjl16,10,Declaração  do identificador [g] usado na linha [4] não encontrada ,10,TRUE
+GrupoG,kjl17,10,Declaração  do identificador [h] usado na linha [3] não encontrada ,10,TRUE
+GrupoG,kjl18,11,"Redeclaração  do identificador [a] detectada na linha [11], declaração prévia na linha [5] ",11,TRUE
+GrupoG,kjl19,0,NA,0,TRUE
+GrupoG,kjl20,10,Declaração  do identificador [a] usado na linha [6] não encontrada ,10,TRUE
+GrupoG,kjl21,10,Declaração  do identificador [a] usado na linha [6] não encontrada ,10,TRUE
+GrupoG,kjl22,10,Declaração  do identificador [g] usado na linha [7] não encontrada ,10,TRUE
+GrupoG,kjl23,10,Declaração  do identificador [v] usado na linha [6] não encontrada ,10,TRUE
+GrupoG,kjl24,11,"Redeclaração  do identificador [f] detectada na linha [7], declaração prévia na linha [2] ",11,TRUE
+GrupoG,kjl25,10,Declaração  do identificador [g] usado na linha [10] não encontrada ,10,TRUE
+GrupoG,kjl26,0,NA,0,TRUE
+GrupoG,kjl27,11,"Redeclaração  do identificador [g] detectada na linha [8], declaração prévia na linha [2] ",11,TRUE
+GrupoG,kjl28,11,"Redeclaração  do identificador [a] detectada na linha [2], declaração prévia na linha [2] ",11,TRUE
+GrupoG,kjl29,0,NA,0,TRUE
+GrupoG,kjl30,11,"Redeclaração  do identificador [main] detectada na linha [7], declaração prévia na linha [2] ",11,TRUE
+GrupoH,kjl00,10,Error: Assignment to undeclared variable a on line 3. ,10,TRUE
+GrupoH,kjl01,11,Error: Redeclaration of variable a (int) on line 4: Found previous declaration a (int) on line 3. ,11,TRUE
+GrupoH,kjl02,11,Error: Redeclaration of variable a (float) on line 4: Found previous declaration a (int) on line 3. ,11,TRUE
+GrupoH,kjl03,0,NA,0,TRUE
+GrupoH,kjl04,11,Error: Redeclaration of function f > int on line 16: Found previous declaration f > int on line 2. ,11,TRUE
+GrupoH,kjl05,11,Error: Redeclaration of variable a (int) on line 10: Found previous declaration a (int) on line 3. ,11,TRUE
+GrupoH,kjl06,0,NA,0,TRUE
+GrupoH,kjl07,10,Error: Using undeclared variable a on line 3. ,10,TRUE
+GrupoH,kjl08,11,Error: Redeclaration of variable b (int) on line 3: Found previous declaration b (int) on line 2. ,11,TRUE
+GrupoH,kjl09,10,Error: Using undeclared variable b on line 4. ,10,TRUE
+GrupoH,kjl10,10,Error: Assignment to undeclared variable a on line 3. ,10,TRUE
+GrupoH,kjl11,10,Error: Assignment to undeclared variable a on line 4. ,10,TRUE
+GrupoH,kjl12,10,Error: Assignment to undeclared variable b on line 3. ,10,TRUE
+GrupoH,kjl13,10,Error: Assignment to undeclared variable a on line 3. ,10,TRUE
+GrupoH,kjl14,10,Error: Assignment to undeclared variable a on line 3. ,10,TRUE
+GrupoH,kjl15,10,Error: Assignment to undeclared variable a on line 4. ,10,TRUE
+GrupoH,kjl16,10,Error: Call to undeclared function g on line 4. ,10,TRUE
+GrupoH,kjl17,10,Error: Call to undeclared function h on line 3. ,10,TRUE
+GrupoH,kjl18,11,Error: Redeclaration of variable a (int) on line 11: Found previous declaration a (int) on line 5. ,11,TRUE
+GrupoH,kjl19,0,NA,0,TRUE
+GrupoH,kjl20,10,Error: Assignment to undeclared variable a on line 6. ,10,TRUE
+GrupoH,kjl21,10,Error: Assignment to undeclared variable a on line 6. ,10,TRUE
+GrupoH,kjl22,10,Error: Call to undeclared function g on line 7. ,10,TRUE
+GrupoH,kjl23,10,Error: Assignment to undeclared variable v on line 6. ,10,TRUE
+GrupoH,kjl24,11,Error: Redeclaration of function f > int on line 7: Found previous declaration f > int on line 2. ,11,TRUE
+GrupoH,kjl25,10,Error: Call to undeclared function g on line 10. ,10,TRUE
+GrupoH,kjl26,0,NA,0,TRUE
+GrupoH,kjl27,11,Error: Redeclaration of function g > int on line 8: Found previous declaration g > int on line 2. ,11,TRUE
+GrupoH,kjl28,11,Error: Redeclaration of parameter a <- int on line 2: Found previous declaration a <- int on line 2. ,11,TRUE
+GrupoH,kjl29,0,NA,0,TRUE
+GrupoH,kjl30,11,Error: Redeclaration of function main > int on line 7: Found previous declaration main > int on line 2. ,11,TRUE
+GrupoJ,kjl00,10,Erro na linha 3: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl01,11,Erro na linha 4: símbolo já declarado. O símbolo a foi previamente declarado na linha 3. ,11,TRUE
+GrupoJ,kjl02,11,Erro na linha 4: símbolo já declarado. O símbolo a foi previamente declarado na linha 3. ,11,TRUE
+GrupoJ,kjl03,0,NA,0,TRUE
+GrupoJ,kjl04,11,Erro na linha 16: símbolo já declarado. O símbolo f foi previamente declarado na linha 2. ,11,TRUE
+GrupoJ,kjl05,11,Erro na linha 10: símbolo já declarado. O símbolo a foi previamente declarado na linha 3. ,11,TRUE
+GrupoJ,kjl06,0,0x56227e0812a0 [label= g ]; ,0,TRUE
+GrupoJ,kjl07,10,Erro na linha 3: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl08,11,Erro na linha 3: símbolo já declarado. O símbolo b foi previamente declarado na linha 2. ,11,TRUE
+GrupoJ,kjl09,10,Erro na linha 4: símbolo não declarado. O símbolo b não foi declarado. ,10,TRUE
+GrupoJ,kjl10,10,Erro na linha 3: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl11,10,Erro na linha 4: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl12,10,Erro na linha 3: símbolo não declarado. O símbolo b não foi declarado. ,10,TRUE
+GrupoJ,kjl13,10,Erro na linha 3: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl14,10,Erro na linha 3: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl15,10,Erro na linha 4: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl16,10,Erro na linha 4: símbolo não declarado. O símbolo g não foi declarado. ,10,TRUE
+GrupoJ,kjl17,10,Erro na linha 3: símbolo não declarado. O símbolo h não foi declarado. ,10,TRUE
+GrupoJ,kjl18,11,Erro na linha 11: símbolo já declarado. O símbolo a foi previamente declarado na linha 5. ,11,TRUE
+GrupoJ,kjl19,0,0x55e2389e52a0 [label= f ]; ,0,TRUE
+GrupoJ,kjl20,10,Erro na linha 6: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl21,10,Erro na linha 6: símbolo não declarado. O símbolo a não foi declarado. ,10,TRUE
+GrupoJ,kjl22,10,Erro na linha 7: símbolo não declarado. O símbolo g não foi declarado. ,10,TRUE
+GrupoJ,kjl23,10,Erro na linha 6: símbolo não declarado. O símbolo v não foi declarado. ,10,TRUE
+GrupoJ,kjl24,11,Erro na linha 7: símbolo já declarado. O símbolo f foi previamente declarado na linha 2. ,11,TRUE
+GrupoJ,kjl25,10,Erro na linha 10: símbolo não declarado. O símbolo g não foi declarado. ,10,TRUE
+GrupoJ,kjl26,0,0x55741df3f2e0 [label= g ]; ,0,TRUE
+GrupoJ,kjl27,11,Erro na linha 8: símbolo já declarado. O símbolo g foi previamente declarado na linha 2. ,11,TRUE
+GrupoJ,kjl28,11,Erro na linha 2: símbolo já declarado. O símbolo a foi previamente declarado na linha 2. ,11,TRUE
+GrupoJ,kjl29,0,0x5644a52e22a0 [label= f ]; ,0,TRUE
+GrupoJ,kjl30,11,Erro na linha 7: símbolo já declarado. O símbolo main foi previamente declarado na linha 2. ,11,TRUE
+GrupoK,kjl00,10,ERRO na linha 3: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl01,11,ERRO na linha 4: O nome a ja esta sendo usado neste escopo. ,11,TRUE
+GrupoK,kjl02,11,ERRO na linha 4: O nome a ja esta sendo usado neste escopo. ,11,TRUE
+GrupoK,kjl03,0,Erro: asd_print recebeu parâmetro tree = (nil). ,0,TRUE
+GrupoK,kjl04,0,0x556c0f5043f0 [label= f ]; ,11,FALSE
+GrupoK,kjl05,11,ERRO na linha 10: O nome a ja esta sendo usado neste escopo. ,11,TRUE
+GrupoK,kjl06,0,0x556a131fb3f0 [label= g ]; ,0,TRUE
+GrupoK,kjl07,10,ERRO na linha 3: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl08,11,ERRO na linha 3: O nome b ja esta sendo usado neste escopo. ,11,TRUE
+GrupoK,kjl09,10,ERRO na linha 4: A variavel b nao foi declarada. ,10,TRUE
+GrupoK,kjl10,10,ERRO na linha 3: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl11,10,ERRO na linha 4: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl12,10,ERRO na linha 3: A variavel b nao foi declarada. ,10,TRUE
+GrupoK,kjl13,10,ERRO na linha 3: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl14,10,ERRO na linha 3: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl15,10,ERRO na linha 4: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl16,10,ERRO na linha 4: A funcao g foi chamada sem ter sido declarada. ,10,TRUE
+GrupoK,kjl17,10,ERRO na linha 3: A funcao h foi chamada sem ter sido declarada. ,10,TRUE
+GrupoK,kjl18,11,ERRO na linha 11: O nome a ja esta sendo usado neste escopo. ,11,TRUE
+GrupoK,kjl19,0,0x5588571cf3f0 [label= f ]; ,0,TRUE
+GrupoK,kjl20,10,ERRO na linha 6: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl21,10,ERRO na linha 6: A variavel a nao foi declarada. ,10,TRUE
+GrupoK,kjl22,10,ERRO na linha 7: A funcao g foi chamada sem ter sido declarada. ,10,TRUE
+GrupoK,kjl23,10,ERRO na linha 6: A variavel v nao foi declarada. ,10,TRUE
+GrupoK,kjl24,11,ERRO na linha 9: O nome b ja esta sendo usado neste escopo. ,11,TRUE
+GrupoK,kjl25,10,ERRO na linha 10: A funcao g foi chamada sem ter sido declarada. ,10,TRUE
+GrupoK,kjl26,0,0x5614a0863490 [label= g ]; ,0,TRUE
+GrupoK,kjl27,0,0x55f7abe2d490 [label= g ]; ,11,FALSE
+GrupoK,kjl28,0,0x55b9ae1775d0 [label= f ]; ,11,FALSE
+GrupoK,kjl29,0,0x558cb3f743f0 [label= f ]; ,0,TRUE
+GrupoK,kjl30,0,0x55be238423f0 [label= main ]; ,11,FALSE
+GrupoL,kjl00,10,"Erro na linha 3, variavel a nao declarada ",10,TRUE
+GrupoL,kjl01,11,"Erro na linha 4, identificador a já declarado na linha 3 ",11,TRUE
+GrupoL,kjl02,11,"Erro na linha 4, identificador a já declarado na linha 3 ",11,TRUE
+GrupoL,kjl03,0,NA,0,TRUE
+GrupoL,kjl04,11,"Erro na linha 16, funcao f já declarada na linha 2 ",11,TRUE
+GrupoL,kjl05,11,"Erro na linha 10, identificador a já declarado na linha 3 ",11,TRUE
+GrupoL,kjl06,0,0x560a8e845410 [label= g ]; ,0,TRUE
+GrupoL,kjl07,10,"Erro na linha 3, variavel a nao declarada ",10,TRUE
+GrupoL,kjl08,11,"Erro na linha 3, identificador b já declarado na linha 2 ",11,TRUE
+GrupoL,kjl09,10,"Erro na linha 4, variavel b nao declarada ",10,TRUE
+GrupoL,kjl10,10,"Erro na linha 3, variavel a nao declarada ",10,TRUE
+GrupoL,kjl11,10,"Erro na linha 4, variavel a nao declarada ",10,TRUE
+GrupoL,kjl12,10,"Erro na linha 3, variavel b nao declarada ",10,TRUE
+GrupoL,kjl13,10,"Erro na linha 3, variavel a nao declarada ",10,TRUE
+GrupoL,kjl14,10,"Erro na linha 3, variavel a nao declarada ",10,TRUE
+GrupoL,kjl15,10,"Erro na linha 4, variavel a nao declarada ",10,TRUE
+GrupoL,kjl16,10,"Erro na linha 4, funcao g nao declarada ",10,TRUE
+GrupoL,kjl17,10,"Erro na linha 3, funcao h nao declarada ",10,TRUE
+GrupoL,kjl18,11,"Erro na linha 11, identificador a já declarado na linha 5 ",11,TRUE
+GrupoL,kjl19,0,0x5573dfb4b410 [label= f ]; ,0,TRUE
+GrupoL,kjl20,10,"Erro na linha 6, variavel a nao declarada ",10,TRUE
+GrupoL,kjl21,10,"Erro na linha 6, variavel a nao declarada ",10,TRUE
+GrupoL,kjl22,10,"Erro na linha 7, funcao g nao declarada ",10,TRUE
+GrupoL,kjl23,10,"Erro na linha 6, variavel v nao declarada ",10,TRUE
+GrupoL,kjl24,11,"Erro na linha 7, funcao f já declarada na linha 2 ",11,TRUE
+GrupoL,kjl25,10,"Erro na linha 10, funcao g nao declarada ",10,TRUE
+GrupoL,kjl26,0,0x55a760f0d4c0 [label= g ]; ,0,TRUE
+GrupoL,kjl27,11,"Erro na linha 8, funcao g já declarada na linha 2 ",11,TRUE
+GrupoL,kjl28,11,"Erro na linha 2, parâmetro a já declarado na linha 2 ",11,TRUE
+GrupoL,kjl29,0,0x5614e78ba410 [label= f ]; ,0,TRUE
+GrupoL,kjl30,11,"Erro na linha 7, funcao main já declarada na linha 2 ",11,TRUE
+GrupoM,kjl00,10,Erro na linha 3: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl01,11,Erro na linha 4: O identificador a já foi declarado na linha 3! ,11,TRUE
+GrupoM,kjl02,11,Erro na linha 4: O identificador a já foi declarado na linha 3! ,11,TRUE
+GrupoM,kjl03,0,NA,0,TRUE
+GrupoM,kjl04,11,Erro na linha 16: O identificador f já foi declarado na linha 2! ,11,TRUE
+GrupoM,kjl05,11,Erro na linha 10: O identificador a já foi declarado na linha 3! ,11,TRUE
+GrupoM,kjl06,0,0x557adae81470 [label= g ]; ,0,TRUE
+GrupoM,kjl07,10,Erro na linha 3: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl08,11,Erro na linha 3: O identificador b já foi declarado na linha 2! ,11,TRUE
+GrupoM,kjl09,10,Erro na linha 4: A variável b não foi declarada! ,10,TRUE
+GrupoM,kjl10,10,Erro na linha 3: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl11,10,Erro na linha 4: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl12,10,Erro na linha 3: A variável b não foi declarada! ,10,TRUE
+GrupoM,kjl13,10,Erro na linha 3: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl14,10,Erro na linha 3: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl15,10,Erro na linha 4: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl16,10,Erro na linha 4: A função g não foi declarada! ,10,TRUE
+GrupoM,kjl17,10,Erro na linha 3: A função h não foi declarada! ,10,TRUE
+GrupoM,kjl18,11,Erro na linha 11: O identificador a já foi declarado na linha 5! ,11,TRUE
+GrupoM,kjl19,0,0x55e4c9c0d470 [label= f ]; ,0,TRUE
+GrupoM,kjl20,10,Erro na linha 6: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl21,10,Erro na linha 6: A variável a não foi declarada! ,10,TRUE
+GrupoM,kjl22,10,Erro na linha 7: A função g não foi declarada! ,10,TRUE
+GrupoM,kjl23,10,Erro na linha 6: A variável v não foi declarada! ,10,TRUE
+GrupoM,kjl24,11,Erro na linha 7: O identificador f já foi declarado na linha 2! ,11,TRUE
+GrupoM,kjl25,10,Erro na linha 10: A função g não foi declarada! ,10,TRUE
+GrupoM,kjl26,0,0x556acdd10510 [label= g ]; ,0,TRUE
+GrupoM,kjl27,11,Erro na linha 8: O identificador g já foi declarado na linha 2! ,11,TRUE
+GrupoM,kjl28,11,Erro na linha 2: O identificador a já foi declarado na linha 2! ,11,TRUE
+GrupoM,kjl29,0,0x56473ccbb470 [label= f ]; ,0,TRUE
+GrupoM,kjl30,11,Erro na linha 7: O identificador main já foi declarado na linha 2! ,11,TRUE
+GrupoN,kjl00,139,Segmentation fault,10,FALSE
+GrupoN,kjl01,0,NA,11,FALSE
+GrupoN,kjl02,0,NA,11,FALSE
+GrupoN,kjl03,0,NA,0,TRUE
+GrupoN,kjl04,0,NA,11,FALSE
+GrupoN,kjl05,0,NA,11,FALSE
+GrupoN,kjl06,0,NA,0,TRUE
+GrupoN,kjl07,139,Segmentation fault,10,FALSE
+GrupoN,kjl08,0,NA,11,FALSE
+GrupoN,kjl09,139,Segmentation fault,10,FALSE
+GrupoN,kjl10,139,Segmentation fault,10,FALSE
+GrupoN,kjl11,139,Segmentation fault,10,FALSE
+GrupoN,kjl12,139,Segmentation fault,10,FALSE
+GrupoN,kjl13,139,Segmentation fault,10,FALSE
+GrupoN,kjl14,139,Segmentation fault,10,FALSE
+GrupoN,kjl15,139,Segmentation fault,10,FALSE
+GrupoN,kjl16,0,NA,10,FALSE
+GrupoN,kjl17,0,NA,10,FALSE
+GrupoN,kjl18,0,NA,11,FALSE
+GrupoN,kjl19,0,NA,0,TRUE
+GrupoN,kjl20,139,Segmentation fault,10,FALSE
+GrupoN,kjl21,139,Segmentation fault,10,FALSE
+GrupoN,kjl22,0,NA,10,FALSE
+GrupoN,kjl23,139,Segmentation fault,10,FALSE
+GrupoN,kjl24,0,NA,11,FALSE
+GrupoN,kjl25,0,NA,10,FALSE
+GrupoN,kjl26,0,NA,0,TRUE
+GrupoN,kjl27,0,NA,11,FALSE
+GrupoN,kjl28,0,NA,11,FALSE
+GrupoN,kjl29,139,Segmentation fault,0,FALSE
+GrupoN,kjl30,0,NA,11,FALSE
+GrupoO,kjl00,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 3. ,10,TRUE
+GrupoO,kjl01,11,"SEMANTIC ERROR: Attempted to declare symbol a in line 4, but it is already declared in line 3 (nested scope level 2). ",11,TRUE
+GrupoO,kjl02,11,"SEMANTIC ERROR: Attempted to declare symbol a in line 4, but it is already declared in line 3 (nested scope level 2). ",11,TRUE
+GrupoO,kjl03,0,NA,0,TRUE
+GrupoO,kjl04,11,"SEMANTIC ERROR: Attempted to declare symbol f in line 16, but it is already declared in line 2 (global scope). ",11,TRUE
+GrupoO,kjl05,11,"SEMANTIC ERROR: Attempted to declare symbol a in line 10, but it is already declared in line 3 (nested scope level 2). ",11,TRUE
+GrupoO,kjl06,134,Double free detected,0,FALSE
+GrupoO,kjl07,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 3. ,10,TRUE
+GrupoO,kjl08,11,"SEMANTIC ERROR: Attempted to declare symbol b in line 3, but it is already declared in line 2 (nested scope level 2). ",11,TRUE
+GrupoO,kjl09,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol b in line 4. ,10,TRUE
+GrupoO,kjl10,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 3. ,10,TRUE
+GrupoO,kjl11,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 4. ,10,TRUE
+GrupoO,kjl12,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol b in line 3. ,10,TRUE
+GrupoO,kjl13,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 3. ,10,TRUE
+GrupoO,kjl14,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 3. ,10,TRUE
+GrupoO,kjl15,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 4. ,10,TRUE
+GrupoO,kjl16,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol g in line 4. ,10,TRUE
+GrupoO,kjl17,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol h in line 3. ,10,TRUE
+GrupoO,kjl18,11,"SEMANTIC ERROR: Attempted to declare symbol a in line 5, but it is already declared in line 3 (nested scope level 2). ",11,TRUE
+GrupoO,kjl19,11,"SEMANTIC ERROR: Attempted to declare symbol a in line 6, but it is already declared in line 3 (nested scope level 2). ",0,FALSE
+GrupoO,kjl20,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 6. ,10,TRUE
+GrupoO,kjl21,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol a in line 6. ,10,TRUE
+GrupoO,kjl22,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol g in line 7. ,10,TRUE
+GrupoO,kjl23,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol v in line 6. ,10,TRUE
+GrupoO,kjl24,11,"SEMANTIC ERROR: Attempted to declare symbol f in line 7, but it is already declared in line 2 (global scope). ",11,TRUE
+GrupoO,kjl25,10,SEMANTIC ERROR: Attempted attribution operation with undeclared symbol g in line 10. ,10,TRUE
+GrupoO,kjl26,134,Double free detected,0,FALSE
+GrupoO,kjl27,11,"SEMANTIC ERROR: Attempted to declare symbol g in line 8, but it is already declared in line 2 (global scope). ",11,TRUE
+GrupoO,kjl28,11,"SEMANTIC ERROR: Attempted to declare symbol a in line 2, but it is already declared in line 2 (nested scope level 2). ",11,TRUE
+GrupoO,kjl29,134,Double free detected,0,FALSE
+GrupoO,kjl30,11,"SEMANTIC ERROR: Attempted to declare symbol main in line 4, but it is already declared in line 2 (global scope). ",11,TRUE
+GrupoP,kjl00,10,"Line 3: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl01,11,"Line 4: semantic error, Identifier a was already declared on line 3. ",11,TRUE
+GrupoP,kjl02,11,"Line 4: semantic error, Identifier a was already declared on line 3. ",11,TRUE
+GrupoP,kjl03,0,NA,0,TRUE
+GrupoP,kjl04,11,"Line 16: semantic error, Function f was already declared on line 2. ",11,TRUE
+GrupoP,kjl05,11,"Line 10: semantic error, Identifier a was already declared on line 3. ",11,TRUE
+GrupoP,kjl06,0,NA,0,TRUE
+GrupoP,kjl07,10,"Line 3: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl08,11,"Line 3: semantic error, Identifier b was already declared on line 2. ",11,TRUE
+GrupoP,kjl09,10,"Line 4: semantic error, Identifier b was not declared. ",10,TRUE
+GrupoP,kjl10,10,"Line 3: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl11,10,"Line 4: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl12,10,"Line 3: semantic error, Identifier b was not declared. ",10,TRUE
+GrupoP,kjl13,10,"Line 3: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl14,10,"Line 3: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl15,10,"Line 4: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl16,10,"Line 4: semantic error, Function g was not declared. ",10,TRUE
+GrupoP,kjl17,10,"Line 3: semantic error, Function h was not declared. ",10,TRUE
+GrupoP,kjl18,11,"Line 11: semantic error, Identifier a was already declared on line 5. ",11,TRUE
+GrupoP,kjl19,0,NA,0,TRUE
+GrupoP,kjl20,10,"Line 6: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl21,10,"Line 6: semantic error, Identifier a was not declared. ",10,TRUE
+GrupoP,kjl22,10,"Line 7: semantic error, Function g was not declared. ",10,TRUE
+GrupoP,kjl23,10,"Line 6: semantic error, Identifier v was not declared. ",10,TRUE
+GrupoP,kjl24,11,"Line 7: semantic error, Function f was already declared on line 2. ",11,TRUE
+GrupoP,kjl25,10,"Line 10: semantic error, Function g was not declared. ",10,TRUE
+GrupoP,kjl26,0,NA,0,TRUE
+GrupoP,kjl27,11,"Line 8: semantic error, Function g was already declared on line 2. ",11,TRUE
+GrupoP,kjl28,11,"Line 2: semantic error, Identifier a was already declared on line 2. ",11,TRUE
+GrupoP,kjl29,0,NA,0,TRUE
+GrupoP,kjl30,11,"Line 7: semantic error, Function main was already declared on line 2. ",11,TRUE
+GrupoR,kjl00,10,Semantic error (line 3): identifier a not declared. ,10,TRUE
+GrupoR,kjl01,11,Semantic error (line 4): identifier a already declared in the current scope. ,11,TRUE
+GrupoR,kjl02,11,Semantic error (line 4): identifier a already declared in the current scope. ,11,TRUE
+GrupoR,kjl03,0,NA,0,TRUE
+GrupoR,kjl04,11,Semantic error (line 16): identifier f already declared in the current scope. ,11,TRUE
+GrupoR,kjl05,11,Semantic error (line 10): identifier a already declared in the current scope. ,11,TRUE
+GrupoR,kjl06,0,NA,0,TRUE
+GrupoR,kjl07,10,Semantic error (line 3): identifier a not declared. ,10,TRUE
+GrupoR,kjl08,11,Semantic error (line 3): identifier b already declared in the current scope. ,11,TRUE
+GrupoR,kjl09,10,Semantic error (line 4): identifier b not declared. ,10,TRUE
+GrupoR,kjl10,10,Semantic error (line 3): identifier a not declared. ,10,TRUE
+GrupoR,kjl11,10,Semantic error (line 4): identifier a not declared. ,10,TRUE
+GrupoR,kjl12,10,Semantic error (line 3): identifier b not declared. ,10,TRUE
+GrupoR,kjl13,10,Semantic error (line 3): identifier a not declared. ,10,TRUE
+GrupoR,kjl14,10,Semantic error (line 3): identifier a not declared. ,10,TRUE
+GrupoR,kjl15,10,Semantic error (line 4): identifier a not declared. ,10,TRUE
+GrupoR,kjl16,10,Semantic error (line 4): identifier g not declared. ,10,TRUE
+GrupoR,kjl17,10,Semantic error (line 3): identifier h not declared. ,10,TRUE
+GrupoR,kjl18,11,Semantic error (line 11): identifier a already declared in the current scope. ,11,TRUE
+GrupoR,kjl19,0,NA,0,TRUE
+GrupoR,kjl20,10,Semantic error (line 6): identifier a not declared. ,10,TRUE
+GrupoR,kjl21,10,Semantic error (line 6): identifier a not declared. ,10,TRUE
+GrupoR,kjl22,10,Semantic error (line 7): identifier g not declared. ,10,TRUE
+GrupoR,kjl23,10,Semantic error (line 6): identifier v not declared. ,10,TRUE
+GrupoR,kjl24,11,Semantic error (line 7): identifier f already declared in the current scope. ,11,TRUE
+GrupoR,kjl25,10,Semantic error (line 10): identifier g not declared. ,10,TRUE
+GrupoR,kjl26,0,NA,0,TRUE
+GrupoR,kjl27,11,Semantic error (line 8): identifier g already declared in the current scope. ,11,TRUE
+GrupoR,kjl28,11,Semantic error (line 2): identifier a already declared in the current scope. ,11,TRUE
+GrupoR,kjl29,0,NA,0,TRUE
+GrupoR,kjl30,11,Semantic error (line 7): identifier main already declared in the current scope. ,11,TRUE
+GrupoS,kjl00,10,"Erro na linha 3, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl01,11,"Erro na linha 4, identificador a já foi declarado na linha 4",11,TRUE
+GrupoS,kjl02,11,"Erro na linha 4, identificador a já foi declarado na linha 4",11,TRUE
+GrupoS,kjl03,0,NA,0,TRUE
+GrupoS,kjl04,11,"Erro na linha 16, identificador f já declarado na linha 2 ",11,TRUE
+GrupoS,kjl05,11,"Erro na linha 10, identificador a já foi declarado na linha 10",11,TRUE
+GrupoS,kjl06,0,  0x5636a7bd83f0 [label= g ]; ,0,TRUE
+GrupoS,kjl07,10,"Erro na linha 3, operador a não declarado ",10,TRUE
+GrupoS,kjl08,11,"Erro na linha 3, identificador b já foi declarado na linha 3",11,TRUE
+GrupoS,kjl09,10,"Erro na linha 4, operador b não declarado ",10,TRUE
+GrupoS,kjl10,10,"Erro na linha 3, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl11,10,"Erro na linha 4, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl12,10,"Erro na linha 3, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl13,10,"Erro na linha 3, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl14,10,"Erro na linha 3, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl15,10,"Erro na linha 4, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl16,10,"Erro na linha 4, função g não existe ",10,TRUE
+GrupoS,kjl17,10,"Erro na linha 3, função h não existe ",10,TRUE
+GrupoS,kjl18,11,"Erro na linha 11, identificador a já foi declarado na linha 11",11,TRUE
+GrupoS,kjl19,0,  0x55eb922f03f0 [label= f ]; ,0,TRUE
+GrupoS,kjl20,10,"Erro na linha 6, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl21,10,"Erro na linha 6, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl22,10,"Erro na linha 7, função g não existe ",10,TRUE
+GrupoS,kjl23,10,"Erro na linha 6, atribuição feita para variável não declarada ",10,TRUE
+GrupoS,kjl24,11,"Erro na linha 7, identificador f já declarado na linha 2 ",11,TRUE
+GrupoS,kjl25,10,"Erro na linha 10, função g não existe ",10,TRUE
+GrupoS,kjl26,0,  0x558d98c59490 [label= g ]; ,0,TRUE
+GrupoS,kjl27,11,"Erro na linha 8, identificador g já declarado na linha 2 ",11,TRUE
+GrupoS,kjl28,11,"Erro na linha 2, parâmetro a já declarado",11,TRUE
+GrupoS,kjl29,0,  0x55e2409203f0 [label= f ]; ,0,TRUE
+GrupoS,kjl30,11,"Erro na linha 7, identificador main já declarado na linha 2 ",11,TRUE
+GrupoT,kjl00,10,Erro semântico na linha 3: identificador a não declarado ,10,TRUE
+GrupoT,kjl01,11,Erro semântico na linha 4: identificador a já declarado anteriormente na linha 3 ,11,TRUE
+GrupoT,kjl02,11,Erro semântico na linha 4: identificador a já declarado anteriormente na linha 3 ,11,TRUE
+GrupoT,kjl03,0, ,0,TRUE
+GrupoT,kjl04,11,Erro semântico na linha 16: identificador f já declarado anteriormente na linha 2 ,11,TRUE
+GrupoT,kjl05,11,Erro semântico na linha 10: identificador a já declarado anteriormente na linha 3 ,11,TRUE
+GrupoT,kjl06,0,"0x557f64db5460, 0x557f64db5630 ",0,TRUE
+GrupoT,kjl07,10,Erro semântico na linha 3: identificador a não declarado ,10,TRUE
+GrupoT,kjl08,11,Erro semântico na linha 3: identificador b já declarado anteriormente na linha 2 ,11,TRUE
+GrupoT,kjl09,10,Erro semântico na linha 4: identificador b não declarado ,10,TRUE
+GrupoT,kjl10,10,Erro semântico na linha 3: identificador a não declarado ,10,TRUE
+GrupoT,kjl11,10,Erro semântico na linha 4: identificador a não declarado ,10,TRUE
+GrupoT,kjl12,10,Erro semântico na linha 3: identificador b não declarado ,10,TRUE
+GrupoT,kjl13,10,Erro semântico na linha 3: identificador a não declarado ,10,TRUE
+GrupoT,kjl14,10,Erro semântico na linha 3: identificador a não declarado ,10,TRUE
+GrupoT,kjl15,10,Erro semântico na linha 4: identificador a não declarado ,10,TRUE
+GrupoT,kjl16,10,Erro semântico na linha 4: identificador g não declarado ,10,TRUE
+GrupoT,kjl17,10,Erro semântico na linha 3: identificador h não declarado ,10,TRUE
+GrupoT,kjl18,11,Erro semântico na linha 11: identificador a já declarado anteriormente na linha 5 ,11,TRUE
+GrupoT,kjl19,0,"0x5568a8721460, 0x5568a8721b50 ",0,TRUE
+GrupoT,kjl20,10,Erro semântico na linha 6: identificador a não declarado ,10,TRUE
+GrupoT,kjl21,10,Erro semântico na linha 6: identificador a não declarado ,10,TRUE
+GrupoT,kjl22,10,Erro semântico na linha 7: identificador g não declarado ,10,TRUE
+GrupoT,kjl23,10,Erro semântico na linha 6: identificador v não declarado ,10,TRUE
+GrupoT,kjl24,11,Erro semântico na linha 7: identificador f já declarado anteriormente na linha 2 ,11,TRUE
+GrupoT,kjl25,10,Erro semântico na linha 10: identificador g não declarado ,10,TRUE
+GrupoT,kjl26,0,"0x55e60c7465c0, 0x55e60c746790 ",0,TRUE
+GrupoT,kjl27,11,Erro semântico na linha 8: identificador g já declarado anteriormente na linha 2 ,11,TRUE
+GrupoT,kjl28,11,Erro semântico na linha 2: identificador a já declarado anteriormente na linha 2 ,11,TRUE
+GrupoT,kjl29,0,"0x55556c4d6460, 0x55556c4d68b0 ",0,TRUE
+GrupoT,kjl30,11,Erro semântico na linha 7: identificador main já declarado anteriormente na linha 2 ,11,TRUE
