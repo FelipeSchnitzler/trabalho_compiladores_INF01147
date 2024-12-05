@@ -110,3 +110,32 @@ asd_tree_t *asd_get_last_child(asd_tree_t *tree){
     printf("Erro: %s recebeu parâmetro tree = %p.\n", __FUNCTION__, tree);
   }
 }
+
+/*[EngSw]=======================================================================================*/
+
+/*
+ * Funcao para facilitar a vida de expressoes
+ */
+
+// asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_tree_t* right) {
+//     if (!operator || !left || !right) {
+//       printf("Erro: %s recebeu parâmetro tree = %p.\n", __FUNCTION__, tree);
+//       return NULL;
+//     }
+
+//     // Cria um novo nó para o operador
+//     asd_tree_t* node = asd_new(operator);
+//     if (!node) {
+//         log_error("Falha ao criar nó para operação binária.");
+//         return NULL;
+//     }
+
+//     // Adiciona os filhos (operandos) ao nó do operador
+//     asd_add_child(node, left);
+//     asd_add_child(node, right);
+
+//     // Infere o tipo resultante com base nos tipos dos operandos
+//     // node->tipo = type_inference(left->tipo, right->tipo);
+
+//     return node;
+// }

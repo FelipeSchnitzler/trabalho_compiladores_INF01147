@@ -325,37 +325,47 @@ expr4:
     | expr3 { $$ = $1; };
 
 expr3: 
-expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
-| expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
-| expr2 { $$ = $1; };
+    expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
+    | expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
+    | expr2 { $$ = $1; };
 
 expr2: 
-expr2 '*' expr1 { $$ = asd_new("*"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
-| expr2 '/' expr1 { $$ = asd_new("/"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
-| expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
-| expr1 { $$ = $1;};
+    expr2 '*' expr1 {
+        $$ = asd_new("*"); 
+        asd_add_child($$,$1); 
+        asd_add_child($$,$3); 
+        $$->tipo = type_inference($1->tipo,$3->tipo);
+        }
+    | expr2 '/' expr1 { 
+        $$ = asd_new("/"); 
+        asd_add_child($$,$1); 
+        asd_add_child($$,$3); 
+        $$->tipo = type_inference($1->tipo,$3->tipo);
+    }
+    | expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
+    | expr1 { $$ = $1;};
 
 expr1: 
-'-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
-| '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
-| TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = FLOAT;}
-| TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = INT;}
-| chamada_funcao  { $$ = $1; }
-|'(' expressao ')' { $$ = $2; };
-| TK_IDENTIFICADOR { 
-    Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
-    if(symbol == NULL){
-        printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
-        exit(ERR_UNDECLARED);
+    '-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
+    | '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
+    | TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = FLOAT;}
+    | TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = INT;}
+    | chamada_funcao  { $$ = $1; }
+    |'(' expressao ')' { $$ = $2; };
+    | TK_IDENTIFICADOR { 
+        Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
+        if(symbol == NULL){
+            printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
+            exit(ERR_UNDECLARED);
+        }
+        if(symbol->natureza != IDENTIFICADOR) {
+            printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
+            exit(ERR_FUNCTION);
+        }
+        $$ = asd_new($1->valor); 
+        $$->tipo = symbol->tipo;
+        valor_lexico_free($1); 
     }
-    if(symbol->natureza != IDENTIFICADOR) {
-        printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
-        exit(ERR_FUNCTION);
-    }
-    $$ = asd_new($1->valor); 
-    $$->tipo = symbol->tipo;
-    valor_lexico_free($1); 
-}
 
 %%
 
