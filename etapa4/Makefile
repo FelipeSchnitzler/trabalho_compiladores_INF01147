@@ -61,7 +61,7 @@ clean_entrega:
 
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
-TESTE = testes/E3/z02
+TESTE = testes/E3/z31
 REF = $(TESTE).ref.dot
 
 tst: png

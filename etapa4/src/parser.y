@@ -325,23 +325,36 @@ expr4:
     | expr3 { $$ = $1; };
 
 expr3: 
-    expr3 '+' expr2 { $$ = asd_new("+"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
-    | expr3 '-' expr2 { $$ = asd_new("-"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
-    | expr2 { $$ = $1; };
+    expr3 '+' expr2 { 
+        $$ = handle_binary_operation("+", $1, $3); 
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr3 '-' expr2 { 
+        $$ = handle_binary_operation("-", $1, $3); 
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr2 { 
+        $$ = $1; 
+    };
+
 
 expr2: 
-    expr2 '*' expr1 {
-        $$ = handle_binary_operation("*",$1,$3);
-        $$->tipo = type_inference($1->tipo,$3->tipo);
-        }
-    | expr2 '/' expr1 { 
-        $$ = asd_new("/"); 
-        asd_add_child($$,$1); 
-        asd_add_child($$,$3); 
-        $$->tipo = type_inference($1->tipo,$3->tipo);
+    expr2 '*' expr1 { 
+        $$ = handle_binary_operation("*", $1, $3); 
+        $$->tipo = type_inference($1->tipo, $3->tipo);
     }
-    | expr2 '%' expr1 { $$ = asd_new("%"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
-    | expr1 { $$ = $1;};
+    | expr2 '/' expr1 { 
+        $$ = handle_binary_operation("/", $1, $3); 
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr2 '%' expr1 { 
+        $$ = handle_binary_operation("%", $1, $3); 
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr1 { 
+        $$ = $1; 
+    };
+
 
 expr1: 
     '-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
