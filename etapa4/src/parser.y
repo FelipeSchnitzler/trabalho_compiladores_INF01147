@@ -331,9 +331,7 @@ expr3:
 
 expr2: 
     expr2 '*' expr1 {
-        $$ = asd_new("*"); 
-        asd_add_child($$,$1); 
-        asd_add_child($$,$3); 
+        $$ = handle_binary_operation("*",$1,$3);
         $$->tipo = type_inference($1->tipo,$3->tipo);
         }
     | expr2 '/' expr1 { 

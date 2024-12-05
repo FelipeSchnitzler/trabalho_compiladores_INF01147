@@ -38,4 +38,11 @@ void asd_print_graphviz (asd_tree_t *tree);
  * Função que pega quem deve ser o pai do prox comando
  */
 asd_tree_t *asd_get_last_child(asd_tree_t *tree);
+
+/*
+ * Funcao para facilitar a vida de expressoes
+ */
+
+asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_tree_t* right) ;
+
 #endif //_ARVORE_H_
