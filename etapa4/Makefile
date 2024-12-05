@@ -61,18 +61,27 @@ clean_entrega:
 
 ## [Testes] ====================================================================
 ## Criados de maneira experimental para ajudar no debug manual
-TESTE = testes/E3/z31
+## Dica:  use ==>   export i=$((i + 1)); make t num=$(printf "%02d" "$i")
+num ?= 53
+TESTE = testes/E3/z$(num)
 REF = $(TESTE).ref.dot
+
+t: tst
 
 tst: png
 	dot $(REF) -Tpng -o outputs/ref.png
 	xdg-open outputs/ref.png 
+	xdg-open outputs/grafo.png
 
 png: $(ETAPA) 
 	mkdir -p outputs
 	./etapa4 < $(TESTE)
 	dot saida.dot -Tpng -o outputs/grafo.png
-	xdg-open outputs/grafo.png
+
+
+print_teste: 
+	printf ">>>> Teste: $(TESTE)"
+
 ## ==============================================================================
 
-.PHONY: clean
+.PHONY: clean print_teste

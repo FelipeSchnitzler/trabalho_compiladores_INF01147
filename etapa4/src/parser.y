@@ -317,13 +317,30 @@ expr5:
     | expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
     | expr4 { $$ = $1; };
 
-expr4: 
-    expr4 '<' expr3 { $$ = asd_new("<"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
-    | expr4 '>' expr3 { $$ = asd_new(">"); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo);}
-    | expr4 TK_OC_LE expr3 { $$ = asd_new("<="); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
-    | expr4 TK_OC_GE expr3 { $$ = asd_new(">="); asd_add_child($$,$1); asd_add_child($$,$3); $$->tipo = type_inference($1->tipo,$3->tipo); }
-    | expr3 { $$ = $1; };
 
+/* ============================== [3.4] Expressoes aritmeticas ============================== */
+expr4:
+    expr4 '<' expr3 {
+        $$ = handle_binary_operation("<", $1, $3);
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr4 '>' expr3 {
+        $$ = handle_binary_operation(">", $1, $3);
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr4 TK_OC_LE expr3 {
+        $$ = handle_binary_operation("<=", $1, $3);
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr4 TK_OC_GE expr3 {
+        $$ = handle_binary_operation(">=", $1, $3);
+        $$->tipo = type_inference($1->tipo, $3->tipo);
+    }
+    | expr3 {
+        $$ = $1;
+    };
+
+/* ============================== [3.4] Expressoes aritmeticas ============================== */
 expr3: 
     expr3 '+' expr2 { 
         $$ = handle_binary_operation("+", $1, $3); 
