@@ -217,27 +217,11 @@ identificador:
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
-        $$ = asd_new("<="); 
-        asd_add_child($$, asd_new($1->valor));
-        asd_add_child($$, asd_new($3->valor));
-        Symbol *identificador = find_symbol(stack->table,$1->valor);
-        if(identificador != NULL){
-            printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
-            exit(ERR_DECLARED);
-        }
-        insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+        $$ = make_IDENTIFICADOR("<=",$1->valor,$3->valor);
         valor_lexico_free($1); valor_lexico_free($3);
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { 
-        $$ = asd_new("<="); 
-        asd_add_child($$, asd_new($1->valor)); 
-        asd_add_child($$, asd_new($3->valor));
-        Symbol *identificador = find_symbol(stack->table,$1->valor);
-        if(identificador != NULL){
-            printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), $1->valor, identificador->linha);
-            exit(ERR_DECLARED);
-        }
-        insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+        $$ = make_IDENTIFICADOR("<=",$1->valor,$3->valor);
         valor_lexico_free($1); valor_lexico_free($3);
     };
     
@@ -399,4 +383,21 @@ char *cria_label_func(char *identificador)
     strcat(ret, identificador);
 
     return ret;
+}
+
+asd_tree_t *make_IDENTIFICADOR(const char *label,const char *nome_identificador,const char *valor){
+    asd_tree_t *new_identificador = asd_new(label); 
+    
+    asd_add_child(new_identificador, asd_new(nome_identificador));
+    asd_add_child(new_identificador, asd_new(valor));
+
+    Symbol *identificador = find_symbol(stack->table,nome_identificador);
+    if(identificador != NULL){
+        printf("Erro na linha %d, identificador '%s' já declarado na linha %d\n",get_line_number(), nome_identificador, identificador->linha);
+        exit(ERR_DECLARED);
+    }
+
+    insert_symbol(stack->table,nome_identificador,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+
+    return new_identificador;
 }

@@ -49,4 +49,6 @@ asd_tree_t *asd_new_with_1_child(const char *label, asd_tree_t *child1);
 
 TipoDado type_inference(TipoDado tipo1, TipoDado tipo2);
 
+asd_tree_t *make_IDENTIFICADOR(const char *label,const char *nome_identificador,const char *valor);
+
 #endif //_ARVORE_H_
