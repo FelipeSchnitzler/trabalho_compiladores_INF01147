@@ -258,6 +258,7 @@ comando_atribuicao:
             $$ = asd_new("=");
             asd_add_child($$, asd_new($1->valor)); 
             asd_add_child($$,$3); valor_lexico_free($1);
+            $$->tipo = symbol->tipo;
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
