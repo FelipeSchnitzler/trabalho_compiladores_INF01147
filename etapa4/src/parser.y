@@ -9,7 +9,7 @@
     extern void *arvore;
     extern SymbolTableStack *stack;
     char *cria_label_func(char *identificador);
-    TipoDado type_inference(TipoDado tipo1, TipoDado tipo2);
+    
 %}
 
 %code requires { 
@@ -305,68 +305,43 @@ comando_controle_fluxo:
 expressao: expr7 { $$ = $1; };
 
 expr7: 
-    expr7 TK_OC_OR expr6 {$$ = asd_new("|"); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
+    expr7 TK_OC_OR expr6 {$$ = handle_binary_operation("|", $1, $3);  }
     | expr6 { $$ = $1; };
 
 expr6: 
-    expr6 TK_OC_AND expr5 { $$ = asd_new("&"); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
+    expr6 TK_OC_AND expr5 { $$ = handle_binary_operation("&", $1, $3);  }
     | expr5 { $$ = $1; };
 
 expr5: 
-    expr5 TK_OC_NE expr4 { $$ = asd_new("!="); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
-    | expr5 TK_OC_EQ expr4 { $$ = asd_new("=="); asd_add_child($$,$1); asd_add_child($$,$3);  $$->tipo = type_inference($1->tipo,$3->tipo); }
+    expr5 TK_OC_NE expr4 { $$ = handle_binary_operation("!=", $1, $3);  }
+    | expr5 TK_OC_EQ expr4 { $$ = handle_binary_operation("==", $1, $3); }
     | expr4 { $$ = $1; };
 
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
 expr4:
-    expr4 '<' expr3 {
-        $$ = handle_binary_operation("<", $1, $3);
-        $$->tipo = type_inference($1->tipo, $3->tipo);
-    }
-    | expr4 '>' expr3 {
-        $$ = handle_binary_operation(">", $1, $3);
-        $$->tipo = type_inference($1->tipo, $3->tipo);
-    }
-    | expr4 TK_OC_LE expr3 {
-        $$ = handle_binary_operation("<=", $1, $3);
-        $$->tipo = type_inference($1->tipo, $3->tipo);
-    }
-    | expr4 TK_OC_GE expr3 {
-        $$ = handle_binary_operation(">=", $1, $3);
-        $$->tipo = type_inference($1->tipo, $3->tipo);
-    }
-    | expr3 {
-        $$ = $1;
-    };
+    expr4 '<' expr3 { $$ = handle_binary_operation("<", $1, $3); }
+    | expr4 '>' expr3 { $$ = handle_binary_operation(">", $1, $3); }
+    | expr4 TK_OC_LE expr3 { $$ = handle_binary_operation("<=", $1, $3); }
+    | expr4 TK_OC_GE expr3 { $$ = handle_binary_operation(">=", $1, $3); }
+    | expr3 { $$ = $1; };
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
 expr3: 
-    expr3 '+' expr2 { 
-        $$ = handle_binary_operation("+", $1, $3); 
-        $$->tipo = type_inference($1->tipo, $3->tipo);
-    }
-    | expr3 '-' expr2 { 
-        $$ = handle_binary_operation("-", $1, $3); 
-        $$->tipo = type_inference($1->tipo, $3->tipo);
-    }
-    | expr2 { 
-        $$ = $1; 
-    };
+    expr3 '+' expr2 { $$ = handle_binary_operation("+", $1, $3); }
+    | expr3 '-' expr2 { $$ = handle_binary_operation("-", $1, $3); }
+    | expr2 { $$ = $1; };
 
 
 expr2: 
     expr2 '*' expr1 { 
         $$ = handle_binary_operation("*", $1, $3); 
-        $$->tipo = type_inference($1->tipo, $3->tipo);
     }
     | expr2 '/' expr1 { 
         $$ = handle_binary_operation("/", $1, $3); 
-        $$->tipo = type_inference($1->tipo, $3->tipo);
     }
     | expr2 '%' expr1 { 
         $$ = handle_binary_operation("%", $1, $3); 
-        $$->tipo = type_inference($1->tipo, $3->tipo);
     }
     | expr1 { 
         $$ = $1; 
@@ -374,12 +349,18 @@ expr2:
 
 
 expr1: 
-    '-' expr1 { $$ = asd_new("-"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
-    | '!' expr1 { $$ = asd_new("!"); asd_add_child($$,$2); $$->tipo = $2->tipo;}
-    | TK_LIT_FLOAT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = FLOAT;}
-    | TK_LIT_INT { $$ = asd_new($1->valor); valor_lexico_free($1); $$->tipo = INT;}
-    | chamada_funcao  { $$ = $1; }
-    |'(' expressao ')' { $$ = $2; };
+    '-' expr1 { $$ = asd_new_with_1_child("-",$2);}
+    | '!' expr1 { $$ = asd_new_with_1_child("!",$2);}
+    | TK_LIT_FLOAT { 
+        $$ = asd_new($1->valor); 
+        valor_lexico_free($1); 
+        $$->tipo = FLOAT;
+    }
+    | TK_LIT_INT { 
+        $$ = asd_new($1->valor); 
+        valor_lexico_free($1); 
+        $$->tipo = INT;
+    }
     | TK_IDENTIFICADOR { 
         Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
         if(symbol == NULL){
@@ -394,6 +375,8 @@ expr1:
         $$->tipo = symbol->tipo;
         valor_lexico_free($1); 
     }
+    | chamada_funcao  { $$ = $1; }
+    |'(' expressao ')' { $$ = $2; };
 
 %%
 
@@ -415,12 +398,4 @@ char *cria_label_func(char *identificador)
     strcat(ret, identificador);
 
     return ret;
-}
-
-TipoDado type_inference(TipoDado tipo1, TipoDado tipo2) {
-    if(tipo1 == FLOAT || tipo2 == FLOAT) {return FLOAT;}
-
-    else if(tipo1 == INT && tipo2 == INT) {return INT;}
-
-    return INDEFINIDO;
 }

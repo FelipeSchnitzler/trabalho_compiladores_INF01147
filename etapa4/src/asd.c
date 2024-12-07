@@ -98,7 +98,6 @@ void asd_print_graphviz(asd_tree_t *tree)
 }
 
 asd_tree_t *asd_get_last_child(asd_tree_t *tree){
-  printf("AAAA\n");
   asd_tree_t *last = tree;
   
   if (last != NULL){
@@ -147,8 +146,26 @@ asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_
         return NULL;
     }
 
-    // // Calcula o tipo resultante da operação
-    // node->tipo = type_inference(left->tipo, right->tipo);
+    // Calcula o tipo resultante da operação
+    node->tipo = type_inference(left->tipo, right->tipo);
 
     return node;
+}
+
+asd_tree_t *asd_new_with_1_child(const char *label, asd_tree_t *child1){
+  asd_tree_t *new_tree = asd_new(label);
+
+  asd_add_child(new_tree,child1);
+  
+  new_tree->tipo = child1->tipo;
+
+  return new_tree;
+}
+
+TipoDado type_inference(TipoDado tipo1, TipoDado tipo2) {
+    if(tipo1 == FLOAT || tipo2 == FLOAT) {return FLOAT;}
+
+    else if(tipo1 == INT && tipo2 == INT) {return INT;}
+
+    return INDEFINIDO;
 }
