@@ -1,8 +1,10 @@
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)  # macOS
     LFLAGS = -ll  
+	OPEN = open
 else ifeq ($(UNAME_S), Linux)  # Linux
     LFLAGS = -lfl 
+	OPEN = xdg-open
 endif
 
 ## ==============================================================================
@@ -70,14 +72,13 @@ t: tst
 
 tst: png
 	dot $(REF) -Tpng -o outputs/ref.png
-	xdg-open outputs/ref.png 
-	xdg-open outputs/grafo.png
+	$(OPEN) outputs/ref.png 
+	$(OPEN) outputs/grafo.png
 
 png: $(ETAPA) 
 	mkdir -p outputs
 	./etapa4 < $(TESTE)
 	dot saida.dot -Tpng -o outputs/grafo.png
-
 
 print_teste: 
 	printf ">>>> Teste: $(TESTE)"
