@@ -169,3 +169,25 @@ TipoDado type_inference(TipoDado tipo1, TipoDado tipo2) {
 
     return INDEFINIDO;
 }
+
+
+/*
+ * Funcao Criada para facilitar a adicao de filhos em uma arvore
+ * Exemplo: 
+ * Em vez de usar: 
+ *   asd_add_child($$,$3);
+ *   if($5 != NULL){asd_add_child($$,$5);} 
+ *   if($7 != NULL){asd_add_child($$,$7);}
+ * pode simplesmente usar:
+ *   ADD_CHILDREN_IF_NOT_NULL_MACRO($$, $3, $5, $7);
+ */
+void add_children_if_not_null_function(asd_tree_t* parent, asd_tree_t* children[], size_t count) {
+    for (size_t i = 0; i < count; i++) {
+        if (children[i] != NULL) {
+            asd_add_child(parent, children[i]);
+        }
+    }
+}
+
+
+    

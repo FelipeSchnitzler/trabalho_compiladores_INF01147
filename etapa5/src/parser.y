@@ -279,9 +279,10 @@ comando_controle_fluxo:
     }
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
         $$ = asd_new("if");
-        asd_add_child($$,$3);
-        if($5 != NULL){asd_add_child($$,$5);} 
-        if($7 != NULL){asd_add_child($$,$7);}
+        ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5,$7);
+        // asd_add_child($$,$3);
+        // if($5 != NULL){asd_add_child($$,$5);} 
+        // if($7 != NULL){asd_add_child($$,$7);}
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
 

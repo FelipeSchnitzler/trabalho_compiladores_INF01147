@@ -77,7 +77,7 @@ tst: png
 
 png: $(ETAPA) 
 	mkdir -p outputs
-	./etapa4 < $(TESTE)
+	./$(ETAPA) < $(TESTE)
 	dot saida.dot -Tpng -o outputs/grafo.png
 
 print_teste: 

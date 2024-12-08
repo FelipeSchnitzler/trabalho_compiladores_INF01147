@@ -1,7 +1,8 @@
 #ifndef _ARVORE_H_
 #define _ARVORE_H_
-
+#include <stddef.h> 
 #include "table.h"
+
 
 typedef struct asd_tree {
   char *label;
@@ -9,6 +10,7 @@ typedef struct asd_tree {
   TipoDado tipo;
   struct asd_tree **children;
 } asd_tree_t;
+
 
 /*
  * Função asd_new, cria um nó sem filhos com o label informado.
@@ -50,5 +52,15 @@ asd_tree_t *asd_new_with_1_child(const char *label, asd_tree_t *child1);
 TipoDado type_inference(TipoDado tipo1, TipoDado tipo2);
 
 asd_tree_t *make_IDENTIFICADOR(const char *label,const char *nome_identificador,const char *valor);
+
+
+void add_children_if_not_null_function(asd_tree_t* parent, asd_tree_t* children[], size_t count);
+
+#define ADD_CHILDREN_IF_NOT_NULL_MACRO(parent, ...) \
+    do { \
+        asd_tree_t* children[] = { __VA_ARGS__ }; \
+        add_children_if_not_null_function(parent, children, sizeof(children) / sizeof(children[0])); \
+    } while (0)
+
 
 #endif //_ARVORE_H_
