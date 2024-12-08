@@ -1,0 +1,6 @@
+//INCORRECT
+main = > int {
+  func = > int {
+
+  }
+}

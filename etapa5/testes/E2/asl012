@@ -1,0 +1,3 @@
+//CORRECT
+main = p1 <- int | p2 <- float > int {
+}
