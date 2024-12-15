@@ -1,8 +1,46 @@
 # Compiladores 
 
-## Gramática
+## To Do 
+
+- [ ] #define TRUE COMP $_ 0
+- [ ] #define FALSE COMP $_ 0 
+- [ ] Criar deslocamento Tabela de simbolos
+- [ ] Alterar gramatica para receber
+
+- [ ] 
+- [ ]  
+- [ ] 
+- [ ] 
+- [ ]  
+Functions 
+- [ ] GeraTemp();
+- [ ] GeraLabel();
+- [ ] Concatena();
+- [ ] GetDesloc();
+- [ ] cria_instrucao();
+
+```c
+typedef struct { 
+    lista_instr_t *lista;
+    temp_t *temporario;
+} retorno_engsoft_t;
+
+retorno_eng_soft_t gera_codigo_de_expressoes_binarias
+( char *mneu, asd_tree_t f1, asd_tree_t )
+{
+    retorno_eng_soft_t  retorno = {0};
+    temp_t = temporario = geratemp();
+    iloc_t inst_mult = cria_instrucao("mult", f1.local, f2.local, temporario);
+    retorno.codigo = concatena3(f1.codigo, f2.codigo, instr_mult);
+    retorno.local = temporario;
+};
 
 ```
+
+
+## Gramática
+
+```yacc
 programa: 
     lista_de_funcoes
     | /* vazio */
