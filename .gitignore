@@ -9,3 +9,10 @@ etapa3/testes/
 
 etapa*/etapa*/gitignore
 etapa*/build/*.o
+
+etapa*.dSYM/
+build/*.o
+build/parser.*
+parser.tab.*
+parser.output
+etapa*

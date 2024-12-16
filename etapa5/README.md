@@ -7,7 +7,7 @@
 - [ ] Criar deslocamento Tabela de simbolos
 - [ ] Alterar gramatica para receber
 
-- [ ] 
+- [ ] `base, desloc = consulta(nome);`
 - [ ]  
 - [ ] 
 - [ ] 

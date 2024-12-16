@@ -69,7 +69,6 @@
 %type<arvore>  expr3
 %type<arvore>  expr2
 %type<arvore>  expr1
-%type<arvore>  expr0
 %type<tiposvar> tipo
 
 %define parse.error verbose
@@ -128,24 +127,29 @@ funcao: cabecalho corpo {
 
 cabecalho: 
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
-        
+
+      
         $$ = asd_new($1->valor); 
+        //[ACTION] : Criar macro para verificar_ERR_DECLARED
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         } //assume pilha tem profundidade = 2 
+
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
         valor_lexico_free($1);
     }
     | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
         $$ = asd_new($1->valor); 
-        
+
+        //[ACTION] : Criar macro para verificar_ERR_DECLARED
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
         }  //assume pilha tem profundidade = 2 
+
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
         valor_lexico_free($1);
 
@@ -157,6 +161,7 @@ lista_de_parametros:
 
 parametro: TK_IDENTIFICADOR '<' '-' tipo { 
         $$ = NULL;
+        //[ACTION] : Criar macro para verificar_ERR_DECLARED
         Symbol *retorno;
         retorno = find_symbol(stack->table,$1->valor);
         if(retorno != NULL){
@@ -166,18 +171,29 @@ parametro: TK_IDENTIFICADOR '<' '-' tipo {
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,$4);
     };
 
-corpo: bloco_comandos_Func { $$ = $1; };
 
-/* ============================== [3.2] ============================== */
-bloco_comandos_Func: '{' '}' { $$ = NULL; }| 
-                '{' sequencia_de_comandos '}' { $$ = $2; };
+/* ================== Corpo ============================== */
+corpo: bloco_comandos_Func { 
+    $$ = $1; 
+};
 
-bloco_comandos: '{' '}' { $$ = NULL; }| 
-                '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' { $$ = $3; };
+/* ============================== [3.2] Bloco de Comandos ============================== */
+bloco_comandos_Func: 
+    '{' '}' { $$ = NULL; }
+    | '{' sequencia_de_comandos '}' { $$ = $2; };
+
+bloco_comandos: 
+    '{' '}' { $$ = NULL; }
+    | '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' { 
+        $$ = $3; 
+    };
 
 sequencia_de_comandos: 
-    comando_simples ';' { $$ = $1; }
+    comando_simples ';' { 
+        $$ = $1; 
+    }
     | comando_simples ';' sequencia_de_comandos { 
+        //[MAYBE][ACTION] : Criar macro para Acoes de Comandos
         $$ = ($1 != NULL) ? $1 : $3;
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
@@ -185,12 +201,15 @@ sequencia_de_comandos:
         
     } 
     | declaracao_variavel  ';' sequencia_de_comandos { 
+        //[MAYBE][ACTION] : Criar macro para Acoes de Comandos
         $$ = ($1 != NULL) ? $1 : $3; 
         if ($1 != NULL && $3 != NULL) {
             asd_add_child(asd_get_last_child($$), $3);
         }
     }
-    | declaracao_variavel  ';' { $$ = $1; };
+    | declaracao_variavel  ';' { 
+        $$ = $1; 
+    };
 
 /* ============================== [3.3] Comandos ============================== */
 comando_simples: 
@@ -348,9 +367,7 @@ expr1:
     | '!' expr1 { $$ = asd_new_with_1_child("!",$2);}
     | chamada_funcao  { $$ = $1; }
     |'(' expressao ')' { $$ = $2; }
-    | expr0 { $$ = $1; };
-
-expr0: 
+    /* Expressoes caso 2 */
     | TK_LIT_FLOAT { 
         $$ = asd_new($1->valor); 
         valor_lexico_free($1); 

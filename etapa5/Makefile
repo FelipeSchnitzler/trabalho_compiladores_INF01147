@@ -43,7 +43,7 @@ $(BUILD_DIR):
 	mkdir -p $@
 
 clean:
-	rm -rf $(BUILD_DIR) $(ETAPA) outputs/*.png saida.dot
+	rm -rf $(BUILD_DIR) $(ETAPA) outputs/*.png saida.dot $(ETAPA).dSYM/
 
 ## [Entrega] ==================================================================
 entrega: entrega_dir 
