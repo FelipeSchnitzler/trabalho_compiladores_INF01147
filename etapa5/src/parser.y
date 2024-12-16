@@ -363,11 +363,21 @@ expr2:
 
 
 expr1: 
-    '-' expr1 { $$ = asd_new_with_1_child("-",$2);}
-    | '!' expr1 { $$ = asd_new_with_1_child("!",$2);}
-    | chamada_funcao  { $$ = $1; }
-    |'(' expressao ')' { $$ = $2; }
-    /* Expressoes caso 2 */
+    '-' expr1 { 
+        $$ = asd_new_with_1_child("-",$2);
+    }
+    | '!' expr1 { 
+        $$ = asd_new_with_1_child("!",$2);
+    }
+    | chamada_funcao  { 
+        $$ = $1; 
+    }
+    | '(' expressao ')' {
+         $$ = $2; 
+    }
+    /* Expressoes caso 2 
+     * [MAYBE ACTION]: Criar macro para verificar se o identificador foi declarado
+     */
     | TK_LIT_FLOAT { 
         $$ = asd_new($1->valor); 
         valor_lexico_free($1); 

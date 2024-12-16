@@ -19,6 +19,10 @@ Functions
 - [ ] GetDesloc();
 - [ ] cria_instrucao();
 
+Reflexões: 
+- Seria bom trocar o tipo para ser um nó ? 
+    - Assim o width(deslocamento) já seria encapsulado na hora de declarar a variável 
+
 ```c
 typedef struct { 
     lista_instr_t *lista;

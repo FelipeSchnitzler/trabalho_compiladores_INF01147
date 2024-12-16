@@ -1,18 +1,26 @@
 
 
+# Lex e Parser
 lex.yy.c
+parser.tab.*
+parser.output
+
 avaliacoes/ 
 etapa*/*.o
 
+# Especifico da etapa3 
 etapa3/gitignore
 etapa3/testes/
 
+# Especifico da cada etapa
 etapa*/etapa*/gitignore
 etapa*/build/*.o
 
+# Ignora esse cara chato que o MacOs cria 
 etapa*.dSYM/
+
 build/*.o
 build/parser.*
-parser.tab.*
-parser.output
-etapa*
+
+# Ignore executaveis de cada etapa
+etapa*/etapa*

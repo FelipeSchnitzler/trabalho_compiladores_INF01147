@@ -63,6 +63,9 @@ Symbol *find_symbol_in_stack(SymbolTableStack *stack, const char *name);
 
 void free_stack(SymbolTableStack *stack);
 
+/*
+ * Funcoes auxiliares para debug
+ */
 void print_table(SymbolTable *table);
 void print_stack(SymbolTableStack *stack);
 #endif
