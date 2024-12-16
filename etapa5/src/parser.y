@@ -69,6 +69,7 @@
 %type<arvore>  expr3
 %type<arvore>  expr2
 %type<arvore>  expr1
+%type<arvore>  expr0
 %type<tiposvar> tipo
 
 %define parse.error verbose
@@ -76,6 +77,8 @@
 %%
 main: cria_escopo_global programa destroi_escopo_global;
 
+
+/*============= TABLE ACTIONS ============================= */
 cria_escopo_global:
 {
     stack = create_stack();
@@ -97,6 +100,8 @@ desempilha_tabela:
     pop_table(&stack);
 };
 
+/* ================== Programa ============================== */
+
 programa: 
     lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
     | /* vazio */ { $$ = NULL; arvore = $$; asd_print_graphviz(arvore); };
@@ -106,18 +111,25 @@ lista_de_funcoes:
     | funcao { $$ = $1;};
 
 
-// utils
+/* ================== Tipo ============================== */
 tipo: 
-    TK_PR_INT {$$ = INT;}
-    | TK_PR_FLOAT{$$ = FLOAT;}; //Nao importa pq sempre é ignorado mais na frente
+    TK_PR_INT {
+        $$ = INT;
+    }
+    | TK_PR_FLOAT{
+        $$ = FLOAT;
+    };
 
-//funcao
-funcao: cabecalho corpo { $$ = $1;  if($2 != NULL){asd_add_child($$,$2);} };
+/* ================== Funcao ============================== */
+funcao: cabecalho corpo { 
+    $$ = $1;  
+    if($2 != NULL){asd_add_child($$,$2);} 
+};
 
 cabecalho: 
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
-        $$ = asd_new($1->valor); 
         
+        $$ = asd_new($1->valor); 
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
@@ -280,9 +292,6 @@ comando_controle_fluxo:
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
         $$ = asd_new("if");
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5,$7);
-        // asd_add_child($$,$3);
-        // if($5 != NULL){asd_add_child($$,$5);} 
-        // if($7 != NULL){asd_add_child($$,$7);}
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
 
@@ -337,6 +346,11 @@ expr2:
 expr1: 
     '-' expr1 { $$ = asd_new_with_1_child("-",$2);}
     | '!' expr1 { $$ = asd_new_with_1_child("!",$2);}
+    | chamada_funcao  { $$ = $1; }
+    |'(' expressao ')' { $$ = $2; }
+    | expr0 { $$ = $1; };
+
+expr0: 
     | TK_LIT_FLOAT { 
         $$ = asd_new($1->valor); 
         valor_lexico_free($1); 
@@ -360,10 +374,7 @@ expr1:
         $$ = asd_new($1->valor); 
         $$->tipo = symbol->tipo;
         valor_lexico_free($1); 
-    }
-    | chamada_funcao  { $$ = $1; }
-    |'(' expressao ')' { $$ = $2; };
-
+    };
 %%
 
 void yyerror(char const *mensagem)
