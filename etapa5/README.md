@@ -223,5 +223,80 @@ primary:
 
 ```
 
+## Exemplos de programas da Linguagem Comp20242
+```C
+main = > int {
+  int x;
+  x = x|3;
+}
+
+//CORRECT
+main = > int {
+  int a <= 2;
+}
+
+main = > int {
+  if (0) { x = 2; } else { x = 3; };
+}
+
+main = p1 <- int | p2 <- float | p3 <- int > int {
+  int a;
+  a = 1;
+  return 0;
+}
+
+main = > int {
+  x = x < x < x < x;
+}
+
+main = > int {
+  int x;
+  x = ---x;
+}
+
+main = > int {
+  x = x == x == x == x;
+}
+
+
+
+main = > int {
+  x = x >= x >= x >= x;
+}
+
+//E4: kjl06
+g = > int  { return 0; }
+f = > int  {
+  int a;
+  g(a);
+}
+
+
+//E4: kjl19
+f = > int {
+    int a;
+    {
+	{
+	   int a;
+	   {
+	      int a;
+ 	   };
+	};
+	int a;
+    };
+    return 0;
+}
+
+// E4: kjl26
+g = xis <- int > int  { return 0; }
+f = > int  {
+    int a;
+    g(a);
+    return 0;
+}
+
+
+```
+
 ## Etapa 05 
 

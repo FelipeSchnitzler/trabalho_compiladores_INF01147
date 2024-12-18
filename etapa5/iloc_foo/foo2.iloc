@@ -1,0 +1,1 @@
+int y; int main () { int x; y = 59; x = 33; }

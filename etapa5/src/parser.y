@@ -261,19 +261,19 @@ identificador:
 /* ============================== [3.3.2] comando de atribuicao ============================== */
 comando_atribuicao: 
     TK_IDENTIFICADOR '=' expressao { 
-            Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
-            if(symbol == NULL){
-                printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
-                exit(ERR_UNDECLARED);
-            }
-            if(symbol->natureza != IDENTIFICADOR) {
-                printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
-                exit(ERR_FUNCTION);
-            }
-            $$ = asd_new("=");
-            asd_add_child($$, asd_new($1->valor)); 
-            asd_add_child($$,$3); valor_lexico_free($1);
-            $$->tipo = symbol->tipo;
+        Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
+        if(symbol == NULL){
+            printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
+            exit(ERR_UNDECLARED);
+        }
+        if(symbol->natureza != IDENTIFICADOR) {
+            printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
+            exit(ERR_FUNCTION);
+        }
+        $$ = asd_new("=");
+        asd_add_child($$, asd_new($1->valor)); 
+        asd_add_child($$,$3); valor_lexico_free($1);
+        $$->tipo = symbol->tipo;
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
@@ -295,11 +295,17 @@ chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
 };
 
 lista_argumentos: 
-    expressao ',' lista_argumentos { $$ = $1; asd_add_child($$, $3); } 
+    expressao ',' lista_argumentos { 
+        $$ = $1; 
+        asd_add_child($$, $3); 
+    } 
     | expressao { $$ = $1; };
 
 /* ============================== [3.3.4] comando de retorno ============================== */
-comando_retorno: TK_PR_RETURN expressao { $$ = asd_new("return"); asd_add_child($$,$2); };
+comando_retorno: TK_PR_RETURN expressao { 
+    $$ = asd_new("return"); 
+    asd_add_child($$,$2); 
+};
 
 /* ============================== [3.3.5] comando de controle de fluxo ============================== */
 comando_controle_fluxo: 
@@ -312,7 +318,11 @@ comando_controle_fluxo:
         $$ = asd_new("if");
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5,$7);
     }
-    | TK_PR_WHILE '(' expressao ')' bloco_comandos { $$ = asd_new("while"); asd_add_child($$,$3); if($5 != NULL){asd_add_child($$,$5);}};
+    | TK_PR_WHILE '(' expressao ')' bloco_comandos { 
+        $$ = asd_new("while"); 
+        asd_add_child($$,$3); 
+        if($5 != NULL){asd_add_child($$,$5);}
+    };
 
 
 /* ============================== EXPRESSOES ============================== */
@@ -373,7 +383,7 @@ expr1:
         $$ = $1; 
     }
     | '(' expressao ')' {
-         $$ = $2; 
+        $$ = $2; 
     }
     /* Expressoes caso 2 
      * [MAYBE ACTION]: Criar macro para verificar se o identificador foi declarado
@@ -398,6 +408,7 @@ expr1:
             printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
             exit(ERR_FUNCTION);
         }
+
         $$ = asd_new($1->valor); 
         $$->tipo = symbol->tipo;
         valor_lexico_free($1); 
