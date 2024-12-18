@@ -1,4 +1,0 @@
-//INCORRECT
-main = > int {
-  if (a = 2) { };
-}

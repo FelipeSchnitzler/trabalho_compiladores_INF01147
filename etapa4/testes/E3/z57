@@ -1,7 +1,0 @@
-fa = k <- float | l <- int > int
-{
-  int va;
-  int a;
-  int vc;
-}
-

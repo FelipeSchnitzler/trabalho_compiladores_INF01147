@@ -1,5 +1,0 @@
-//CORRECT
-main = > int {
-  float a <= 1.2;
-  return 0;
-}

@@ -23,6 +23,14 @@
     # include "iloc.h"
     char *cria_label_func(char *identificador);
     asd_tree_t *handleDeclaration(void *stack, valor_lexico_t *vl);
+
+
+    /* Macros */
+    #ifdef ASD_PRINT_GRAPHVIZ_FLAG
+        #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
+    #else
+        #define GRAPHVIZ_PRINT // Não faz nada
+    #endif
     
 %}
 
@@ -101,21 +109,36 @@ cria_escopo_global:
 {
     stack = create_stack();
     push_table(&stack);
+    stack->table->deslocamento = 0;
+    #ifdef DVERBOSE
+    printf("==================foo!\n");
+    #endif
 };
 
 destroi_escopo_global: 
 {
+    print_stack(stack);
     free_stack(stack);
 };
 
 empilha_tabela: 
 {
+    int deslocamento = (stack->table && stack->table->deslocamento) ? stack->table->deslocamento : 0;
     push_table(&stack);
+    if(stack->table){
+        stack->table->deslocamento = deslocamento;
+    }
+    print_table(stack->table);
 };
 
 desempilha_tabela: 
 {
+
+    int deslocamento = (stack->table && stack->table->deslocamento) ? stack->table->deslocamento : 0;
     pop_table(&stack);
+    if(stack->table){
+        stack->table->deslocamento = deslocamento;
+    }
 };
 /* ================== Tipo ============================== */
 tipo: 
@@ -133,12 +156,14 @@ programa:
     lista_de_funcoes { 
         $$ = $1; 
         arvore = $$; 
-        asd_print_graphviz(arvore); 
+        GRAPHVIZ_PRINT;
+        // asd_print_graphviz(arvore); 
     } 
     | /* vazio */ { 
         $$ = NULL; 
         arvore = $$; 
-        asd_print_graphviz(arvore); 
+        GRAPHVIZ_PRINT;
+        // asd_print_graphviz(arvore); 
     };
 
 lista_de_funcoes: 
@@ -302,7 +327,8 @@ comando_atribuicao:
         }
         $$ = asd_new("=");
         asd_add_child($$, asd_new($1->valor)); 
-        asd_add_child($$,$3); valor_lexico_free($1);
+        asd_add_child($$,$3); 
+        valor_lexico_free($1);
         $$->tipo = symbol->tipo;
     };
 
@@ -433,6 +459,10 @@ primary:
     }
     | TK_IDENTIFICADOR { 
         char *temp = GeraTemp();
+        #ifdef DVERBOSE
+        printf("==================foo!\n");
+        #endif
+        // printf("loadAI %s => %s\n", $1->valor, temp);
         // Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
         // if(symbol == NULL){
         //     printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
@@ -535,3 +565,27 @@ asd_tree_t *make_IDENTIFICADOR(const char *label,const char *nome_identificador,
 
     return new_identificador;
 }
+
+/* =========== FOO ======================
+
+int main() { 
+    int a ; 
+    int b; 
+    {
+        int c;
+        int d;
+    }
+    int e; 
+
+
+#---------------
+    ::  deslocamento :: Tamaho 
+ a  ::      0        :: 4 
+ b  ::      4        :: 4
+ c  ::      8        :: 4
+ d  ::      12       :: 4
+ e  ::      16       :: 4
+
+
+
+ */

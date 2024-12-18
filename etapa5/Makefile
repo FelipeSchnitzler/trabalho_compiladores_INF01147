@@ -11,7 +11,7 @@ endif
 ETAPA = etapa5
 ## ==============================================================================
 CC = gcc
-CFLAGS = -Iinclude -g -Wall -Wextra
+CFLAGS = -Iinclude -g -Wall -Wextra -DVERBOSE -DASD_PRINT_GRAPHVIZ_FLAG
 BISON_FLAGS = -d -v -Wcounterexamples
 
 LEX_SRC = src/scanner.l
@@ -39,7 +39,7 @@ $(LEX_C): $(LEX_SRC) | $(BUILD_DIR)
 $(BISON_C) $(BISON_H): $(BISON_SRC) | $(BUILD_DIR)
 	bison $(BISON_FLAGS) -o $(BISON_C) $<
 
-$(BUILD_DIR):
+$(BUILD_DIR): 
 	mkdir -p $@
 
 clean:

@@ -1,6 +1,0 @@
-//CORRECT
-main = a <- int | b <- float > float {
-  int x;
-  int y;
-  f(x, y);
-}

@@ -3,13 +3,12 @@
 #include <string.h>
 #include "table.h"
 
+/* 
+* [Engenharia de Software] 
+* Macro => Atribui o tamanho de um tipo de dado em bytes
+*/
+#define TIPO_WIDTH(tipo)   ((tipo) == INT ? 4 : (tipo) == FLOAT ? 4 : 0)
 
-// [ACTION] { $$ = GeraDado(INT); }
-TipoDado_t GeraDado(TipoDado tipo){
-    TipoDado_t dado;
-    dado.tipo = tipo;
-    return dado;
-}
 
 /*
  * Cria uma nova tabela de símbolos vazia
@@ -45,6 +44,7 @@ void free_table(SymbolTable *table) {
  *  linha: linha onde o símbolo foi declarado
  *  natureza: natureza do símbolo (identificador ou função)
  *  type: tipo de dado do símbolo (inteiro ou float)
+ *  
  * 
  */
 Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza natureza, TipoDado type) {
@@ -66,6 +66,10 @@ Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza n
     symbol->natureza = natureza;
     symbol->tipo = type;
     symbol->next = table->head;
+    symbol->tamanho = TIPO_WIDTH(type);
+    symbol->deslocamento = table->deslocamento; 
+
+    table->deslocamento += symbol->tamanho;
     table->head = symbol;
     // print_table(table);
     return NULL;

@@ -1,5 +1,0 @@
-//CORRECT
-main = k <- float | l <- int > float {
-  int a;
-}
-
