@@ -1,7 +1,39 @@
-// #include <string.h>
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include "ILOC.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "iloc.h"
+
+/*
+* Gera uma nova instrução ILOC
+*/
+char* GeraTemp() {
+    static int temp_counter = 0; 
+    size_t size = snprintf(NULL, 0, "t%d", temp_counter) + 1; 
+    char* temp = (char*)malloc(size); 
+    if (!temp) {
+        fprintf(stderr, "Erro: Falha ao alocar memória para GeraTemp().\n");
+        exit(EXIT_FAILURE);
+    }
+    snprintf(temp, size, "t%d", temp_counter++); 
+    return temp;
+}
+
+/*
+* Gera um nome único para um rótulo
+*/
+char* GeraRotulo() {
+    static int label_counter = 0; 
+    size_t size = snprintf(NULL, 0, "L%d", label_counter) + 1; 
+    char* label = (char*)malloc(size); 
+    if (!label) {
+        fprintf(stderr, "Erro: Falha ao alocar memória para GeraRotulo().\n");
+        exit(EXIT_FAILURE);
+    }
+    snprintf(label, size, "L%d", label_counter++); 
+    return label;
+}
+
+
 
 // // ==============  operation functions  ==============
 // IlocOp_t* new_ILOC_instruction(const char* name, const char* operator_1, const char* operator_2, const char* target, const char* label){

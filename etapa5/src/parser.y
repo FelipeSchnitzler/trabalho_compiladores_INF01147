@@ -31,6 +31,7 @@
     #include "valor_lexico.h" 
     #include "table.h"
     #include "errors.h"
+    #include "iloc.h"
 }
 
 %union{
@@ -431,6 +432,7 @@ primary:
         $$->tipo = INT;
     }
     | TK_IDENTIFICADOR { 
+        char *temp = GeraTemp();
         // Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
         // if(symbol == NULL){
         //     printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);

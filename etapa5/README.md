@@ -1,4 +1,23 @@
 # Compiladores 
+Em busca do bombom léxico. 
+
+# Testes 
+```shell
+## [Testes] ====================================================================
+## Criados de maneira experimental para ajudar no debug manual
+## Dica:  use ==>   
+export i=$((i + 1)); make t num=$(printf "%02d" "$i")
+```
+
+# Reference 
+### Debug 
+```C
+
+print_stack();
+print_tabel();
+```
+
+
 
 ## To Do 
 
@@ -22,6 +41,7 @@ Functions
 Reflexões: 
 - Seria bom trocar o tipo para ser um nó ? 
     - Assim o width(deslocamento) já seria encapsulado na hora de declarar a variável 
+
 
 ```c
 typedef struct { 
