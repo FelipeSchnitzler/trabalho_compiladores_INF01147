@@ -8,7 +8,21 @@
     int get_line_number();
     extern void *arvore;
     extern SymbolTableStack *stack;
+
+    /*
+     * [Engenharia de Software]
+     * Funções auxiliares: Declaradas no final do arquivo
+        * handleDeclaration: lida com a declaração de variáveis
+        * cria_label_func: cria uma label para a chamada de uma função
+        * make_IDENTIFICADOR: cria uma árvore para um identificador
+        * yyerror: função chamada quando ocorre um erro de sintaxe (Bison default)
+        * 
+    */
+    # include "valor_lexico.h"
+    # include "asd.h"
+    # include "iloc.h"
     char *cria_label_func(char *identificador);
+    asd_tree_t *handleDeclaration(void *stack, valor_lexico_t *vl);
     
 %}
 
@@ -75,6 +89,9 @@
 %define parse.error verbose
 
 %%
+
+
+
 main: cria_escopo_global programa destroi_escopo_global;
 
 
@@ -414,19 +431,20 @@ primary:
         $$->tipo = INT;
     }
     | TK_IDENTIFICADOR { 
-        Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
-        if(symbol == NULL){
-            printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
-            exit(ERR_UNDECLARED);
-        }
-        if(symbol->natureza != IDENTIFICADOR) {
-            printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
-            exit(ERR_FUNCTION);
-        }
+        // Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
+        // if(symbol == NULL){
+        //     printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
+        //     exit(ERR_UNDECLARED);
+        // }
+        // if(symbol->natureza != IDENTIFICADOR) {
+        //     printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
+        //     exit(ERR_FUNCTION);
+        // }
 
-        $$ = asd_new($1->valor); 
-        $$->tipo = symbol->tipo;
-        valor_lexico_free($1); 
+        // $$ = asd_new($1->valor); 
+        // $$->tipo = symbol->tipo;
+        // valor_lexico_free($1); 
+        $$ = handleDeclaration(stack, $1);
     };
     | chamada_funcao  { 
         $$ = $1; 
@@ -436,11 +454,52 @@ primary:
     }
 %%
 
+/* ============================== Funcoes ================================== */
+
+/* 
+ * [Engehnaria de Software]
+ * Funcao que lida com declaracao de variaveis
+ * @param stack: pilha de tabelas de simbolos
+ * @param vl: valor lexico
+* @return asd_tree_t*: Nó da árvore sintática abstrata (AST)
+ */
+asd_tree_t *handleDeclaration(void *stack, valor_lexico_t *vl) {
+    if (!vl) {
+        fprintf(stderr, "Erro interno: valor_lexico nulo em handleDeclaration.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Symbol *symbol = find_symbol_in_stack(stack, vl->valor);
+    if (symbol == NULL) {
+        printf("Erro na linha %d, variável '%s' não declarada\n", vl->linha, vl->valor);
+        exit(ERR_UNDECLARED);
+    }
+    if (symbol->natureza != IDENTIFICADOR) {
+        printf("Erro na linha %d, variável '%s' na verdade é uma função declarada na linha %d\n",
+               vl->linha, vl->valor, symbol->linha);
+        exit(ERR_FUNCTION);
+    }
+
+    asd_tree_t *node = asd_new(vl->valor);
+    node->tipo = symbol->tipo;
+
+    /* Implementado em valor_lexico.c */
+    valor_lexico_free(vl);
+
+    return node;
+}
+
+/* 
+ * Esta função é chamada quando ocorre um erro de sintaxe (Bison default)
+*/
 void yyerror(char const *mensagem)
 {
     fprintf(stderr, "%s on line %d\n", mensagem, get_line_number());
 }
 
+/* 
+* Função que cria uma label para a chamada de uma função ( call <identificador> )
+*/
 char *cria_label_func(char *identificador)
 {
     int tam = strlen("call ") + strlen(identificador) + 1;
@@ -455,7 +514,9 @@ char *cria_label_func(char *identificador)
 
     return ret;
 }
-
+/*
+* Função que cria uma árvore para um identificador
+*/
 asd_tree_t *make_IDENTIFICADOR(const char *label,const char *nome_identificador,const char *valor){
     asd_tree_t *new_identificador = asd_new(label); 
     
