@@ -8,7 +8,7 @@
 - [ ] Alterar gramatica para receber
 
 - [ ] `base, desloc = consulta(nome);`
-- [ ]  
+- [ ]  Criar Regra Gramatical para lidar com erro
 - [ ] 
 - [ ] 
 - [ ]  
@@ -173,6 +173,55 @@ expr1:
 
 ```
 
+## Sugestão de Reescrita da Gramática
+
+```
+expressao: expr_or;
+
+expr_or: 
+    expr_or TK_OC_OR expr_and 
+    | expr_and;
+
+expr_and: 
+    expr_and TK_OC_AND expr_eq 
+    | expr_eq;
+
+expr_eq: 
+    expr_eq TK_OC_EQ expr_rel 
+    | expr_eq TK_OC_NE expr_rel 
+    | expr_rel;
+
+expr_rel: 
+    expr_rel '<' expr_add 
+    | expr_rel '>' expr_add 
+    | expr_rel TK_OC_LE expr_add 
+    | expr_rel TK_OC_GE expr_add 
+    | expr_add;
+
+expr_add: 
+    expr_add '+' expr_mul 
+    | expr_add '-' expr_mul 
+    | expr_mul;
+
+expr_mul: 
+    expr_mul '*' expr_unary 
+    | expr_mul '/' expr_unary 
+    | expr_mul '%' expr_unary 
+    | expr_unary;
+
+expr_unary: 
+    '-' expr_unary 
+    | '!' expr_unary 
+    | primary;
+
+primary: 
+    TK_LIT_FLOAT 
+    | TK_LIT_INT 
+    | TK_IDENTIFICADOR 
+    | chamada_funcao 
+    | '(' expressao ')';
+
+```
 
 ## Etapa 05 
 
