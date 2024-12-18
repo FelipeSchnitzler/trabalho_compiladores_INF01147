@@ -1,7 +1,19 @@
 #ifndef _ARVORE_H_
 #define _ARVORE_H_
+
 #include <stddef.h> 
 #include "table.h"
+
+
+/* 
+ * Macro para adicionar filhos a um nó, caso o nó seja nulo, não adiciona. 
+ */
+#define ADD_CHILDREN_IF_NOT_NULL_MACRO(parent, ...) \
+    do { \
+        asd_tree_t* children[] = { __VA_ARGS__ }; \
+        add_children_if_not_null_function(parent, children, sizeof(children) / sizeof(children[0])); \
+    } while (0)
+
 
 
 typedef struct asd_tree {
@@ -55,12 +67,5 @@ asd_tree_t *make_IDENTIFICADOR(const char *label,const char *nome_identificador,
 
 
 void add_children_if_not_null_function(asd_tree_t* parent, asd_tree_t* children[], size_t count);
-
-#define ADD_CHILDREN_IF_NOT_NULL_MACRO(parent, ...) \
-    do { \
-        asd_tree_t* children[] = { __VA_ARGS__ }; \
-        add_children_if_not_null_function(parent, children, sizeof(children) / sizeof(children[0])); \
-    } while (0)
-
 
 #endif //_ARVORE_H_

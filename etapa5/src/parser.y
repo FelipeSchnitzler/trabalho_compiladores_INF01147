@@ -62,13 +62,14 @@
 %type<arvore>  comando_retorno
 %type<arvore>  comando_controle_fluxo
 %type<arvore>  expressao
-%type<arvore>  expr7
-%type<arvore>  expr6
-%type<arvore>  expr5
-%type<arvore>  expr4
-%type<arvore>  expr3
-%type<arvore>  expr2
-%type<arvore>  expr1
+%type<arvore>  expr_or
+%type<arvore>  expr_and
+%type<arvore>  expr_eq
+%type<arvore>  expr_rel
+%type<arvore>  expr_add
+%type<arvore>  expr_mult
+%type<arvore>  expr_unary
+%type<arvore>  primary
 %type<tiposvar> tipo
 
 %define parse.error verbose
@@ -98,18 +99,6 @@ desempilha_tabela:
 {
     pop_table(&stack);
 };
-
-/* ================== Programa ============================== */
-
-programa: 
-    lista_de_funcoes { $$ = $1; arvore = $$; asd_print_graphviz(arvore); } 
-    | /* vazio */ { $$ = NULL; arvore = $$; asd_print_graphviz(arvore); };
-
-lista_de_funcoes: 
-    funcao desempilha_tabela lista_de_funcoes {$$ = $1; asd_add_child($$,$3); }
-    | funcao { $$ = $1;};
-
-
 /* ================== Tipo ============================== */
 tipo: 
     TK_PR_INT {
@@ -119,16 +108,39 @@ tipo:
         $$ = FLOAT;
     };
 
+
+/* ================== Programa ============================== */
+
+programa: 
+    lista_de_funcoes { 
+        $$ = $1; 
+        arvore = $$; 
+        asd_print_graphviz(arvore); 
+    } 
+    | /* vazio */ { 
+        $$ = NULL; 
+        arvore = $$; 
+        asd_print_graphviz(arvore); 
+    };
+
+lista_de_funcoes: 
+    funcao desempilha_tabela lista_de_funcoes {
+        $$ = $1; 
+        asd_add_child($$,$3);
+    }
+    | funcao { $$ = $1;};
+
+
 /* ================== Funcao ============================== */
 funcao: cabecalho corpo { 
     $$ = $1;  
-    if($2 != NULL){asd_add_child($$,$2);} 
+    ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$2);
+    // if($2 != NULL){asd_add_child($$,$2);} 
 };
 
 cabecalho: 
     TK_IDENTIFICADOR '=' empilha_tabela lista_de_parametros '>' tipo {
 
-      
         $$ = asd_new($1->valor); 
         //[ACTION] : Criar macro para verificar_ERR_DECLARED
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
@@ -311,8 +323,9 @@ comando_retorno: TK_PR_RETURN expressao {
 comando_controle_fluxo: 
     TK_PR_IF '(' expressao ')' bloco_comandos { 
         $$ = asd_new("if");
-        asd_add_child($$,$3);
-        if($5 != NULL){asd_add_child($$,$5);}
+        ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
+        // asd_add_child($$,$3);
+        // if($5 != NULL){asd_add_child($$,$5);}
     }
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
         $$ = asd_new("if");
@@ -320,75 +333,77 @@ comando_controle_fluxo:
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { 
         $$ = asd_new("while"); 
-        asd_add_child($$,$3); 
-        if($5 != NULL){asd_add_child($$,$5);}
+        ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
+
+        // asd_add_child($$,$3); 
+        // if($5 != NULL){asd_add_child($$,$5);}
     };
 
 
 /* ============================== EXPRESSOES ============================== */
-expressao: expr7 { $$ = $1; };
+expressao: expr_or { $$ = $1; };
 
-expr7: 
-    expr7 TK_OC_OR expr6 {$$ = handle_binary_operation("|", $1, $3);  }
-    | expr6 { $$ = $1; };
+expr_or: 
+    expr_or TK_OC_OR expr_and {$$ = handle_binary_operation("|", $1, $3);  }
+    | expr_and { $$ = $1; };
 
-expr6: 
-    expr6 TK_OC_AND expr5 { $$ = handle_binary_operation("&", $1, $3);  }
-    | expr5 { $$ = $1; };
+expr_and: 
+    expr_and TK_OC_AND expr_eq { $$ = handle_binary_operation("&", $1, $3);  }
+    | expr_eq { $$ = $1; };
 
-expr5: 
-    expr5 TK_OC_NE expr4 { $$ = handle_binary_operation("!=", $1, $3);  }
-    | expr5 TK_OC_EQ expr4 { $$ = handle_binary_operation("==", $1, $3); }
-    | expr4 { $$ = $1; };
+expr_eq: 
+    expr_eq TK_OC_NE expr_rel { $$ = handle_binary_operation("!=", $1, $3);  }
+    | expr_eq TK_OC_EQ expr_rel { $$ = handle_binary_operation("==", $1, $3); }
+    | expr_rel { $$ = $1; };
 
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
-expr4:
-    expr4 '<' expr3 { $$ = handle_binary_operation("<", $1, $3); }
-    | expr4 '>' expr3 { $$ = handle_binary_operation(">", $1, $3); }
-    | expr4 TK_OC_LE expr3 { $$ = handle_binary_operation("<=", $1, $3); }
-    | expr4 TK_OC_GE expr3 { $$ = handle_binary_operation(">=", $1, $3); }
-    | expr3 { $$ = $1; };
+expr_rel:
+    expr_rel '<' expr_add { $$ = handle_binary_operation("<", $1, $3); }
+    | expr_rel '>' expr_add { $$ = handle_binary_operation(">", $1, $3); }
+    | expr_rel TK_OC_LE expr_add { $$ = handle_binary_operation("<=", $1, $3); }
+    | expr_rel TK_OC_GE expr_add { $$ = handle_binary_operation(">=", $1, $3); }
+    | expr_add { $$ = $1; };
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
-expr3: 
-    expr3 '+' expr2 { $$ = handle_binary_operation("+", $1, $3); }
-    | expr3 '-' expr2 { $$ = handle_binary_operation("-", $1, $3); }
-    | expr2 { $$ = $1; };
+expr_add: 
+    expr_add '+' expr_mult { $$ = handle_binary_operation("+", $1, $3); }
+    | expr_add '-' expr_mult { $$ = handle_binary_operation("-", $1, $3); }
+    | expr_mult { $$ = $1; };
 
 
-expr2: 
-    expr2 '*' expr1 { 
+expr_mult: 
+    expr_mult '*' expr_unary { 
         $$ = handle_binary_operation("*", $1, $3); 
     }
-    | expr2 '/' expr1 { 
+    | expr_mult '/' expr_unary { 
         $$ = handle_binary_operation("/", $1, $3); 
     }
-    | expr2 '%' expr1 { 
+    | expr_mult '%' expr_unary { 
         $$ = handle_binary_operation("%", $1, $3); 
     }
-    | expr1 { 
+    | expr_unary { 
         $$ = $1; 
     };
 
 
-expr1: 
-    '-' expr1 { 
+expr_unary: 
+    '-' expr_unary { 
         $$ = asd_new_with_1_child("-",$2);
     }
-    | '!' expr1 { 
+    | '!' expr_unary { 
         $$ = asd_new_with_1_child("!",$2);
     }
-    | chamada_funcao  { 
+    | primary { 
         $$ = $1; 
-    }
-    | '(' expressao ')' {
-        $$ = $2; 
-    }
+    };
+
+primary: 
+
     /* Expressoes caso 2 
      * [MAYBE ACTION]: Criar macro para verificar se o identificador foi declarado
      */
-    | TK_LIT_FLOAT { 
+    TK_LIT_FLOAT { 
         $$ = asd_new($1->valor); 
         valor_lexico_free($1); 
         $$->tipo = FLOAT;
@@ -413,6 +428,12 @@ expr1:
         $$->tipo = symbol->tipo;
         valor_lexico_free($1); 
     };
+    | chamada_funcao  { 
+        $$ = $1; 
+    }
+    | '(' expressao ')' {
+        $$ = $2; 
+    }
 %%
 
 void yyerror(char const *mensagem)
