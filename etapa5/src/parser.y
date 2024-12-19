@@ -34,11 +34,13 @@
     #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
     #define PRINT_DEBUG printf("DEBUG: %s:%d\n",__FILE__,__LINE__);
     #define PRINT_CODE  imprimeListaIlocInstructions(node->codigo);
+    #define PRINT_PILHA print_stack(stack);
         // #define GRAPHVIZ_PRINT 1 // Não faz nada
     #else
         #define GRAPHVIZ_PRINT // Não faz nada
         #define PRINT_DEBUG // Não faz nada
         #define PRINT_CODE // Não faz nada
+        #define PRINT_PILHA // Não faz nada
     #endif
 %}
 
@@ -125,7 +127,7 @@ cria_escopo_global:
 
 destroi_escopo_global: 
 {
-    // print_stack(stack);
+    PRINT_PILHA;
     free_stack(stack);
 };
 
@@ -137,20 +139,20 @@ empilha_tabela:
     if(stack->table){
         stack->table->deslocamento = deslocamento;
     }
-    // print_stack(stack->table);
+
 };
 
 desempilha_tabela: 
 {
-    print_stack(stack);
+    PRINT_PILHA;
     // printf("\n ##>>>>>>Deslocamento: %d\n",stack->table->deslocamento);
     int deslocamento = (stack->table->deslocamento) ? stack->table->deslocamento : 0;
     pop_table(&stack);
 
     // printf("\n ##>>>>>>Deslocamento: %d\n",stack->table->deslocamento);
     if(stack->table){
-        // stack->table->deslocamento = deslocamento;
-    }
+        stack->table->deslocamento = deslocamento;
+    };
 
 };
 /* ================== Tipo ============================== */
@@ -424,8 +426,8 @@ expr_rel:
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
 expr_add: 
-    expr_add '+' expr_mult { $$ = handle_binary_operation("+", $1, $3); }
-    | expr_add '-' expr_mult { $$ = handle_binary_operation("-", $1, $3); }
+    expr_add '+' expr_mult { $$ = handle_multiplication("+", $1, $3); }
+    | expr_add '-' expr_mult { $$ = handle_multiplication("-", $1, $3); }
     | expr_mult { $$ = $1; };
 
 
@@ -435,10 +437,10 @@ expr_mult:
         $$ = handle_multiplication("*", $1, $3);
     }
     | expr_mult '/' expr_unary { 
-        $$ = handle_binary_operation("/", $1, $3); 
+        $$ = handle_multiplication("/", $1, $3); 
     }
     | expr_mult '%' expr_unary { 
-        $$ = handle_binary_operation("%", $1, $3); 
+        $$ = handle_multiplication("%", $1, $3); 
     }
     | expr_unary { 
         $$ = $1; 
@@ -521,17 +523,32 @@ primary:
 
     node->local = GeraTemp();
 
-    if (strcmp(operator, "*") == 0) {
+    if (strcmp(operator, "+") == 0) {
+        // Código para soma
+        struct iloc_list *add = criaInstrucao("add", left->local, right->local, node->local);
+        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, add));
+    } 
+    else if (strcmp(operator, "-") == 0) {
+        // Código para subtração
+        struct iloc_list *sub = criaInstrucao("sub", left->local, right->local, node->local);
+        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, sub));
+    } 
+    else if (strcmp(operator, "*") == 0) 
+    {
         struct iloc_list *mul = criaInstrucao("mul", left->local, right->local, node->local);
         node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mul));
     } 
-    /* else if (strcmp(operator, "/") == 0) {
+    else if (strcmp(operator, "/") == 0) 
+    {
         struct iloc_list *div = criaInstrucao("div", left->local, right->local, node->local);
-        node->codigo = concatena_codigo(left->codigo, concatena_codigo(right->codigo, div));
-    } else if (strcmp(operator, "%") == 0) {
+        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, div));
+    } 
+    else if (strcmp(operator, "%") == 0)
+    {
         struct iloc_list *mod = criaInstrucao("mod", left->local, right->local, node->local);
-        node->codigo = concatena_codigo(left->codigo, concatena_codigo(right->codigo, mod));
-    } else {
+        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mod));
+    } else 
+    {
         fprintf(stderr, "Erro interno: operação inválida '%s' em handle_multiplication.\n", operator);
         exit(EXIT_FAILURE);
     } 
