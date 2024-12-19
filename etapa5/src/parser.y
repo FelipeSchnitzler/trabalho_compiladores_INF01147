@@ -422,17 +422,16 @@ expr_and:
     | expr_eq { $$ = $1; };
 
 expr_eq: 
-    expr_eq TK_OC_NE expr_rel { $$ = handle_binary_operation("!=", $1, $3);  }
-    | expr_eq TK_OC_EQ expr_rel { $$ = handle_binary_operation("==", $1, $3); }
+    expr_eq TK_OC_NE expr_rel { $$ = handle_relop("!=", $1, $3);  }
+    | expr_eq TK_OC_EQ expr_rel { $$ = handle_relop("==", $1, $3); }
     | expr_rel { $$ = $1; };
 
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
 expr_rel:
-    expr_rel '<' expr_add { $$ = handle_binary_operation("<", $1, $3); }
-    | expr_rel '>' expr_add { $$ = handle_binary_operation(">", $1, $3); }
-    | expr_rel TK_OC_LE expr_add { $$ = handle_binary_operation("<=", $1, $3); }
-    /* | expr_rel TK_OC_GE expr_add { $$ = handle_binary_operation(">=", $1, $3); } */
+    expr_rel '<' expr_add { $$ = handle_relop("<", $1, $3); }
+    | expr_rel '>' expr_add { $$ = handle_relop(">", $1, $3); }
+    | expr_rel TK_OC_LE expr_add { $$ = handle_relop("<=", $1, $3); }
     | expr_rel TK_OC_GE expr_add { $$ = handle_relop(">=", $1, $3); }
     | expr_add { $$ = $1; };
 
@@ -511,47 +510,36 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
 
     IlocList_t* tempCode = NULL;
     
-    /* IlocList_t* loadLeft = criaInstrucao("load", left->local, NULL, "t0");
-    IlocList_t* loadRight = criaInstrucao("load", right->local, NULL, "t1"); */
-
-    /* // Gerar a instrução de comparação
-    IlocList_t* ge = criaInstrucao("cmp_GE", "t0", "t1", node->local); 
-
-    // Concatenar as instruções
-    tempCode = concatenaInstrucoes(left->codigo, 
-                concatenaInstrucoes(right->codigo, 
-                concatenaInstrucoes(loadLeft, concatenaInstrucoes(loadRight, ge)))); */
-
-    node->codigo = tempCode;
- // Carregar os operandos nos temporários
-    IlocList_t* loadLeft = criaInstrucao("load", left->local, NULL, "t0");
-    IlocList_t* loadRight = criaInstrucao("load", right->local, NULL, "t1");
 
     // Gerar as instruções de comparação para cada operador relacional
     if (strcmp(operator, "<") == 0) {
-        tempCode = criaInstrucao("cmp_LT", "t0", "t1", node->local);
+        tempCode = criaInstrucao("cmp_LT", left->local, right->local, node->local);
     } else if (strcmp(operator, ">") == 0) {
-        tempCode = criaInstrucao("cmp_GT", "t0", "t1", node->local);
+        tempCode = criaInstrucao("cmp_GT", left->local, right->local, node->local);
     } else if (strcmp(operator, "<=") == 0) {
-        tempCode = criaInstrucao("cmp_LE", "t0", "t1", node->local);
+        tempCode = criaInstrucao("cmp_LE", left->local, right->local, node->local);
     } else if (strcmp(operator, ">=") == 0) {
-        tempCode = criaInstrucao("cmp_GE", "t0", "t1", node->local);
+        tempCode = criaInstrucao("cmp_GE", left->local, right->local, node->local);
     } else if (strcmp(operator, "==") == 0) {
-        tempCode = criaInstrucao("cmp_EQ", "t0", "t1", node->local);
+        tempCode = criaInstrucao("cmp_EQ", left->local, right->local, node->local);
     } else if (strcmp(operator, "!=") == 0) {
-        tempCode = criaInstrucao("cmp_NE", "t0", "t1", node->local);
+        tempCode = criaInstrucao("cmp_NE", left->local, right->local, node->local);
     } else {
         fprintf(stderr, "Erro interno: operador relacional inválido '%s' em handle_relop.\n", operator);
         exit(EXIT_FAILURE);
     }
 
-    tempCode = concatenaInstrucoes(left->codigo,
+    node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, tempCode));
+    /* tempCode = concatenaInstrucoes(left->codigo,
                   concatenaInstrucoes(right->codigo,
                   concatenaInstrucoes(loadLeft,
-                  concatenaInstrucoes(loadRight, tempCode))));
+                  concatenaInstrucoes(loadRight, tempCode)))); */
 
-    node->codigo = tempCode;
+    /* node->codigo = tempCode; */
 
+    PRINT_SEPARATOR
+    PRINT_CODE
+    PRINT_SEPARATOR
 
     return node;
 
