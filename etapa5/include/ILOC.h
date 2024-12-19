@@ -1,6 +1,6 @@
-#pragma once
+#ifndef ILOC_H  
+#define ILOC_H
 
-#include "asd.h"
 typedef struct IlocInstruction
 {
     char* op;
@@ -18,7 +18,23 @@ typedef struct IlocList
     struct IlocList* next;
 } IlocList_t;
 
-char* GeraTemp();     // Gera um nome único para um temporário
-char* GeraRotulo();   // Gera um nome único para um rótulo
+char* GeraTemp();     
+char* GeraRotulo();   
+
 
 IlocInstruction_t* new_ILOC_instruction(const char* op, const char* arg1, const char* arg2, const char* arg3);
+IlocInstruction_t* nova_instrucao(char* operacao, char* arg1, char* arg2, char* arg3) ;
+IlocList_t* nova_lista_instrucoes();
+void add_instrucao(IlocList_t** lista, IlocInstruction_t* instrucao);
+IlocList_t* geraCodigo(char* operacao, char* arg1, char* arg2, char* arg3);
+
+
+
+
+void imprimeIlocInstruction(const IlocInstruction_t* instrucao);
+void imprimeListaIlocInstructions(const IlocList_t* lista);
+
+IlocList_t* concatenaInstrucoes(IlocList_t* lista1, IlocList_t* lista2);
+
+
+#endif

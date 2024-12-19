@@ -12,7 +12,7 @@
     /*
      * [Engenharia de Software]
      * Funções auxiliares: Declaradas no final do arquivo
-        * handleDeclaration: lida com a declaração de variáveis
+        * handleAtribuicao: lida com a declaração de variáveis
         * cria_label_func: cria uma label para a chamada de uma função
         * make_IDENTIFICADOR: cria uma árvore para um identificador
         * yyerror: função chamada quando ocorre um erro de sintaxe (Bison default)
@@ -22,7 +22,7 @@
     # include "asd.h"
     # include "iloc.h"
     char *cria_label_func(char *identificador);
-    asd_tree_t *handleDeclaration(void *stack, valor_lexico_t *vl);
+    asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl);
 
 
     /* Macros */
@@ -468,21 +468,8 @@ primary:
         #ifdef DVERBOSE
         printf("==================foo!\n");
         #endif
-        // printf("loadAI %s => %s\n", $1->valor, temp);
-        // Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
-        // if(symbol == NULL){
-        //     printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
-        //     exit(ERR_UNDECLARED);
-        // }
-        // if(symbol->natureza != IDENTIFICADOR) {
-        //     printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
-        //     exit(ERR_FUNCTION);
-        // }
 
-        // $$ = asd_new($1->valor); 
-        // $$->tipo = symbol->tipo;
-        // valor_lexico_free($1); 
-        $$ = handleDeclaration(stack, $1);
+        $$ = handleAtribuicao(stack, $1);
     };
     | chamada_funcao  { 
         $$ = $1; 
@@ -501,9 +488,9 @@ primary:
  * @param vl: valor lexico
 * @return asd_tree_t*: Nó da árvore sintática abstrata (AST)
  */
-asd_tree_t *handleDeclaration(void *stack, valor_lexico_t *vl) {
+asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl) {
     if (!vl) {
-        fprintf(stderr, "Erro interno: valor_lexico nulo em handleDeclaration.\n");
+        fprintf(stderr, "Erro interno: valor_lexico nulo em handleAtribuicao.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -513,13 +500,26 @@ asd_tree_t *handleDeclaration(void *stack, valor_lexico_t *vl) {
         exit(ERR_UNDECLARED);
     }
     if (symbol->natureza != IDENTIFICADOR) {
-        printf("Erro na linha %d, variável '%s' na verdade é uma função declarada na linha %d\n",
-               vl->linha, vl->valor, symbol->linha);
+        printf("Erro na linha %d, variável '%s' na verdade é uma função declarada na linha %d\n",vl->linha, vl->valor, symbol->linha);
         exit(ERR_FUNCTION);
     }
 
     asd_tree_t *node = asd_new(vl->valor);
     node->tipo = symbol->tipo;
+    node->local = GeraTemp();
+
+    char deslocamento_str[12]; 
+    sprintf(deslocamento_str, "%d", symbol->deslocamento);
+    node->codigo = geraCodigo("loadAI","rfp",deslocamento_str,node->local);
+
+    /* printf("\n>>>>[DEBUG] \n");  
+    imprimeIlocInstruction(node->codigo->instruction);
+
+    printf("\n>>>>[DEBUG] \n");  
+    imprimeListaIlocInstructions(node->codigo); */
+
+
+    
 
     /* Implementado em valor_lexico.c */
     valor_lexico_free(vl);

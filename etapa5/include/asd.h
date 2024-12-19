@@ -3,7 +3,7 @@
 
 #include <stddef.h> 
 #include "table.h"
-
+#include "iloc.h"
 
 /* 
  * Macro para adicionar filhos a um nó, caso o nó seja nulo, não adiciona. 
@@ -21,6 +21,8 @@ typedef struct asd_tree {
   int number_of_children;
   TipoDado tipo;
   struct asd_tree **children;
+  IlocList_t *codigo;
+  char *local;
 } asd_tree_t;
 
 

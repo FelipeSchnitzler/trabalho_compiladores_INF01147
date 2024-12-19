@@ -67,8 +67,8 @@ Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza n
     symbol->natureza = natureza;
     symbol->tipo = type;
     symbol->next = table->head;
-    // symbol->tamanho = TIPO_WIDTH(type) == 0 ? 4 : TIPO_WIDTH(type);
-    symbol->tamanho =  4;
+    symbol->tamanho = TIPO_WIDTH(type) == 0 ? 4 : TIPO_WIDTH(type);
+    // symbol->tamanho =  4;
     symbol->deslocamento = table->deslocamento; 
 
     // #ifdef DEBUG

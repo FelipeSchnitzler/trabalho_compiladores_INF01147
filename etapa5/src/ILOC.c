@@ -34,6 +34,107 @@ char* GeraRotulo() {
 }
 
 
+IlocInstruction_t* new_ILOC_instruction(const char* op, const char* arg1, const char* arg2, const char* arg3) {
+    IlocInstruction_t* ret = NULL;
+    ret = (IlocInstruction_t*)calloc(1,sizeof(IlocInstruction_t));
+    if (ret != NULL) {
+        ret->op = strdup(op);
+        ret->arg1 = strdup(arg1);
+        ret->arg2 = strdup(arg2);
+        ret->arg3 = strdup(arg3);
+    }
+    return ret;
+}
+
+
+IlocInstruction_t* nova_instrucao(char* operacao, char* arg1, char* arg2, char* arg3) {
+    IlocInstruction_t* instrucao = (IlocInstruction_t*)calloc(1, sizeof(IlocInstruction_t));
+    if (!instrucao) return NULL;
+
+    printf("------------------\n");
+    // printf("[DEBUG] => Nova instrução: %s %s %s %s\n", operacao, arg1, arg2, arg3);
+    instrucao->op = strdup(operacao);
+    instrucao->arg1 = arg1 ? strdup(arg1) : NULL;
+    instrucao->arg2 = arg2 ? strdup(arg2) : NULL;
+    instrucao->arg3 = arg3 ? strdup(arg3) : NULL;
+
+     imprimeIlocInstruction(instrucao);
+
+    //   printf("[DEBUG] => Nova instrução: %s %s %s %s\n", operacao, arg1, arg2, arg3);
+
+    return instrucao;
+}
+
+IlocList_t* nova_lista_instrucoes() {
+    return NULL;
+}
+
+void add_instrucao(IlocList_t** lista, IlocInstruction_t* instrucao) {
+    IlocList_t* novo_no = (IlocList_t*)calloc(1, sizeof(IlocList_t));
+    if (!novo_no) return;
+
+    novo_no->instruction = instrucao;
+    novo_no->next = *lista;
+    *lista = novo_no;
+}
+
+IlocList_t* geraCodigo(char* operacao, char* arg1, char* arg2, char* arg3) {
+    IlocList_t* lista = nova_lista_instrucoes();
+    IlocInstruction_t* instrucao = nova_instrucao(operacao, arg1, arg2, arg3);
+
+    if (!instrucao) {
+        free(lista);
+        return NULL;
+    }
+
+    add_instrucao(&lista, instrucao);
+    return lista;
+}
+
+
+void imprimeIlocInstruction(const IlocInstruction_t* instrucao) {
+    if (!instrucao) {
+        fprintf(stderr, "Erro: Instrução nula.\n");
+        return;
+    }
+
+    printf("%s", instrucao->op ? instrucao->op : "NULL");
+
+    if (instrucao->arg1) printf(" %s", instrucao->arg1);
+    if (instrucao->arg2) printf(", %s", instrucao->arg2);
+    if (instrucao->arg3) printf(" => %s", instrucao->arg3);
+
+    printf("\n");
+}
+
+void imprimeListaIlocInstructions(const IlocList_t* lista) {
+    if (!lista) {
+        printf("A lista está vazia.\n");
+        return;
+    }
+
+    const IlocList_t* atual = lista;
+    while (atual) {
+        imprimeIlocInstruction(atual->instruction);
+        atual = atual->next;
+    }
+}
+
+IlocList_t* concatenaInstrucoes(IlocList_t* lista1, IlocList_t* lista2) {
+    if (!lista1) return lista2; 
+    if (!lista2) return lista1; 
+
+    IlocList_t* atual = lista1;
+
+    while (atual->next != NULL) {
+        atual = atual->next;
+    }
+
+    atual->next = lista2;
+
+    return lista1;
+}
+
 
 // // ==============  operation functions  ==============
 // IlocOp_t* new_ILOC_instruction(const char* name, const char* operator_1, const char* operator_2, const char* target, const char* label){
