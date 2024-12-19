@@ -414,11 +414,11 @@ expressao:
     };
 
 expr_or: 
-    expr_or TK_OC_OR expr_and {$$ = handle_binary_operation("|", $1, $3);  }
+    expr_or TK_OC_OR expr_and {$$ = handle_relop("|", $1, $3);  }
     | expr_and { $$ = $1; };
 
 expr_and: 
-    expr_and TK_OC_AND expr_eq { $$ = handle_binary_operation("&", $1, $3);  }
+    expr_and TK_OC_AND expr_eq { $$ = handle_relop("&", $1, $3);  }
     | expr_eq { $$ = $1; };
 
 expr_eq: 
@@ -524,7 +524,16 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
         tempCode = criaInstrucao("cmp_EQ", left->local, right->local, node->local);
     } else if (strcmp(operator, "!=") == 0) {
         tempCode = criaInstrucao("cmp_NE", left->local, right->local, node->local);
-    } else {
+    } if (strcmp(operator, "&") == 0) {
+        PRINT_SEPARATOR
+        PRINT_DEBUG
+        tempCode = criaInstrucao("and", left->local, right->local, node->local);
+        imprimeIlocInstruction(tempCode);  
+        PRINT_SEPARATOR
+    } else if (strcmp(operator,  "|") == 0) {
+        tempCode = criaInstrucao("or", left->local, right->local, node->local);
+    } 
+    else {
         fprintf(stderr, "Erro interno: operador relacional inválido '%s' em handle_relop.\n", operator);
         exit(EXIT_FAILURE);
     }
