@@ -26,7 +26,8 @@
     asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo);
     asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl);
     asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr);
-    asd_tree_t* handle_multiplication(const char* operator, asd_tree_t* left, asd_tree_t* right);
+    asd_tree_t* handle_arithmetic(const char* operator, asd_tree_t* left, asd_tree_t* right);
+    asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* right);
 
 
     /* Macros */
@@ -35,12 +36,19 @@
     #define PRINT_DEBUG printf("DEBUG: %s:%d\n",__FILE__,__LINE__);
     #define PRINT_CODE  imprimeListaIlocInstructions(node->codigo);
     #define PRINT_PILHA print_stack(stack);
+    #define PRINT_SEPARATOR printf("=================================================\n"); 
         // #define GRAPHVIZ_PRINT 1 // Não faz nada
     #else
         #define GRAPHVIZ_PRINT // Não faz nada
         #define PRINT_DEBUG // Não faz nada
         #define PRINT_CODE // Não faz nada
         #define PRINT_PILHA // Não faz nada
+        #define PRINT_SEPARATOR // Não faz nada
+    #endif
+    #if defined(PRINT_TREE)
+        #define PRINT_TREE asd_print_graphviz(arvore);
+    #else
+        #define PRINT_TREE // Não faz nada
     #endif
 %}
 
@@ -136,6 +144,7 @@ empilha_tabela:
     int deslocamento = (stack->table->deslocamento) ? stack->table->deslocamento : 0;
     push_table(&stack);
      stack->table->deslocamento =  stack->table->deslocamento ;
+     
     if(stack->table){
         stack->table->deslocamento = deslocamento;
     }
@@ -172,12 +181,13 @@ programa:
         $$ = $1; 
         arvore = $$; 
         // GRAPHVIZ_PRINT;
-         asd_print_graphviz(arvore); 
+        PRINT_TREE
+        //  asd_print_graphviz(arvore); 
     } 
     | /* vazio */ { 
         $$ = NULL; 
         arvore = $$; 
-        asd_print_graphviz(arvore); 
+        PRINT_TREE
         // asd_print_graphviz(arvore); 
     };
 
@@ -383,8 +393,7 @@ comando_controle_fluxo:
     TK_PR_IF '(' expressao ')' bloco_comandos { 
         $$ = asd_new("if");
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
-        // asd_add_child($$,$3);
-        // if($5 != NULL){asd_add_child($$,$5);}
+
     }
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
         $$ = asd_new("if");
@@ -394,13 +403,14 @@ comando_controle_fluxo:
         $$ = asd_new("while"); 
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
 
-        // asd_add_child($$,$3); 
-        // if($5 != NULL){asd_add_child($$,$5);}
     };
 
 
 /* ============================== EXPRESSOES ============================== */
-expressao: expr_or { $$ = $1; };
+expressao: 
+    expr_or {
+        $$ = $1; 
+    };
 
 expr_or: 
     expr_or TK_OC_OR expr_and {$$ = handle_binary_operation("|", $1, $3);  }
@@ -421,26 +431,27 @@ expr_rel:
     expr_rel '<' expr_add { $$ = handle_binary_operation("<", $1, $3); }
     | expr_rel '>' expr_add { $$ = handle_binary_operation(">", $1, $3); }
     | expr_rel TK_OC_LE expr_add { $$ = handle_binary_operation("<=", $1, $3); }
-    | expr_rel TK_OC_GE expr_add { $$ = handle_binary_operation(">=", $1, $3); }
+    /* | expr_rel TK_OC_GE expr_add { $$ = handle_binary_operation(">=", $1, $3); } */
+    | expr_rel TK_OC_GE expr_add { $$ = handle_relop(">=", $1, $3); }
     | expr_add { $$ = $1; };
 
 /* ============================== [3.4] Expressoes aritmeticas ============================== */
 expr_add: 
-    expr_add '+' expr_mult { $$ = handle_multiplication("+", $1, $3); }
-    | expr_add '-' expr_mult { $$ = handle_multiplication("-", $1, $3); }
+    expr_add '+' expr_mult { $$ = handle_arithmetic("+", $1, $3); }
+    | expr_add '-' expr_mult { $$ = handle_arithmetic("-", $1, $3); }
     | expr_mult { $$ = $1; };
 
 
 expr_mult: 
     expr_mult '*' expr_unary { 
         // $$ = handle_binary_operation("*", $1, $3); 
-        $$ = handle_multiplication("*", $1, $3);
+        $$ = handle_arithmetic("*", $1, $3);
     }
     | expr_mult '/' expr_unary { 
-        $$ = handle_multiplication("/", $1, $3); 
+        $$ = handle_arithmetic("/", $1, $3); 
     }
     | expr_mult '%' expr_unary { 
-        $$ = handle_multiplication("%", $1, $3); 
+        $$ = handle_arithmetic("%", $1, $3); 
     }
     | expr_unary { 
         $$ = $1; 
@@ -486,72 +497,87 @@ primary:
 
 /* ============================== Funcoes ================================== */
 
-/*
- * [Engehnaria de Software]
- * Funcao que lida com literais E -> TK_LIT_INT | TK_LIT_FLOAT
- */
 
- asd_tree_t* handle_multiplication(const char* operator, asd_tree_t* left, asd_tree_t* right) {
-    // Valida os parâmetros de entrada
-    if (!operator) {
-        printf("Erro em %s: operador nulo fornecido.\n", __FUNCTION__);
-        return NULL;
-    }
-    if (!left || !right) {
-        printf("Erro em %s: operandos inválidos (left = %p, right = %p).\n", __FUNCTION__, (void*)left, (void*)right);
-        return NULL;
-    }
-
-    // Cria um novo nó para a operação binária
-    asd_tree_t* node = asd_new(operator);
+asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* right) {
+    asd_tree_t* node = handle_binary_operation(operator, left, right);
+    
     if (!node) {
-        printf("Erro em %s: falha ao alocar memória para o nó operador.\n", __FUNCTION__);
+        printf("Erro em %s: falha ao criar nó para operador relacional.\n", __FUNCTION__);
         return NULL;
     }
 
-    // Adiciona os operandos como filhos do nó
-    asd_add_child(node, left);
-    asd_add_child(node, right);
+    node->local = GeraTemp();  // Cria uma variável temporária para o resultado
 
-    // Copia o operador de forma segura
-    node->label = strdup(operator);
-    if (!node->label) {
-        printf("Erro em %s: falha ao copiar o operador.\n", __FUNCTION__);
-        free(node);
+    IlocList_t* tempCode = NULL;
+    
+    IlocList_t* loadLeft = criaInstrucao("load", left->local, NULL, "t0");
+    IlocList_t* loadRight = criaInstrucao("load", right->local, NULL, "t1");
+
+    // Gerar a instrução de comparação
+    IlocList_t* ge = criaInstrucao("cmp_GE", "t0", "t1", node->local); 
+
+    // Concatenar as instruções
+    tempCode = concatenaInstrucoes(left->codigo, 
+                concatenaInstrucoes(right->codigo, 
+                concatenaInstrucoes(loadLeft, concatenaInstrucoes(loadRight, ge))));
+
+    node->codigo = tempCode;
+    
+    /* PRINT_SEPARATOR;
+    PRINT_CODE;
+    PRINT_SEPARATOR; */
+
+
+
+    return node;
+
+}
+
+ asd_tree_t* handle_arithmetic(const char* operator, asd_tree_t* left, asd_tree_t* right) {
+    asd_tree_t* node = handle_binary_operation(operator, left, right);
+    
+    if (!node) {
+        printf("Erro em %s: falha ao criar nó para operador relacional.\n", __FUNCTION__);
         return NULL;
     }
 
-    node->local = GeraTemp();
+
+    node->local = GeraTemp(); 
+
+    IlocList_t* tempCode = NULL;
 
     if (strcmp(operator, "+") == 0) {
         // Código para soma
-        struct iloc_list *add = criaInstrucao("add", left->local, right->local, node->local);
-        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, add));
+        IlocList_t* add = criaInstrucao("add", left->local, right->local, node->local);
+        tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, add));
     } 
     else if (strcmp(operator, "-") == 0) {
         // Código para subtração
-        struct iloc_list *sub = criaInstrucao("sub", left->local, right->local, node->local);
-        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, sub));
+        IlocList_t* sub = criaInstrucao("sub", left->local, right->local, node->local);
+        tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, sub));
     } 
-    else if (strcmp(operator, "*") == 0) 
-    {
-        struct iloc_list *mul = criaInstrucao("mul", left->local, right->local, node->local);
-        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mul));
+    else if (strcmp(operator, "*") == 0) {
+        // Código para multiplicação
+        IlocList_t* mul = criaInstrucao("mul", left->local, right->local, node->local);
+        tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mul));
     } 
-    else if (strcmp(operator, "/") == 0) 
-    {
-        struct iloc_list *div = criaInstrucao("div", left->local, right->local, node->local);
-        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, div));
+    else if (strcmp(operator, "/") == 0) {
+        // Código para divisão
+        IlocList_t* div = criaInstrucao("div", left->local, right->local, node->local);
+        tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, div));
     } 
-    else if (strcmp(operator, "%") == 0)
-    {
-        struct iloc_list *mod = criaInstrucao("mod", left->local, right->local, node->local);
-        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mod));
-    } else 
-    {
-        fprintf(stderr, "Erro interno: operação inválida '%s' em handle_multiplication.\n", operator);
+    else if (strcmp(operator, "%") == 0) {
+        // Código para módulo
+        IlocList_t* mod = criaInstrucao("mod", left->local, right->local, node->local);
+        tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mod));
+    } 
+    else {
+        fprintf(stderr, "Erro interno: operação inválida '%s' em handle_binary_operation.\n", operator);
         exit(EXIT_FAILURE);
-    } 
+    }
+
+   
+    node->codigo = tempCode;
     PRINT_CODE;
 
     return node;
@@ -580,6 +606,11 @@ asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
     return node;
 }
 
+
+/*
+ * [Engehnaria de Software]
+ * Funcao que lida com literais E -> TK_LIT_INT | TK_LIT_FLOAT
+ */
 
 asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo) {
         if (!vl) {

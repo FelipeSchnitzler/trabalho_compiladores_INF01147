@@ -17,7 +17,6 @@ typedef enum {
 } TipoDado;
 
 
-
 /*
  * Estrutura de um símbolo ( entrada na tabela de símbolos )
  * Equivalente a uma "linha" da tabela de símbolos
