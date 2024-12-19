@@ -13,7 +13,9 @@ SymbolTableStack *stack = NULL;
 int main (int argc, char **argv)
 {
   int ret = yyparse(); 
+  #ifdef GraphvizPrint
   exporta (arvore);
+  #endif
   asd_free((asd_tree_t *) arvore);
   yylex_destroy();
   return ret;
@@ -28,6 +30,7 @@ void exporta (void *arvore)
   
   asd_tree_t *arvore_p = (asd_tree_t *) arvore;
   
+  
   fprintf(stdout, "%p [label=\"%s\"];\n", arvore_p, arvore_p->label);
 
   int i = 0;
@@ -35,5 +38,8 @@ void exporta (void *arvore)
   {
     exporta(arvore_p->children[i]);
     fprintf(stdout, "%p, %p\n",arvore_p,arvore_p->children[i]);
+    
   }
+
+
 }

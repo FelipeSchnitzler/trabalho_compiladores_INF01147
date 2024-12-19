@@ -161,11 +161,14 @@ void print_table(SymbolTable *table) {
 
     Symbol *current = table->head;
     while (current) {
-        printf("%-20s %-10d %-15s %-10s\n",
+        printf("%-20s %-10d %-15s %-10s %-15d %-15d\n",
                current->nome,
                current->linha,
                current->natureza == IDENTIFICADOR ? "IDENTIFICADOR" : "FUNCAO",
-               current->tipo == INT ? "INT" : "FLOAT");
+                current->tipo == INT ? "INT" : "FLOAT",
+                current->tamanho,
+                current->deslocamento
+               );
         current = current->next;
     }
     
@@ -180,20 +183,20 @@ void print_stack(SymbolTableStack *stack) {
         return;
     }
 
-    printf("===============================================================\n");
-    printf("%-20s %-10s %-15s %-10s\n", "Nome", "Linha", "Natureza", "Tipo"); // Cabeçalho
-    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("================================================================================================\n");
+    printf("%-20s %-10s %-15s %-10s %-15s %-15s\n", "Nome", "Linha", "Natureza", "Tipo", "Tamanho", "Deslocamento"); // Cabeçalho
+    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
     // int i = 1; // Contador para os escopos
     while (stack) {
         // Imprime uma linha separadora entre os escopos
         
-        printf("---------------------------------------------------------------\n");
+        printf("--------------------------------------------------------------------------------------------\n");
 
         // Imprime a tabela de símbolos para o escopo atual
         print_table(stack->table);  // Assume que print_table já é implementada corretamente
         stack = stack->next;
     }
-    printf("===============================================================\n\n\n");
+    printf("================================================================================================\n\n\n");
     
 }
