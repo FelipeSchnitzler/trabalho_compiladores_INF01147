@@ -27,7 +27,8 @@
 
     /* Macros */
     #ifdef ASD_PRINT_GRAPHVIZ_FLAG
-        #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
+        // #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
+        #define GRAPHVIZ_PRINT // Não faz nada
     #else
         #define GRAPHVIZ_PRINT // Não faz nada
     #endif
@@ -117,28 +118,33 @@ cria_escopo_global:
 
 destroi_escopo_global: 
 {
-    print_stack(stack);
+    // print_stack(stack);
     free_stack(stack);
 };
 
 empilha_tabela: 
 {
-    int deslocamento = (stack->table && stack->table->deslocamento) ? stack->table->deslocamento : 0;
+    int deslocamento = (stack->table->deslocamento) ? stack->table->deslocamento : 0;
     push_table(&stack);
+     stack->table->deslocamento =  stack->table->deslocamento ;
     if(stack->table){
         stack->table->deslocamento = deslocamento;
     }
-    print_table(stack->table);
+    // print_stack(stack->table);
 };
 
 desempilha_tabela: 
 {
-
-    int deslocamento = (stack->table && stack->table->deslocamento) ? stack->table->deslocamento : 0;
+    print_stack(stack);
+    // printf("\n ##>>>>>>Deslocamento: %d\n",stack->table->deslocamento);
+    int deslocamento = (stack->table->deslocamento) ? stack->table->deslocamento : 0;
     pop_table(&stack);
+
+    // printf("\n ##>>>>>>Deslocamento: %d\n",stack->table->deslocamento);
     if(stack->table){
-        stack->table->deslocamento = deslocamento;
+        // stack->table->deslocamento = deslocamento;
     }
+
 };
 /* ================== Tipo ============================== */
 tipo: 

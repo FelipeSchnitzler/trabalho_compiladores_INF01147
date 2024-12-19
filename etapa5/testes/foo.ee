@@ -1,5 +1,22 @@
-f = > int{ 
-    int a,b,c <= 3, d, e <= 4;
-    a = 3;
-    return 10;
+//f = > int{ 
+//    int a,b,c <= 3, d, e <= 4;
+//    a = 3;
+//    return 10;
+//}
+
+f = > int {
+    int a; 
+    int b; 
+    int c; 
+    { 
+        int d;
+
+    };
+    
+    {
+        int e;
+    };
+
+    int f;
+  return 10;
 }

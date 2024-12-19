@@ -17,6 +17,7 @@ SymbolTable *create_table() {
     SymbolTable *table = NULL;
     table = calloc(1,sizeof(SymbolTable));
     table->head = NULL;
+    table->deslocamento = 0;
     return table;
 }
 
@@ -66,10 +67,26 @@ Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza n
     symbol->natureza = natureza;
     symbol->tipo = type;
     symbol->next = table->head;
-    symbol->tamanho = TIPO_WIDTH(type);
+    // symbol->tamanho = TIPO_WIDTH(type) == 0 ? 4 : TIPO_WIDTH(type);
+    symbol->tamanho =  4;
     symbol->deslocamento = table->deslocamento; 
 
+    // #ifdef DEBUG
+    // printf("\n********** INSERINDO *************\n");
+            // printf("%-20s %-10d %-15s %-10s %-15d %-15d\n",
+            //    symbol->nome,
+            //    symbol->linha,
+            //    symbol->natureza == IDENTIFICADOR ? "IDENTIFICADOR" : "FUNCAO",
+            //     symbol->tipo == INT ? "INT" : "FLOAT",
+            //     symbol->tamanho,
+            //     symbol->deslocamento 
+            //    );
+                //  printf("\n********** INSERINDO *************\n");
+    // #endif
+
+    // printf("\n( %d :: %d ) [%d] :: ", symbol->tamanho, symbol->deslocamento,table->deslocamento);
     table->deslocamento += symbol->tamanho;
+    // printf("[%d]\n",table->deslocamento);
     table->head = symbol;
     // print_table(table);
     return NULL;
@@ -94,12 +111,19 @@ Symbol *find_symbol(SymbolTable *table, const char *name) {
 void set_symbol_type(SymbolTable *table, TipoDado type){
     Symbol *tmp = table->head;
 
+    int deslocamento = table->deslocamento; 
+
     for (; tmp != NULL; tmp = tmp->next)
     {
+       
         if (tmp->tipo == INDEFINIDO)
         {
             tmp->tipo = type;
+            tmp->tamanho = TIPO_WIDTH(type);
+            tmp->deslocamento = deslocamento;
+            // table->deslocamento += 4;
         }
+       
     }
 }
 
