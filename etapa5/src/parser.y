@@ -45,6 +45,7 @@
         #define PRINT_PILHA // Não faz nada
         #define PRINT_SEPARATOR // Não faz nada
     #endif
+    #define PRINT_TREE asd_print_graphviz(arvore);
     #if defined(PRINT_TREE)
         #define PRINT_TREE asd_print_graphviz(arvore);
     #else
@@ -510,23 +511,46 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
 
     IlocList_t* tempCode = NULL;
     
-    IlocList_t* loadLeft = criaInstrucao("load", left->local, NULL, "t0");
-    IlocList_t* loadRight = criaInstrucao("load", right->local, NULL, "t1");
+    /* IlocList_t* loadLeft = criaInstrucao("load", left->local, NULL, "t0");
+    IlocList_t* loadRight = criaInstrucao("load", right->local, NULL, "t1"); */
 
-    // Gerar a instrução de comparação
+    /* // Gerar a instrução de comparação
     IlocList_t* ge = criaInstrucao("cmp_GE", "t0", "t1", node->local); 
 
     // Concatenar as instruções
     tempCode = concatenaInstrucoes(left->codigo, 
                 concatenaInstrucoes(right->codigo, 
-                concatenaInstrucoes(loadLeft, concatenaInstrucoes(loadRight, ge))));
+                concatenaInstrucoes(loadLeft, concatenaInstrucoes(loadRight, ge)))); */
 
     node->codigo = tempCode;
-    
-    /* PRINT_SEPARATOR;
-    PRINT_CODE;
-    PRINT_SEPARATOR; */
+ // Carregar os operandos nos temporários
+    IlocList_t* loadLeft = criaInstrucao("load", left->local, NULL, "t0");
+    IlocList_t* loadRight = criaInstrucao("load", right->local, NULL, "t1");
 
+    // Gerar as instruções de comparação para cada operador relacional
+    if (strcmp(operator, "<") == 0) {
+        tempCode = criaInstrucao("cmp_LT", "t0", "t1", node->local);
+    } else if (strcmp(operator, ">") == 0) {
+        tempCode = criaInstrucao("cmp_GT", "t0", "t1", node->local);
+    } else if (strcmp(operator, "<=") == 0) {
+        tempCode = criaInstrucao("cmp_LE", "t0", "t1", node->local);
+    } else if (strcmp(operator, ">=") == 0) {
+        tempCode = criaInstrucao("cmp_GE", "t0", "t1", node->local);
+    } else if (strcmp(operator, "==") == 0) {
+        tempCode = criaInstrucao("cmp_EQ", "t0", "t1", node->local);
+    } else if (strcmp(operator, "!=") == 0) {
+        tempCode = criaInstrucao("cmp_NE", "t0", "t1", node->local);
+    } else {
+        fprintf(stderr, "Erro interno: operador relacional inválido '%s' em handle_relop.\n", operator);
+        exit(EXIT_FAILURE);
+    }
+
+    tempCode = concatenaInstrucoes(left->codigo,
+                  concatenaInstrucoes(right->codigo,
+                  concatenaInstrucoes(loadLeft,
+                  concatenaInstrucoes(loadRight, tempCode))));
+
+    node->codigo = tempCode;
 
 
     return node;
