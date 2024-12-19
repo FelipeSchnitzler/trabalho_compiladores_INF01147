@@ -10,10 +10,16 @@ void exporta (void *arvore);
 void *arvore = NULL;
 SymbolTableStack *stack = NULL;
 
+#if defined(_DEBUG_)
+// #define DEBUG_PRINT(...) fprintf(stderr, __VA_ARGS__)
+#define GRAPHVIZ_PRINT 1
+#endif
+
+
 int main (int argc, char **argv)
 {
   int ret = yyparse(); 
-  #ifdef GraphvizPrint
+  #ifdef GRAPHVIZ_PRINT
   exporta (arvore);
   #endif
   asd_free((asd_tree_t *) arvore);

@@ -11,7 +11,7 @@ endif
 ETAPA = etapa5
 ## ==============================================================================
 CC = gcc
-CFLAGS = -Iinclude -g -Wall -Wextra -DVERBOSE -DEBUG #-DASD_PRINT_GRAPHVIZ_FLAG
+CFLAGS = -Iinclude -g -Wall -Wextra -DVERBOSE -D_DEBUG_ #-DGraphvizPrint #-DASD_PRINT_GRAPHVIZ_FLAG
 BISON_FLAGS = -d -v -Wcounterexamples
 
 LEX_SRC = src/scanner.l
@@ -82,6 +82,11 @@ png: $(ETAPA)
 
 print_teste: 
 	printf ">>>> Teste: $(TESTE)"
+
+foo: $(ETAPA)
+	./$(ETAPA) < testes/foo.ee
+	dot saida.dot -Tpng -o outputs/grafo.png
+	$(OPEN) outputs/grafo.png
 
 ## ==============================================================================
 

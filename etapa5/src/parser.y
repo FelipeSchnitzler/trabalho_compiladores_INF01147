@@ -26,16 +26,20 @@
     asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo);
     asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl);
     asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr);
+    asd_tree_t* handle_multiplication(const char* operator, asd_tree_t* left, asd_tree_t* right);
 
 
     /* Macros */
-    #ifdef ASD_PRINT_GRAPHVIZ_FLAG
-        // #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
-        #define GRAPHVIZ_PRINT // Não faz nada
+    #if defined(_DEBUG_)        
+    #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
+    #define PRINT_DEBUG printf("DEBUG: %s:%d\n",__FILE__,__LINE__);
+    #define PRINT_CODE  imprimeListaIlocInstructions(node->codigo);
+        // #define GRAPHVIZ_PRINT 1 // Não faz nada
     #else
         #define GRAPHVIZ_PRINT // Não faz nada
+        #define PRINT_DEBUG // Não faz nada
+        #define PRINT_CODE // Não faz nada
     #endif
-    
 %}
 
 %code requires { 
@@ -165,13 +169,13 @@ programa:
     lista_de_funcoes { 
         $$ = $1; 
         arvore = $$; 
-        GRAPHVIZ_PRINT;
-        // asd_print_graphviz(arvore); 
+        // GRAPHVIZ_PRINT;
+         asd_print_graphviz(arvore); 
     } 
     | /* vazio */ { 
         $$ = NULL; 
         arvore = $$; 
-        GRAPHVIZ_PRINT;
+        asd_print_graphviz(arvore); 
         // asd_print_graphviz(arvore); 
     };
 
@@ -427,7 +431,8 @@ expr_add:
 
 expr_mult: 
     expr_mult '*' expr_unary { 
-        $$ = handle_binary_operation("*", $1, $3); 
+        // $$ = handle_binary_operation("*", $1, $3); 
+        $$ = handle_multiplication("*", $1, $3);
     }
     | expr_mult '/' expr_unary { 
         $$ = handle_binary_operation("/", $1, $3); 
@@ -484,6 +489,58 @@ primary:
  * Funcao que lida com literais E -> TK_LIT_INT | TK_LIT_FLOAT
  */
 
+ asd_tree_t* handle_multiplication(const char* operator, asd_tree_t* left, asd_tree_t* right) {
+    // Valida os parâmetros de entrada
+    if (!operator) {
+        printf("Erro em %s: operador nulo fornecido.\n", __FUNCTION__);
+        return NULL;
+    }
+    if (!left || !right) {
+        printf("Erro em %s: operandos inválidos (left = %p, right = %p).\n", __FUNCTION__, (void*)left, (void*)right);
+        return NULL;
+    }
+
+    // Cria um novo nó para a operação binária
+    asd_tree_t* node = asd_new(operator);
+    if (!node) {
+        printf("Erro em %s: falha ao alocar memória para o nó operador.\n", __FUNCTION__);
+        return NULL;
+    }
+
+    // Adiciona os operandos como filhos do nó
+    asd_add_child(node, left);
+    asd_add_child(node, right);
+
+    // Copia o operador de forma segura
+    node->label = strdup(operator);
+    if (!node->label) {
+        printf("Erro em %s: falha ao copiar o operador.\n", __FUNCTION__);
+        free(node);
+        return NULL;
+    }
+
+    node->local = GeraTemp();
+
+    if (strcmp(operator, "*") == 0) {
+        struct iloc_list *mul = criaInstrucao("mul", left->local, right->local, node->local);
+        node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mul));
+    } 
+    /* else if (strcmp(operator, "/") == 0) {
+        struct iloc_list *div = criaInstrucao("div", left->local, right->local, node->local);
+        node->codigo = concatena_codigo(left->codigo, concatena_codigo(right->codigo, div));
+    } else if (strcmp(operator, "%") == 0) {
+        struct iloc_list *mod = criaInstrucao("mod", left->local, right->local, node->local);
+        node->codigo = concatena_codigo(left->codigo, concatena_codigo(right->codigo, mod));
+    } else {
+        fprintf(stderr, "Erro interno: operação inválida '%s' em handle_multiplication.\n", operator);
+        exit(EXIT_FAILURE);
+    } 
+    PRINT_CODE;
+
+    return node;
+}
+
+
 asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
     asd_tree_t *node = asd_new_with_1_child(op, expr);
 
@@ -492,13 +549,16 @@ asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
         node->codigo = criaInstrucao("rsubI", "0", expr->local, node->local);
     } else if (strcmp(op, "!") == 0) {
         char *tempZero = GeraTemp();
-        IlocList_t* loadZero = criaInstrucao("loadI", "0", NULL, tempZero);
-        IlocList_t* cmp = criaInstrucao("cmp_EQ", expr->local, tempZero, node->local);
+        IlocList_t *loadZero = criaInstrucao("loadI", "0", NULL, tempZero);
+        IlocList_t *cmp = criaInstrucao("cmp_EQ", expr->local, tempZero, node->local);
         node->codigo = concatenaInstrucoes(expr->codigo, concatenaInstrucoes(loadZero, cmp));
     } else {
         fprintf(stderr, "Erro interno: operação inválida '%s' em handleUnaryOperation.\n", op);
         exit(EXIT_FAILURE);
-    } 
+    }
+
+    PRINT_CODE;
+
 
     return node;
 }
@@ -554,18 +614,7 @@ asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl) {
     sprintf(deslocamento_str, "%d", symbol->deslocamento);
     node->codigo = criaInstrucao("loadAI","rfp",deslocamento_str,node->local);
     
-    /* IlocList_t* lista = criaInstrucao("ADD", "t1", "t2", "t3");
-    node->codigo = concatenaInstrucoes(node->codigo, lista);
-    imprimeListaIlocInstructions(node->codigo); */
 
-    /* printf("\n>>>>[DEBUG] \n");  
-    imprimeIlocInstruction(node->codigo->instruction);
-
-    printf("\n>>>>[DEBUG] \n");  
-     */
-
-
-    
 
     /* Implementado em valor_lexico.c */
     valor_lexico_free(vl);
