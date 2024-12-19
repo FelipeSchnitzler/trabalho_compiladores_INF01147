@@ -78,7 +78,7 @@ void add_instrucao(IlocList_t** lista, IlocInstruction_t* instrucao) {
     *lista = novo_no;
 }
 
-IlocList_t* geraCodigo(char* operacao, char* arg1, char* arg2, char* arg3) {
+IlocList_t* criaInstrucao(char* operacao, char* arg1, char* arg2, char* arg3) {
     IlocList_t* lista = nova_lista_instrucoes();
     IlocInstruction_t* instrucao = nova_instrucao(operacao, arg1, arg2, arg3);
 

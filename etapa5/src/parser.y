@@ -22,6 +22,8 @@
     # include "asd.h"
     # include "iloc.h"
     char *cria_label_func(char *identificador);
+
+    asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo);
     asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl);
 
 
@@ -454,17 +456,16 @@ primary:
      * [MAYBE ACTION]: Criar macro para verificar se o identificador foi declarado
      */
     TK_LIT_FLOAT { 
-        $$ = asd_new($1->valor); 
-        valor_lexico_free($1); 
-        $$->tipo = FLOAT;
+        $$ = handleLiteral($1, FLOAT);
+        
     }
     | TK_LIT_INT { 
-        $$ = asd_new($1->valor); 
-        valor_lexico_free($1); 
-        $$->tipo = INT;
+        $$ = handleLiteral($1, FLOAT);
+    
+
     }
     | TK_IDENTIFICADOR { 
-        char *temp = GeraTemp();
+        // char *temp = GeraTemp();
         #ifdef DVERBOSE
         printf("==================foo!\n");
         #endif
@@ -480,6 +481,30 @@ primary:
 %%
 
 /* ============================== Funcoes ================================== */
+
+/*
+ * [Engehnaria de Software]
+ * Funcao que lida com literais E -> TK_LIT_INT | TK_LIT_FLOAT
+ */
+
+asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo) {
+        if (!vl) {
+        fprintf(stderr, "Erro interno: valor_lexico nulo em handleAtribuicao.\n");
+        exit(EXIT_FAILURE);
+    }
+    asd_tree_t *node = asd_new(vl->valor);
+    node->tipo = tipo;
+    node->local = GeraTemp();
+    node->codigo = criaInstrucao("loadI", vl->valor, "", node->local);
+   
+    #ifdef DVERBOSE
+        imprimeListaIlocInstructions(node->codigo);
+    #endif
+   
+    return node;
+}
+
+
 
 /* 
  * [Engehnaria de Software]
@@ -510,13 +535,17 @@ asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl) {
 
     char deslocamento_str[12]; 
     sprintf(deslocamento_str, "%d", symbol->deslocamento);
-    node->codigo = geraCodigo("loadAI","rfp",deslocamento_str,node->local);
+    node->codigo = criaInstrucao("loadAI","rfp",deslocamento_str,node->local);
+    
+    /* IlocList_t* lista = criaInstrucao("ADD", "t1", "t2", "t3");
+    node->codigo = concatenaInstrucoes(node->codigo, lista);
+    imprimeListaIlocInstructions(node->codigo); */
 
     /* printf("\n>>>>[DEBUG] \n");  
     imprimeIlocInstruction(node->codigo->instruction);
 
     printf("\n>>>>[DEBUG] \n");  
-    imprimeListaIlocInstructions(node->codigo); */
+     */
 
 
     

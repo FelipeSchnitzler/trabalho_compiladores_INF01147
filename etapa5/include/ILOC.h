@@ -26,7 +26,7 @@ IlocInstruction_t* new_ILOC_instruction(const char* op, const char* arg1, const 
 IlocInstruction_t* nova_instrucao(char* operacao, char* arg1, char* arg2, char* arg3) ;
 IlocList_t* nova_lista_instrucoes();
 void add_instrucao(IlocList_t** lista, IlocInstruction_t* instrucao);
-IlocList_t* geraCodigo(char* operacao, char* arg1, char* arg2, char* arg3);
+IlocList_t* criaInstrucao(char* operacao, char* arg1, char* arg2, char* arg3);
 
 
 
