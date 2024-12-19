@@ -25,6 +25,7 @@
 
     asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo);
     asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl);
+    asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr);
 
 
     /* Macros */
@@ -441,10 +442,12 @@ expr_mult:
 
 expr_unary: 
     '-' expr_unary { 
-        $$ = asd_new_with_1_child("-",$2);
+        // $$ = asd_new_with_1_child("-",$2);
+        $$ = handleUnaryOperation("-", $2);
     }
     | '!' expr_unary { 
-        $$ = asd_new_with_1_child("!",$2);
+        // $$ = asd_new_with_1_child("!", $2);
+        $$ = handleUnaryOperation("!", $2);
     }
     | primary { 
         $$ = $1; 
@@ -461,15 +464,9 @@ primary:
     }
     | TK_LIT_INT { 
         $$ = handleLiteral($1, FLOAT);
-    
 
     }
     | TK_IDENTIFICADOR { 
-        // char *temp = GeraTemp();
-        #ifdef DVERBOSE
-        printf("==================foo!\n");
-        #endif
-
         $$ = handleAtribuicao(stack, $1);
     };
     | chamada_funcao  { 
@@ -486,6 +483,26 @@ primary:
  * [Engehnaria de Software]
  * Funcao que lida com literais E -> TK_LIT_INT | TK_LIT_FLOAT
  */
+
+asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
+    asd_tree_t *node = asd_new_with_1_child(op, expr);
+
+    node->local = GeraTemp();
+    if (strcmp(op, "-") == 0) {
+        node->codigo = criaInstrucao("rsubI", "0", expr->local, node->local);
+    } else if (strcmp(op, "!") == 0) {
+        char *tempZero = GeraTemp();
+        IlocList_t* loadZero = criaInstrucao("loadI", "0", NULL, tempZero);
+        IlocList_t* cmp = criaInstrucao("cmp_EQ", expr->local, tempZero, node->local);
+        node->codigo = concatenaInstrucoes(expr->codigo, concatenaInstrucoes(loadZero, cmp));
+    } else {
+        fprintf(stderr, "Erro interno: operação inválida '%s' em handleUnaryOperation.\n", op);
+        exit(EXIT_FAILURE);
+    } 
+
+    return node;
+}
+
 
 asd_tree_t *handleLiteral (valor_lexico_t *vl, TipoDado tipo) {
         if (!vl) {
