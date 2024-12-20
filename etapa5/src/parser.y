@@ -377,6 +377,7 @@ comando_atribuicao:
             printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
             exit(ERR_FUNCTION);
         }
+
         /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
         $$ = asd_new("=");
         asd_add_child($$, asd_new($1->valor)); 
@@ -384,6 +385,9 @@ comando_atribuicao:
         valor_lexico_free($1);
         /* [Revisar]  */ 
         $$->tipo = symbol->tipo;
+
+
+        /* ============================== [ILOC] ============================== */  
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
@@ -425,20 +429,31 @@ comando_retorno: TK_PR_RETURN expressao {
 comando_controle_fluxo: 
     TK_PR_IF '(' expressao ')' bloco_comandos { 
         $$ = asd_new("if");
-        ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
-        char *label_B_T = GeraLabel();
-        char *label2 = GeraLabel();
-        IlocList_t* tempCode = criaInstrucao("cmp_NE", $3->local, "0", label_B_T);
-        IlocList_t* tempCode2 = criaInstrucao(label_B_T, "nop", NULL, NULL);
-        IlocList_t* tempCode3 = criaInstrucao("jumpI", label2, NULL, NULL);
-        
-        $$->codigo = concatenaInstrucoes($3->codigo, 
-                        concatenaInstrucoes($5->codigo, 
-                        concatenaInstrucoes(tempCode, 
-                        concatenaInstrucoes(tempCode2, tempCode3))));
-            
+        ADD_CHILDREN_IF_NOT_NULL_MACRO($$, $3, $5);
+
+       
+        char *label_true = GeraLabel(); 
+        char *label_false = GeraLabel();
+
+       
+        IlocList_t* tempCode = criaInstrucao("cbr", $3->local, label_true, label_false);
+
+       
+        IlocList_t* trueLabel = criaInstrucao(label_true, "nop", NULL, NULL);
+        IlocList_t* falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
+
+       
+        $$->codigo = concatenaInstrucoes($3->codigo,              
+                        concatenaInstrucoes(tempCode,            
+                        concatenaInstrucoes(trueLabel,          
+                        concatenaInstrucoes($5->codigo,         
+                        falseLabel))));                         
+        printf(">>>=================================================\n");
+        imprimeListaIlocInstructions($3->codigo);
         printf(">>>=================================================\n");
         imprimeListaIlocInstructions($$->codigo);
+        printf(">>>=================================================\n");
+        imprimeListaIlocInstructions($5->codigo);
         printf(">>>=================================================\n");
     
 
@@ -446,6 +461,27 @@ comando_controle_fluxo:
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
         $$ = asd_new("if");
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5,$7);
+
+        /* ILOC */
+        char *label_true = GeraLabel();  
+        char *label_false = GeraLabel(); 
+        char *label_end = GeraLabel();   
+     
+        IlocList_t* cbrCode = criaInstrucao("cbr", $3->local, label_true, label_false);
+
+        IlocList_t* instruct_trueLabel = criaInstrucao(label_true, "nop", NULL, NULL);
+        IlocList_t* instruct_falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
+        IlocList_t* jumpToEnd = criaInstrucao("jumpI", label_end, NULL, NULL);
+        IlocList_t* instruct_endLabel = criaInstrucao(label_end, "nop", NULL, NULL);
+
+        $$->codigo = concatenaInstrucoes($3->codigo,       
+                     concatenaInstrucoes(cbrCode,          
+                     concatenaInstrucoes(instruct_trueLabel,        
+                     concatenaInstrucoes($5->codigo,       
+                     concatenaInstrucoes(jumpToEnd,        
+                     concatenaInstrucoes(instruct_falseLabel,       
+                     concatenaInstrucoes($7->codigo,       
+                     instruct_endLabel)))))));                      
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { 
         $$ = asd_new("while"); 
