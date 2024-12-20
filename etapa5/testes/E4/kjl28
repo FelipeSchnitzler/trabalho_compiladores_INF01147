@@ -1,0 +1,3 @@
+//ERR_DECLARED
+f = a <- int | b <- int | a <- int > int {
+}

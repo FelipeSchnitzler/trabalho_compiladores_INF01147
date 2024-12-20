@@ -431,6 +431,7 @@ comando_controle_fluxo:
         IlocList_t* tempCode = criaInstrucao("cmp_NE", $3->local, "0", label_B_T);
         IlocList_t* tempCode2 = criaInstrucao(label_B_T, "nop", NULL, NULL);
         IlocList_t* tempCode3 = criaInstrucao("jumpI", label2, NULL, NULL);
+        
         $$->codigo = concatenaInstrucoes($3->codigo, 
                         concatenaInstrucoes($5->codigo, 
                         concatenaInstrucoes(tempCode, 
@@ -565,11 +566,11 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
         tempCode = criaInstrucao("cmp_EQ", left->local, right->local, node->local);
     } else if (strcmp(operator, "!=") == 0) {
         tempCode = criaInstrucao("cmp_NE", left->local, right->local, node->local);
-    } if (strcmp(operator, "&") == 0) {
+    }else if (strcmp(operator, "&") == 0) {
         PRINT_SEPARATOR
         PRINT_DEBUG
         tempCode = criaInstrucao("and", left->local, right->local, node->local);
-        imprimeIlocInstruction(tempCode);  
+        /* imprimeIlocInstruction(tempCode);   */
         PRINT_SEPARATOR
     } else if (strcmp(operator,  "|") == 0) {
         tempCode = criaInstrucao("or", left->local, right->local, node->local);
@@ -582,9 +583,9 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
     node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, tempCode));
 
 
-    PRINT_SEPARATOR
+    /* PRINT_SEPARATOR
     PRINT_CODE
-    PRINT_SEPARATOR
+    PRINT_SEPARATOR */
 
     return node;
 
