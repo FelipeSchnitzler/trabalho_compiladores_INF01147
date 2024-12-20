@@ -59,7 +59,7 @@ asd_tree_t *asd_get_last_child(asd_tree_t *tree);
  * Funcao para facilitar a vida de expressoes
  */
 
-asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_tree_t* right);
+asd_tree_t* handle_binary_operation(const char* op, asd_tree_t* left, asd_tree_t* right);
 
 asd_tree_t *asd_new_with_1_child(const char *label, asd_tree_t *child1);
 

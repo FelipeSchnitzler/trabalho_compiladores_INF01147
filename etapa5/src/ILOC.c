@@ -21,15 +21,15 @@ char* GeraTemp() {
 /*
 * Gera um nome único para um rótulo
 */
-char* GeraRotulo() {
+char* GeraLabel() {
     static int label_counter = 0; 
-    size_t size = snprintf(NULL, 0, "L%d", label_counter) + 1; 
+    size_t size = snprintf(NULL, 0, "L%d:", label_counter) + 1; 
     char* label = (char*)malloc(size); 
     if (!label) {
-        fprintf(stderr, "Erro: Falha ao alocar memória para GeraRotulo().\n");
+        fprintf(stderr, "Erro: Falha ao alocar memória para GeraLabel().\n");
         exit(EXIT_FAILURE);
     }
-    snprintf(label, size, "L%d", label_counter++); 
+    snprintf(label, size, "L%d:", label_counter++); 
     return label;
 }
 

@@ -106,7 +106,9 @@ Symbol *find_symbol(SymbolTable *table, const char *name) {
 }
 
 /*
- * Provavelmente precisa ser revisto
+ * [REVISAR] : Está só setando tosos os itens idefinidos da tabela para o Type 
+ * 
+ * 
  */
 void set_symbol_type(SymbolTable *table, TipoDado type){
     Symbol *tmp = table->head;
@@ -127,6 +129,8 @@ void set_symbol_type(SymbolTable *table, TipoDado type){
     }
 }
 
+
+
 SymbolTableStack *create_stack() {
     return NULL;
 }
@@ -136,6 +140,7 @@ SymbolTableStack *create_stack() {
  *  logo, ao empilhar uma tabela é preciso passar o __DESLOCAMENTO__ de uma tabela para outra, 
  * e alguns casos quando se desempilha tambem [REVISAR] isso.
  */
+/* [REVISAR ]: O nome não é muito explicativo, talvez faria mais sentido  CreateTableAndPush */
 void push_table(SymbolTableStack **stack) {
     SymbolTableStack *new_node = (SymbolTableStack *)malloc(sizeof(SymbolTableStack));
     new_node->table = create_table();
@@ -148,6 +153,7 @@ void push_table(SymbolTableStack **stack) {
  *  logo, ao empilhar uma tabela é preciso passar o __DESLOCAMENTO__ de uma tabela para outra, 
  * e alguns casos quando se desempilha tambem [REVISAR] isso.
  */
+/* [REVISAR]:  */
 void pop_table(SymbolTableStack **stack) {
     if (!*stack) return;
     SymbolTableStack *temp = *stack;
@@ -156,6 +162,7 @@ void pop_table(SymbolTableStack **stack) {
     free(temp);
 }
 
+/* [REVISAR]: Faria mais sentido criar um findSymbolTable aninhado */
 Symbol *find_symbol_in_stack(SymbolTableStack *stack, const char *name) {
     while (stack) {
         Symbol *symbol = find_symbol(stack->table, name);
@@ -164,7 +171,7 @@ Symbol *find_symbol_in_stack(SymbolTableStack *stack, const char *name) {
     }
     return NULL;
 }
-
+/*[Revisar_]: Faz sentido esse cara? Nao precisaria ser mais especifico */
 void free_stack(SymbolTableStack *stack) {
     while (stack) {
         SymbolTableStack *temp = stack;

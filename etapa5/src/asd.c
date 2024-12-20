@@ -5,6 +5,35 @@
 #define ARQUIVO_SAIDA "saida.dot"
 #define expected_children_count 2
 
+TipoDado type_inference(TipoDado tipo1, TipoDado tipo2) {
+    if(tipo1 == FLOAT || tipo2 == FLOAT) {return FLOAT;}
+
+    else if(tipo1 == INT && tipo2 == INT) {return INT;}
+
+    return INDEFINIDO;
+}
+
+/*
+ * Funcao Criada para facilitar a adicao de filhos em uma arvore
+ * Exemplo: 
+ * Em vez de usar: 
+ *   asd_add_child($$,$3);
+ *   if($5 != NULL){asd_add_child($$,$5);} 
+ *   if($7 != NULL){asd_add_child($$,$7);}
+ * pode simplesmente usar:
+ *   ADD_CHILDREN_IF_NOT_NULL_MACRO($$, $3, $5, $7);
+ */
+void add_children_if_not_null_function(asd_tree_t* parent, asd_tree_t* children[], size_t count) {
+    for (size_t i = 0; i < count; i++) {
+        if (children[i] != NULL) {
+            asd_add_child(parent, children[i]);
+        }
+    }
+}
+
+
+    
+
 asd_tree_t *asd_new(const char *label)
 {
   asd_tree_t *ret = NULL;
@@ -116,9 +145,9 @@ asd_tree_t *asd_get_last_child(asd_tree_t *tree){
  * Funcao para facilitar a vida de expressoes
  */
 
-asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_tree_t* right) {
+asd_tree_t* handle_binary_operation(const char* op, asd_tree_t* left, asd_tree_t* right) {
     // Valida os parâmetros de entrada
-    if (!operator) {
+    if (!op) {
         printf("Erro em %s: operador nulo fornecido.\n", __FUNCTION__);
         return NULL;
     }
@@ -128,7 +157,7 @@ asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_
     }
 
     // Cria um novo nó para a operação binária
-    asd_tree_t* node = asd_new(operator);
+    asd_tree_t* node = asd_new(op);
     if (!node) {
         printf("Erro em %s: falha ao alocar memória para o nó operador.\n", __FUNCTION__);
         return NULL;
@@ -139,7 +168,7 @@ asd_tree_t* handle_binary_operation(const char* operator, asd_tree_t* left, asd_
     asd_add_child(node, right);
 
     // Copia o operador de forma segura
-    node->label = strdup(operator);
+    node->label = strdup(op);
     if (!node->label) {
         printf("Erro em %s: falha ao copiar o operador.\n", __FUNCTION__);
         free(node);
@@ -161,33 +190,3 @@ asd_tree_t *asd_new_with_1_child(const char *label, asd_tree_t *child1){
 
   return new_tree;
 }
-
-TipoDado type_inference(TipoDado tipo1, TipoDado tipo2) {
-    if(tipo1 == FLOAT || tipo2 == FLOAT) {return FLOAT;}
-
-    else if(tipo1 == INT && tipo2 == INT) {return INT;}
-
-    return INDEFINIDO;
-}
-
-
-/*
- * Funcao Criada para facilitar a adicao de filhos em uma arvore
- * Exemplo: 
- * Em vez de usar: 
- *   asd_add_child($$,$3);
- *   if($5 != NULL){asd_add_child($$,$5);} 
- *   if($7 != NULL){asd_add_child($$,$7);}
- * pode simplesmente usar:
- *   ADD_CHILDREN_IF_NOT_NULL_MACRO($$, $3, $5, $7);
- */
-void add_children_if_not_null_function(asd_tree_t* parent, asd_tree_t* children[], size_t count) {
-    for (size_t i = 0; i < count; i++) {
-        if (children[i] != NULL) {
-            asd_add_child(parent, children[i]);
-        }
-    }
-}
-
-
-    

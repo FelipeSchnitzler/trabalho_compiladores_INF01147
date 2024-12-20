@@ -19,7 +19,7 @@ typedef struct IlocList
 } IlocList_t;
 
 char* GeraTemp();     
-char* GeraRotulo();   
+char* GeraLabel();   
 
 
 IlocInstruction_t* new_ILOC_instruction(const char* op, const char* arg1, const char* arg2, const char* arg3);

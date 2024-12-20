@@ -197,7 +197,9 @@ lista_de_funcoes:
         $$ = $1; 
         asd_add_child($$,$3);
     }
-    | funcao { $$ = $1;};
+    | funcao { 
+        $$ = $1;
+    };
 
 
 /* ================== Funcao ============================== */
@@ -237,8 +239,12 @@ cabecalho:
     };
  
 lista_de_parametros: 
-    lista_de_parametros TK_OC_OR parametro { $$ = NULL; }
-    | parametro { $$ = NULL; };
+    lista_de_parametros TK_OC_OR parametro { 
+        $$ = NULL; 
+    }
+    | parametro { 
+        $$ = NULL; 
+    };
 
 parametro: TK_IDENTIFICADOR '<' '-' tipo { 
         $$ = NULL;
@@ -260,8 +266,12 @@ corpo: bloco_comandos_Func {
 
 /* ============================== [3.2] Bloco de Comandos ============================== */
 bloco_comandos_Func: 
-    '{' '}' { $$ = NULL; }
-    | '{' sequencia_de_comandos '}' { $$ = $2; };
+    '{' '}' { 
+        $$ = NULL; 
+    }
+    | '{' sequencia_de_comandos '}' { 
+        $$ = $2; 
+    };
 
 bloco_comandos: 
     '{' '}' { $$ = NULL; }
@@ -294,11 +304,21 @@ sequencia_de_comandos:
 
 /* ============================== [3.3] Comandos ============================== */
 comando_simples: 
-    bloco_comandos { $$ = $1; }
-    | comando_atribuicao { $$ = $1; }
-    | chamada_funcao { $$ = $1; }
-    | comando_retorno { $$ = $1; }
-    | comando_controle_fluxo { $$ = $1; };
+    bloco_comandos { 
+        $$ = $1; 
+    }
+    | comando_atribuicao { 
+        $$ = $1; 
+    }
+    | chamada_funcao { 
+        $$ = $1; 
+    }
+    | comando_retorno { 
+        $$ = $1; 
+    }
+    | comando_controle_fluxo { 
+        $$ = $1; 
+    };
 
 /* ============================== [3.3.1] declaracao de variavel ==============================*/
 declaracao_variavel: tipo lista_de_identificadores { 
@@ -319,7 +339,8 @@ lista_de_identificadores:
 ;
 
 identificador: 
-    TK_IDENTIFICADOR { $$ = NULL; 
+    TK_IDENTIFICADOR { 
+        $$ = NULL; 
         Symbol *identificador = find_symbol(stack->table,$1->valor);
 
         if(identificador != NULL){
@@ -330,11 +351,13 @@ identificador:
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
         $$ = make_IDENTIFICADOR("<=",$1->valor,$3->valor);
-        valor_lexico_free($1); valor_lexico_free($3);
+        valor_lexico_free($1); 
+        valor_lexico_free($3);
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_INT { 
         $$ = make_IDENTIFICADOR("<=",$1->valor,$3->valor);
-        valor_lexico_free($1); valor_lexico_free($3);
+        valor_lexico_free($1); 
+        valor_lexico_free($3);
     };
     
 
@@ -342,25 +365,31 @@ identificador:
 /* ============================== [3.3.2] comando de atribuicao ============================== */
 comando_atribuicao: 
     TK_IDENTIFICADOR '=' expressao { 
+
+        /*[Macro]: Handle symbol search --------------------------------------------------------------------- */
         Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
         if(symbol == NULL){
             printf("Erro na linha %d, variavel '%s' nao declarada\n",get_line_number(), $1->valor);
             exit(ERR_UNDECLARED);
         }
+        
         if(symbol->natureza != IDENTIFICADOR) {
             printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
             exit(ERR_FUNCTION);
         }
+        /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
         $$ = asd_new("=");
         asd_add_child($$, asd_new($1->valor)); 
         asd_add_child($$,$3); 
         valor_lexico_free($1);
+        /* [Revisar]  */ 
         $$->tipo = symbol->tipo;
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
 { 
+    /*[Macro]: Handle symbol search --------------------------------------------------------------------- */
     Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
     if(symbol == NULL){
         printf("Erro na linha %d, funcao '%s' nao declarada\n",get_line_number(), $1->valor);
@@ -370,6 +399,7 @@ chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
         printf("Erro na linha %d, funcao '%s' na verdade é uma variavel declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
         exit(ERR_VARIABLE);
     }
+    /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
 
     $$ = asd_new(cria_label_func($1->valor));
     asd_add_child($$,$3); 
@@ -381,7 +411,9 @@ lista_argumentos:
         $$ = $1; 
         asd_add_child($$, $3); 
     } 
-    | expressao { $$ = $1; };
+    | expressao { 
+        $$ = $1; 
+    };
 
 /* ============================== [3.3.4] comando de retorno ============================== */
 comando_retorno: TK_PR_RETURN expressao { 
@@ -394,6 +426,20 @@ comando_controle_fluxo:
     TK_PR_IF '(' expressao ')' bloco_comandos { 
         $$ = asd_new("if");
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
+        char *label_B_T = GeraLabel();
+        char *label2 = GeraLabel();
+        IlocList_t* tempCode = criaInstrucao("cmp_NE", $3->local, "0", label_B_T);
+        IlocList_t* tempCode2 = criaInstrucao(label_B_T, "nop", NULL, NULL);
+        IlocList_t* tempCode3 = criaInstrucao("jumpI", label2, NULL, NULL);
+        $$->codigo = concatenaInstrucoes($3->codigo, 
+                        concatenaInstrucoes($5->codigo, 
+                        concatenaInstrucoes(tempCode, 
+                        concatenaInstrucoes(tempCode2, tempCode3))));
+            
+        printf(">>>=================================================\n");
+        imprimeListaIlocInstructions($$->codigo);
+        printf(">>>=================================================\n");
+    
 
     }
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
@@ -478,11 +524,9 @@ primary:
      */
     TK_LIT_FLOAT { 
         $$ = handleLiteral($1, FLOAT);
-        
     }
     | TK_LIT_INT { 
         $$ = handleLiteral($1, FLOAT);
-
     }
     | TK_IDENTIFICADOR { 
         $$ = handleAtribuicao(stack, $1);
@@ -506,12 +550,9 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
         return NULL;
     }
 
-    node->local = GeraTemp();  // Cria uma variável temporária para o resultado
-
+    node->local = GeraTemp(); 
     IlocList_t* tempCode = NULL;
-    
 
-    // Gerar as instruções de comparação para cada operador relacional
     if (strcmp(operator, "<") == 0) {
         tempCode = criaInstrucao("cmp_LT", left->local, right->local, node->local);
     } else if (strcmp(operator, ">") == 0) {
@@ -539,12 +580,7 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
     }
 
     node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, tempCode));
-    /* tempCode = concatenaInstrucoes(left->codigo,
-                  concatenaInstrucoes(right->codigo,
-                  concatenaInstrucoes(loadLeft,
-                  concatenaInstrucoes(loadRight, tempCode)))); */
 
-    /* node->codigo = tempCode; */
 
     PRINT_SEPARATOR
     PRINT_CODE
@@ -561,7 +597,6 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
         printf("Erro em %s: falha ao criar nó para operador relacional.\n", __FUNCTION__);
         return NULL;
     }
-
 
     node->local = GeraTemp(); 
 
@@ -603,7 +638,6 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
 
     return node;
 }
-
 
 asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
     asd_tree_t *node = asd_new_with_1_child(op, expr);
