@@ -278,7 +278,7 @@ bloco_comandos:
     | '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' { 
         
         // imprimeListaIlocInstructions($5->codigo);
-        printf("<<<<<<<<<<<=================================================\n");
+        // printf("<<<<<<<<<<<=================================================\n");
     
 
         $$ = $3; 
@@ -463,8 +463,8 @@ comando_controle_fluxo:
         IlocList_t* falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
 
        
-        printf(">>>=================================================\n");
-        imprimeListaIlocInstructions($3->codigo);
+        // printf(">>>=================================================\n");
+        // imprimeListaIlocInstructions($3->codigo);
 
         $$->codigo = concatenaInstrucoes($3->codigo,              
                         concatenaInstrucoes(tempCode,            
@@ -472,11 +472,11 @@ comando_controle_fluxo:
                         concatenaInstrucoes($5->codigo,         
                         falseLabel))));                         
 
-        printf(">>>=================================================\n");
-        imprimeListaIlocInstructions($$->codigo);
-        printf(">>>=================================================\n");
-        imprimeListaIlocInstructions($5->codigo);
-        printf(">>>=================================================\n");
+        // printf(">>>=================================================\n");
+        // imprimeListaIlocInstructions($$->codigo);
+        // printf(">>>=================================================\n");
+        // imprimeListaIlocInstructions($5->codigo);
+        // printf(">>>=================================================\n");
     
 
     }
@@ -496,6 +496,19 @@ comando_controle_fluxo:
         IlocList_t* jumpToEnd = criaInstrucao("jumpI", label_end, NULL, NULL);
         IlocList_t* instruct_endLabel = criaInstrucao(label_end, "nop", NULL, NULL);
 
+        // IlocList_t* tempCode = concatenaInstrucoes($3->codigo, cbrCode);
+        // tempCode = concatenaInstrucoes(tempCode, instruct_trueLabel);
+        // tempCode = concatenaInstrucoes(tempCode, $5->codigo);
+        // tempCode = concatenaInstrucoes(tempCode, jumpToEnd);
+        // tempCode = concatenaInstrucoes(tempCode, instruct_falseLabel);
+        // tempCode = concatenaInstrucoes(tempCode, $7->codigo);
+        // tempCode = concatenaInstrucoes(tempCode, instruct_endLabel);
+
+        // $$->codigo = tempCode;
+
+        
+
+
         $$->codigo = concatenaInstrucoes($3->codigo,       
                      concatenaInstrucoes(cbrCode,          
                      concatenaInstrucoes(instruct_trueLabel,        
@@ -504,10 +517,34 @@ comando_controle_fluxo:
                      concatenaInstrucoes(instruct_falseLabel,       
                      concatenaInstrucoes($7->codigo,       
                      instruct_endLabel)))))));                      
+    
+        printf(">>>=================================================\n");
+        imprimeListaIlocInstructions($$->codigo);
+        printf(">>>=================================================\n");
+    
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { 
         $$ = asd_new("while"); 
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$3,$5);
+
+        /* ============================== [ILOC] ============================== */
+        char *label_start = GeraLabel();
+        char *label_true = GeraLabel();
+        char *label_false = GeraLabel();
+
+        IlocList_t* startLabel = criaInstrucao(label_start, "nop", NULL, NULL);
+        IlocList_t* cbrCode = criaInstrucao("cbr", $3->local, label_true, label_false);
+        IlocList_t* trueLabel = criaInstrucao(label_true, "nop", NULL, NULL);
+        IlocList_t* falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
+        IlocList_t* jumpToStart = criaInstrucao("jumpI", label_start, NULL, NULL);
+
+        $$->codigo = concatenaInstrucoes(startLabel, 
+                     concatenaInstrucoes($3->codigo,
+                     concatenaInstrucoes(cbrCode, 
+                     concatenaInstrucoes(trueLabel, 
+                     concatenaInstrucoes($5->codigo, 
+                     concatenaInstrucoes(jumpToStart, 
+                     falseLabel))))));
 
     };
 
