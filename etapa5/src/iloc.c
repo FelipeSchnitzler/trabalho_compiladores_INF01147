@@ -100,9 +100,15 @@ void imprimeIlocInstruction(const IlocInstruction_t* instrucao) {
 
     printf("%s", instrucao->op ? instrucao->op : "NULL");
 
-    if (instrucao->arg1) printf(" %s", instrucao->arg1);
-    if (instrucao->arg2) printf(", %s", instrucao->arg2);
-    if (instrucao->arg3) printf(" => %s", instrucao->arg3);
+    if (strcmp(instrucao->op, "storeAI") == 0){
+        if (instrucao->arg1) printf(" %s", instrucao->arg1);
+        if (instrucao->arg2) printf(" => (%s", instrucao->arg2);
+        if (instrucao->arg3) printf(",%s)", instrucao->arg3);
+    }else {
+        if (instrucao->arg1) printf(" %s", instrucao->arg1);
+        if (instrucao->arg2) printf(", %s", instrucao->arg2);
+        if (instrucao->arg3) printf(" => %s", instrucao->arg3);
+    }
 
     printf("\n");
 }

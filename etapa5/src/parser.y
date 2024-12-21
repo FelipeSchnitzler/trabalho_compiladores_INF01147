@@ -276,7 +276,13 @@ bloco_comandos_Func:
 bloco_comandos: 
     '{' '}' { $$ = NULL; }
     | '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' { 
+        
+        // imprimeListaIlocInstructions($5->codigo);
+        printf("<<<<<<<<<<<=================================================\n");
+    
+
         $$ = $3; 
+        /* ILOC */
     };
 
 sequencia_de_comandos: 
@@ -348,6 +354,7 @@ identificador:
             exit(ERR_DECLARED);
         }
         insert_symbol(stack->table,$1->valor,get_line_number(),IDENTIFICADOR,INDEFINIDO);
+        
     }
     | TK_IDENTIFICADOR TK_OC_LE TK_LIT_FLOAT { 
         $$ = make_IDENTIFICADOR("<=",$1->valor,$3->valor);
@@ -377,17 +384,26 @@ comando_atribuicao:
             printf("Erro na linha %d, variavel '%s' na verdade é uma funcao declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
             exit(ERR_FUNCTION);
         }
-
         /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
+           
         $$ = asd_new("=");
         asd_add_child($$, asd_new($1->valor)); 
         asd_add_child($$,$3); 
+
+        /* [Revisar] : criar func ou macro  */ 
         valor_lexico_free($1);
-        /* [Revisar]  */ 
         $$->tipo = symbol->tipo;
 
-
         /* ============================== [ILOC] ============================== */  
+        char deslocamento_str[12]; 
+        sprintf(deslocamento_str, "%d", symbol->deslocamento);
+        
+        IlocList_t* tempCode = criaInstrucao("storeAI", $3->local , "rfp", deslocamento_str);        
+        $$->codigo = concatenaInstrucoes($3->codigo, tempCode);
+
+        
+
+      
     };
 
 /* ============================== [3.3.3] chamada de funcao ============================== */
@@ -403,6 +419,10 @@ chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
         printf("Erro na linha %d, funcao '%s' na verdade é uma variavel declarada na linha %d\n",get_line_number(), $1->valor,symbol->linha);
         exit(ERR_VARIABLE);
     }
+
+
+
+
     /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
 
     $$ = asd_new(cria_label_func($1->valor));
@@ -443,13 +463,15 @@ comando_controle_fluxo:
         IlocList_t* falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
 
        
+        printf(">>>=================================================\n");
+        imprimeListaIlocInstructions($3->codigo);
+
         $$->codigo = concatenaInstrucoes($3->codigo,              
                         concatenaInstrucoes(tempCode,            
                         concatenaInstrucoes(trueLabel,          
                         concatenaInstrucoes($5->codigo,         
                         falseLabel))));                         
-        printf(">>>=================================================\n");
-        imprimeListaIlocInstructions($3->codigo);
+
         printf(">>>=================================================\n");
         imprimeListaIlocInstructions($$->codigo);
         printf(">>>=================================================\n");
@@ -752,9 +774,8 @@ asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl) {
 
     char deslocamento_str[12]; 
     sprintf(deslocamento_str, "%d", symbol->deslocamento);
-    node->codigo = criaInstrucao("loadAI","rfp",deslocamento_str,node->local);
+    node->codigo = criaInstrucao("storeAI",node->local ,"rfp",deslocamento_str);
     
-
 
     /* Implementado em valor_lexico.c */
     valor_lexico_free(vl);
