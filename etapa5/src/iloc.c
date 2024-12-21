@@ -100,19 +100,17 @@ void imprimeIlocInstruction(const IlocInstruction_t* instrucao) {
 
     printf("%s", instrucao->op ? instrucao->op : "NULL");
 
-    if (strcmp(instrucao->op, "storeAI") == 0 ) {
+    if (strcmp(instrucao->op, "storeAI") == 0 || strcmp(instrucao->op, "cbr") == 0) {
         if (instrucao->arg1) printf(" %s", instrucao->arg1);
         if (instrucao->arg2) printf(" => %s", instrucao->arg2);
         if (instrucao->arg3) printf(", %s", instrucao->arg3);
-    } else if (strcmp(instrucao->op, "jumpI") == 0 || strcmp(instrucao->op, "loadI") == 0) {
-       if (instrucao->arg1) printf(" %s", instrucao->arg1);
-        if (instrucao->arg3) printf(" => %s", instrucao->arg3); 
-    } else if(strcmp(instrucao->op, "cbr") == 0) {
-        if(instrucao->arg1) printf(" %s", instrucao->arg1);
-        if(instrucao->arg2) printf(" => %s", instrucao->arg2);
-        if(instrucao->arg3) printf(", %s", instrucao->arg3);
-
-    } else { // Outras instruções
+    } else if (strcmp(instrucao->op, "jumpI") == 0) {
+       if (instrucao->arg1) printf(" => %s", instrucao->arg1);
+    } else if (strcmp(instrucao->op, "loadI") == 0) {
+        if (instrucao->arg1) printf(" %s", instrucao->arg1);
+       if (instrucao->arg1) printf(" => %s", instrucao->arg3);
+    } 
+    else { // Outras instruções
         if (instrucao->arg1) printf(" %s", instrucao->arg1);
         if (instrucao->arg2) printf(", %s", instrucao->arg2);
         if (instrucao->arg3) printf(" => %s", instrucao->arg3);
