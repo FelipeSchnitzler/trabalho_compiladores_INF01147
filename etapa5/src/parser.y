@@ -129,9 +129,6 @@ cria_escopo_global:
     stack = create_stack();
     push_table(&stack);
     stack->table->deslocamento = 0;
-    #ifdef DVERBOSE
-    printf("==================foo!\n");
-    #endif
 };
 
 destroi_escopo_global: 
@@ -155,11 +152,9 @@ empilha_tabela:
 desempilha_tabela: 
 {
     PRINT_PILHA;
-    // printf("\n ##>>>>>>Deslocamento: %d\n",stack->table->deslocamento);
     int deslocamento = (stack->table->deslocamento) ? stack->table->deslocamento : 0;
     pop_table(&stack);
 
-    // printf("\n ##>>>>>>Deslocamento: %d\n",stack->table->deslocamento);
     if(stack->table){
         stack->table->deslocamento = deslocamento;
     };
@@ -293,10 +288,6 @@ sequencia_de_comandos:
         $$ = ($1 != NULL) ? $1 : $3;
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
-            // printf("IARA=================================================\n");
-            // imprimeListaIlocInstructions($1->codigo);
-            // printf("<<<<=================================================\n");
-
             $$->codigo = concatenaInstrucoes($$->codigo, $3->codigo);
         }
         
@@ -460,33 +451,20 @@ comando_controle_fluxo:
         $$ = asd_new("if");
         ADD_CHILDREN_IF_NOT_NULL_MACRO($$, $3, $5);
 
-       
+        /* ============ [ILOC] ========================== */         
         char *label_true = GeraLabel(); 
         char *label_false = GeraLabel();
-
        
         IlocList_t* tempCode = criaInstrucao("cbr", $3->local, label_true, label_false);
 
-       
         IlocList_t* trueLabel = criaInstrucao(label_true, ": nop", NULL, NULL);
         IlocList_t* falseLabel = criaInstrucao(label_false, ": nop", NULL, NULL);
-
-       
-        // printf(">>>=================================================\n");
-        // imprimeListaIlocInstructions($3->codigo);
 
         $$->codigo = concatenaInstrucoes($3->codigo,              
                         concatenaInstrucoes(tempCode,            
                         concatenaInstrucoes(trueLabel,          
                         concatenaInstrucoes($5->codigo,         
                         falseLabel))));                         
-
-        // printf(">>>=================================================\n");
-        // imprimeListaIlocInstructions($$->codigo);
-        // printf(">>>=================================================\n");
-        // imprimeListaIlocInstructions($5->codigo);
-        // printf(">>>=================================================\n");
-    
 
     }
     | TK_PR_IF '(' expressao ')' bloco_comandos TK_PR_ELSE bloco_comandos { 
@@ -505,19 +483,6 @@ comando_controle_fluxo:
         IlocList_t* jumpToEnd = criaInstrucao("jumpI", label_end, NULL, NULL);
         IlocList_t* instruct_endLabel = criaInstrucao(label_end, ": nop", NULL, NULL);
 
-        // IlocList_t* tempCode = concatenaInstrucoes($3->codigo, cbrCode);
-        // tempCode = concatenaInstrucoes(tempCode, instruct_trueLabel);
-        // tempCode = concatenaInstrucoes(tempCode, $5->codigo);
-        // tempCode = concatenaInstrucoes(tempCode, jumpToEnd);
-        // tempCode = concatenaInstrucoes(tempCode, instruct_falseLabel);
-        // tempCode = concatenaInstrucoes(tempCode, $7->codigo);
-        // tempCode = concatenaInstrucoes(tempCode, instruct_endLabel);
-
-        // $$->codigo = tempCode;
-
-        
-
-
         $$->codigo = concatenaInstrucoes($3->codigo,       
                      concatenaInstrucoes(cbrCode,          
                      concatenaInstrucoes(instruct_trueLabel,        
@@ -526,11 +491,7 @@ comando_controle_fluxo:
                      concatenaInstrucoes(instruct_falseLabel,       
                      concatenaInstrucoes($7->codigo,       
                      instruct_endLabel)))))));                      
-    
-        // printf(">>>=================================================\n");
-        // imprimeListaIlocInstructions($$->codigo);
-        // printf(">>>=================================================\n");
-    
+        
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { 
         $$ = asd_new("while"); 
@@ -554,11 +515,6 @@ comando_controle_fluxo:
                      concatenaInstrucoes($5->codigo, 
                      concatenaInstrucoes(jumpToStart, 
                      falseLabel))))));
-
-        printf(">>>=================================================\n");
-        imprimeListaIlocInstructions($$->codigo);
-        printf(">>>=================================================\n");
-
 
     };
 

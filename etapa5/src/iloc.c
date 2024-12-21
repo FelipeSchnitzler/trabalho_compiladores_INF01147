@@ -51,16 +51,10 @@ IlocInstruction_t* nova_instrucao(char* operacao, char* arg1, char* arg2, char* 
     IlocInstruction_t* instrucao = (IlocInstruction_t*)calloc(1, sizeof(IlocInstruction_t));
     if (!instrucao) return NULL;
 
-    printf("------------------\n");
-    // printf("[DEBUG] => Nova instrução: %s %s %s %s\n", operacao, arg1, arg2, arg3);
     instrucao->op = strdup(operacao);
     instrucao->arg1 = arg1 ? strdup(arg1) : NULL;
     instrucao->arg2 = arg2 ? strdup(arg2) : NULL;
     instrucao->arg3 = arg3 ? strdup(arg3) : NULL;
-
-     imprimeIlocInstruction(instrucao);
-
-    //   printf("[DEBUG] => Nova instrução: %s %s %s %s\n", operacao, arg1, arg2, arg3);
 
     return instrucao;
 }
