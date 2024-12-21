@@ -68,27 +68,12 @@ Symbol *insert_symbol(SymbolTable *table,const char *name, int linha, Natureza n
     symbol->tipo = type;
     symbol->next = table->head;
     symbol->tamanho = TIPO_WIDTH(type) == 0 ? 4 : TIPO_WIDTH(type);
-    // symbol->tamanho =  4;
     symbol->deslocamento = table->deslocamento; 
 
-    // #ifdef DEBUG
-    // printf("\n********** INSERINDO *************\n");
-            // printf("%-20s %-10d %-15s %-10s %-15d %-15d\n",
-            //    symbol->nome,
-            //    symbol->linha,
-            //    symbol->natureza == IDENTIFICADOR ? "IDENTIFICADOR" : "FUNCAO",
-            //     symbol->tipo == INT ? "INT" : "FLOAT",
-            //     symbol->tamanho,
-            //     symbol->deslocamento 
-            //    );
-                //  printf("\n********** INSERINDO *************\n");
-    // #endif
 
-    // printf("\n( %d :: %d ) [%d] :: ", symbol->tamanho, symbol->deslocamento,table->deslocamento);
     table->deslocamento += symbol->tamanho;
-    // printf("[%d]\n",table->deslocamento);
     table->head = symbol;
-    // print_table(table);
+
     return NULL;
 }
 
@@ -106,10 +91,9 @@ Symbol *find_symbol(SymbolTable *table, const char *name) {
 }
 
 /*
- * [REVISAR] : Está só setando tosos os itens idefinidos da tabela para o Type 
- * 
- * 
- */
+*  Usado quando há 
+* declaracao_variavel: tipo lista_de_identificadores
+*/
 void set_symbol_type(SymbolTable *table, TipoDado type){
     Symbol *tmp = table->head;
 
@@ -135,12 +119,8 @@ SymbolTableStack *create_stack() {
     return NULL;
 }
 
-/* 
- * [ACTION REQUIRED] => Ao Adicionar um novo escopo, é necessário criar uma nova tabela de símbolos
- *  logo, ao empilhar uma tabela é preciso passar o __DESLOCAMENTO__ de uma tabela para outra, 
- * e alguns casos quando se desempilha tambem [REVISAR] isso.
- */
-/* [REVISAR ]: O nome não é muito explicativo, talvez faria mais sentido  CreateTableAndPush */
+
+/* Cria uma nova Tabela e logo já empilha */
 void push_table(SymbolTableStack **stack) {
     SymbolTableStack *new_node = (SymbolTableStack *)malloc(sizeof(SymbolTableStack));
     new_node->table = create_table();
@@ -149,11 +129,10 @@ void push_table(SymbolTableStack **stack) {
 }
 
 /* 
- * [ACTION REQUIRED] => Ao Adicionar um novo escopo, é necessário criar uma nova tabela de símbolos
  *  logo, ao empilhar uma tabela é preciso passar o __DESLOCAMENTO__ de uma tabela para outra, 
- * e alguns casos quando se desempilha tambem [REVISAR] isso.
+ * e alguns casos quando se desempilha tambem [REVISAR] isso. 
+ * => [REVISADO] => esta sendo feito em parser.y
  */
-/* [REVISAR]:  */
 void pop_table(SymbolTableStack **stack) {
     if (!*stack) return;
     SymbolTableStack *temp = *stack;
@@ -171,7 +150,7 @@ Symbol *find_symbol_in_stack(SymbolTableStack *stack, const char *name) {
     }
     return NULL;
 }
-/*[Revisar_]: Faz sentido esse cara? Nao precisaria ser mais especifico */
+/* Free da memoria*/
 void free_stack(SymbolTableStack *stack) {
     while (stack) {
         SymbolTableStack *temp = stack;

@@ -32,11 +32,11 @@
 
     /* Macros */
     #if defined(_DEBUG_)        
-    #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
-    #define PRINT_DEBUG printf("DEBUG: %s:%d\n",__FILE__,__LINE__);
-    #define PRINT_CODE  imprimeListaIlocInstructions(node->codigo);
-    #define PRINT_PILHA print_stack(stack);
-    #define PRINT_SEPARATOR printf("=================================================\n"); 
+        #define GRAPHVIZ_PRINT asd_print_graphviz(arvore);
+        #define PRINT_DEBUG printf("DEBUG: %s:%d\n",__FILE__,__LINE__);
+        #define PRINT_CODE  imprimeListaIlocInstructions(node->codigo);
+        #define PRINT_PILHA print_stack(stack);
+        #define PRINT_SEPARATOR printf("=================================================\n"); 
         // #define GRAPHVIZ_PRINT 1 // Não faz nada
     #else
         #define GRAPHVIZ_PRINT // Não faz nada
