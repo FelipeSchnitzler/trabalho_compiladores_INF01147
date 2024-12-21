@@ -41,15 +41,52 @@
 //    d = a + b;
 //}
 
-f = > int{
-    int a;
-    int b;
-    b = 1;
-    a = 3;
-    if (a != 1) {
-       b = 7;
-    } else {
-       b = 9;
-    };
-    b = 2;
+//f = > int{
+//    int a;
+//    int b;
+//    b = 1;
+//    a = 3;
+//    if (a != 1) {
+//       b = 7;
+//    } else {
+//       b = 9;
+//    };
+//    b = 2;
+//}
+
+//abc07
+
+//main = > int {
+//  int a;
+//  int b;
+//  int c;
+//  int d;
+//  int x;
+//  a = 1;
+//  b = 0;
+//  c = 2;
+//  d = 3;
+//  if (a < b & c < d) {
+//     x = 293;
+//  }else{
+//     x = 322;
+//  };
+//  return 0;
+//}
+
+
+//abc04
+main = > int {
+  int foo;
+  int a;
+  int b;
+  int c;
+  a = 10;
+  b = 2;
+  c = 0;
+  while (a > 5) {
+    a = a - 1;
+    c = c + 123;
+  };
+  return 0;
 }

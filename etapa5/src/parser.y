@@ -459,8 +459,8 @@ comando_controle_fluxo:
         IlocList_t* tempCode = criaInstrucao("cbr", $3->local, label_true, label_false);
 
        
-        IlocList_t* trueLabel = criaInstrucao(label_true, "nop", NULL, NULL);
-        IlocList_t* falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
+        IlocList_t* trueLabel = criaInstrucao(label_true, ": nop", NULL, NULL);
+        IlocList_t* falseLabel = criaInstrucao(label_false, ": nop", NULL, NULL);
 
        
         // printf(">>>=================================================\n");
@@ -491,10 +491,10 @@ comando_controle_fluxo:
      
         IlocList_t* cbrCode = criaInstrucao("cbr", $3->local, label_true, label_false);
 
-        IlocList_t* instruct_trueLabel = criaInstrucao(label_true, "nop", NULL, NULL);
-        IlocList_t* instruct_falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
+        IlocList_t* instruct_trueLabel = criaInstrucao(label_true, ": nop", NULL, NULL);
+        IlocList_t* instruct_falseLabel = criaInstrucao(label_false, ": nop", NULL, NULL);
         IlocList_t* jumpToEnd = criaInstrucao("jumpI", label_end, NULL, NULL);
-        IlocList_t* instruct_endLabel = criaInstrucao(label_end, "nop", NULL, NULL);
+        IlocList_t* instruct_endLabel = criaInstrucao(label_end, ": nop", NULL, NULL);
 
         // IlocList_t* tempCode = concatenaInstrucoes($3->codigo, cbrCode);
         // tempCode = concatenaInstrucoes(tempCode, instruct_trueLabel);
@@ -518,9 +518,9 @@ comando_controle_fluxo:
                      concatenaInstrucoes($7->codigo,       
                      instruct_endLabel)))))));                      
     
-        printf(">>>=================================================\n");
-        imprimeListaIlocInstructions($$->codigo);
-        printf(">>>=================================================\n");
+        // printf(">>>=================================================\n");
+        // imprimeListaIlocInstructions($$->codigo);
+        // printf(">>>=================================================\n");
     
     }
     | TK_PR_WHILE '(' expressao ')' bloco_comandos { 
@@ -532,10 +532,10 @@ comando_controle_fluxo:
         char *label_true = GeraLabel();
         char *label_false = GeraLabel();
 
-        IlocList_t* startLabel = criaInstrucao(label_start, "nop", NULL, NULL);
+        IlocList_t* startLabel = criaInstrucao(label_start, ": nop", NULL, NULL);
         IlocList_t* cbrCode = criaInstrucao("cbr", $3->local, label_true, label_false);
-        IlocList_t* trueLabel = criaInstrucao(label_true, "nop", NULL, NULL);
-        IlocList_t* falseLabel = criaInstrucao(label_false, "nop", NULL, NULL);
+        IlocList_t* trueLabel = criaInstrucao(label_true, ": nop", NULL, NULL);
+        IlocList_t* falseLabel = criaInstrucao(label_false, ": nop", NULL, NULL);
         IlocList_t* jumpToStart = criaInstrucao("jumpI", label_start, NULL, NULL);
 
         $$->codigo = concatenaInstrucoes(startLabel, 
@@ -545,6 +545,11 @@ comando_controle_fluxo:
                      concatenaInstrucoes($5->codigo, 
                      concatenaInstrucoes(jumpToStart, 
                      falseLabel))))));
+
+        printf(">>>=================================================\n");
+        imprimeListaIlocInstructions($$->codigo);
+        printf(">>>=================================================\n");
+
 
     };
 
@@ -811,7 +816,7 @@ asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl) {
 
     char deslocamento_str[12]; 
     sprintf(deslocamento_str, "%d", symbol->deslocamento);
-    node->codigo = criaInstrucao("storeAI",node->local ,"rfp",deslocamento_str);
+    node->codigo = criaInstrucao("loadAI",node->local ,"rfp",deslocamento_str);
     
 
     /* Implementado em valor_lexico.c */

@@ -23,7 +23,7 @@ char* GeraTemp() {
 */
 char* GeraLabel() {
     static int label_counter = 0; 
-    size_t size = snprintf(NULL, 0, "L%d:", label_counter) + 1; 
+    size_t size = snprintf(NULL, 0, "L%d", label_counter) + 1; 
     char* label = (char*)malloc(size); 
     if (!label) {
         fprintf(stderr, "Erro: Falha ao alocar memória para GeraLabel().\n");
@@ -100,15 +100,20 @@ void imprimeIlocInstruction(const IlocInstruction_t* instrucao) {
 
     printf("%s", instrucao->op ? instrucao->op : "NULL");
 
-    if (strcmp(instrucao->op, "storeAI") == 0){
+    if (strcmp(instrucao->op, "storeAI") == 0 || strcmp(instrucao->op, "loadAI") == 0) {
         if (instrucao->arg1) printf(" %s", instrucao->arg1);
-        if (instrucao->arg2) printf(" => (%s", instrucao->arg2);
-        if (instrucao->arg3) printf(",%s)", instrucao->arg3);
-    }else {
+        if (instrucao->arg2) printf(" => %s", instrucao->arg2);
+        if (instrucao->arg3) printf(", %s", instrucao->arg3);
+    } else if (strcmp(instrucao->op, "jumpI") == 0 || strcmp(instrucao->op, "loadI") == 0) {
+       if (instrucao->arg1) printf(" %s", instrucao->arg1);
+        if (instrucao->arg3) printf(" => %s", instrucao->arg3); 
+    } 
+    else { // Outras instruções
         if (instrucao->arg1) printf(" %s", instrucao->arg1);
         if (instrucao->arg2) printf(", %s", instrucao->arg2);
         if (instrucao->arg3) printf(" => %s", instrucao->arg3);
     }
+
 
     printf("\n");
 }
