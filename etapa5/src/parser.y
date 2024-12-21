@@ -196,6 +196,7 @@ lista_de_funcoes:
     funcao desempilha_tabela lista_de_funcoes {
         $$ = $1; 
         asd_add_child($$,$3);
+        $$->codigo = concatenaInstrucoes($1->codigo, $3->codigo);
     }
     | funcao { 
         $$ = $1;
@@ -205,8 +206,10 @@ lista_de_funcoes:
 /* ================== Funcao ============================== */
 funcao: cabecalho corpo { 
     $$ = $1;  
-    ADD_CHILDREN_IF_NOT_NULL_MACRO($$,$2);
-    // if($2 != NULL){asd_add_child($$,$2);} 
+    if($2 != NULL){
+        asd_add_child($$,$2);
+        $$->codigo = $2->codigo; 
+    }
 };
 
 cabecalho: 
@@ -215,10 +218,11 @@ cabecalho:
         $$ = asd_new($1->valor); 
         //[ACTION] : Criar macro para verificar_ERR_DECLARED
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
+        //assume pilha tem profundidade = 2
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
-        } //assume pilha tem profundidade = 2 
+        }  
 
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$6);
         valor_lexico_free($1);
@@ -226,12 +230,13 @@ cabecalho:
     | TK_IDENTIFICADOR '=' empilha_tabela '>' tipo {
         $$ = asd_new($1->valor); 
 
+        //assume pilha tem profundidade = 2 
         //[ACTION] : Criar macro para verificar_ERR_DECLARED
         Symbol *retorno = find_symbol(stack->next->table,$1->valor);
         if(retorno != NULL){
             printf("Erro na linha %d, funcao '%s' já declarada na linha %d\n",get_line_number(), $1->valor, retorno->linha);
             exit(ERR_DECLARED);
-        }  //assume pilha tem profundidade = 2 
+        }  
 
         insert_symbol(stack->next->table,$$->label,get_line_number(),FUNCAO,$5);
         valor_lexico_free($1);
@@ -276,13 +281,7 @@ bloco_comandos_Func:
 bloco_comandos: 
     '{' '}' { $$ = NULL; }
     | '{' empilha_tabela sequencia_de_comandos desempilha_tabela '}' { 
-        
-        // imprimeListaIlocInstructions($5->codigo);
-        // printf("<<<<<<<<<<<=================================================\n");
-    
-
         $$ = $3; 
-        /* ILOC */
     };
 
 sequencia_de_comandos: 
@@ -294,6 +293,11 @@ sequencia_de_comandos:
         $$ = ($1 != NULL) ? $1 : $3;
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
+            // printf("IARA=================================================\n");
+            // imprimeListaIlocInstructions($1->codigo);
+            // printf("<<<<=================================================\n");
+
+            $$->codigo = concatenaInstrucoes($$->codigo, $3->codigo);
         }
         
     } 
@@ -338,10 +342,15 @@ declaracao_variavel: tipo lista_de_identificadores {
 lista_de_identificadores: 
     identificador ',' lista_de_identificadores  {
         $$ = ($1 != NULL) ? $1 : $3;
-        if ($1 != NULL && $3 != NULL) {asd_add_child($$, $3);}
+        if ($1 != NULL && $3 != NULL) {
+            asd_add_child($$, $3);
+        }
     }
 
-    | identificador { if($1 != NULL){$$ = $1;} }
+    | identificador { if($1 != NULL){
+        $$ = $1;
+        } 
+    }
 ;
 
 identificador: 
@@ -420,12 +429,10 @@ chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
         exit(ERR_VARIABLE);
     }
 
-
-
-
     /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
 
     $$ = asd_new(cria_label_func($1->valor));
+    
     asd_add_child($$,$3); 
     valor_lexico_free($1);
 };
@@ -434,6 +441,7 @@ lista_argumentos:
     expressao ',' lista_argumentos { 
         $$ = $1; 
         asd_add_child($$, $3); 
+        $$->codigo = concatenaInstrucoes($1->codigo, $3->codigo);
     } 
     | expressao { 
         $$ = $1; 
@@ -443,6 +451,7 @@ lista_argumentos:
 comando_retorno: TK_PR_RETURN expressao { 
     $$ = asd_new("return"); 
     asd_add_child($$,$2); 
+    $$->codigo = $2->codigo;
 };
 
 /* ============================== [3.3.5] comando de controle de fluxo ============================== */
@@ -816,7 +825,7 @@ asd_tree_t *handleAtribuicao(void *stack, valor_lexico_t *vl) {
 
     char deslocamento_str[12]; 
     sprintf(deslocamento_str, "%d", symbol->deslocamento);
-    node->codigo = criaInstrucao("loadAI",node->local ,"rfp",deslocamento_str);
+    node->codigo = criaInstrucao("loadAI","rfp",deslocamento_str, node->local);
     
 
     /* Implementado em valor_lexico.c */

@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include "table.h"
 #include "errors.h"
+#include "iloc.h"
 
 extern int yyparse(void);
 extern int yylex_destroy(void);
 void exporta (void *arvore);
 
 void *arvore = NULL;
+
 SymbolTableStack *stack = NULL;
 
 #if defined(_DEBUG_)
@@ -22,6 +24,7 @@ int main (int argc, char **argv)
   #ifdef GRAPHVIZ_PRINT
   exporta (arvore);
   #endif
+  imprimeListaIlocInstructions(((asd_tree_t *) arvore)->codigo);
   asd_free((asd_tree_t *) arvore);
   yylex_destroy();
   return ret;
