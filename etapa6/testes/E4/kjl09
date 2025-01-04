@@ -1,0 +1,6 @@
+//ERR_UNDECLARED
+f = > int  {
+    int a;
+    a = 2 + b;
+    return 0;
+}

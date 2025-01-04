@@ -1,0 +1,8 @@
+//ERR_DECLARED
+g = z <- int > int  { return 0; }
+f = > int  {
+    int a;
+    g(a);
+    return 0;
+}
+g = z <- int > int  { return 0; }

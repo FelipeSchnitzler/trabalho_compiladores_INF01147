@@ -1,0 +1,7 @@
+//CORRECT
+main = > int {
+  if (c)
+	 {
+	 }else{
+  };
+}

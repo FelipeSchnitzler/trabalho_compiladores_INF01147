@@ -1,0 +1,7 @@
+//CORRECT
+main = > int {
+  int a;
+  float b;
+  a = 2 + b;
+  return 0;
+}
