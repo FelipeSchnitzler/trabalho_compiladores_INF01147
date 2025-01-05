@@ -91,6 +91,13 @@ void imprimeIlocInstruction(const IlocInstruction_t* instrucao) {
         fprintf(stderr, "Erro: Instrução nula.\n");
         return;
     }
+    /* Flag: imprimir codigo ILOC como comentario*/
+    #ifdef D_GenerateASM_
+        printf("\t# ");
+    #else
+        printf("*\t");
+    #endif
+    
 
     printf("%s", instrucao->op ? instrucao->op : "NULL");
 

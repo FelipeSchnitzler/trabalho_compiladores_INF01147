@@ -8,10 +8,10 @@ else ifeq ($(UNAME_S), Linux)  # Linux
 endif
 
 ## ==============================================================================
-ETAPA = etapa5
+ETAPA = etapa6
 ## ==============================================================================
 CC = gcc
-CFLAGS = -Iinclude -g -Wall -Wextra  # -DVERBOSE # -D_DEBUG_ #-DGraphvizPrint #-DASD_PRINT_GRAPHVIZ_FLAG
+CFLAGS = -Iinclude -g -Wall -Wextra -DGENERAASM_ -DVERBOSE # -D_DEBUG_ #-DGraphvizPrint #-DASD_PRINT_GRAPHVIZ_FLAG
 BISON_FLAGS = -d -v -Wcounterexamples
 
 LEX_SRC = src/scanner.l

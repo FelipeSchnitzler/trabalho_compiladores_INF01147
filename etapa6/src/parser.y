@@ -442,7 +442,11 @@ lista_argumentos:
 comando_retorno: TK_PR_RETURN expressao { 
     $$ = asd_new("return"); 
     asd_add_child($$,$2); 
-    $$->codigo = $2->codigo;
+    // $$->codigo = $2->codigo;
+    
+    IlocList_t* tempCode = criaInstrucao("RETURN", NULL, NULL, NULL); 
+    $$->codigo = concatenaInstrucoes(tempCode, $2->codigo);     
+
 };
 
 /* ============================== [3.3.5] comando de controle de fluxo ============================== */
