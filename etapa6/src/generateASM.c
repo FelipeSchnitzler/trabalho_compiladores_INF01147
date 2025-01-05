@@ -5,14 +5,6 @@
  Facilitadores
 ==============================================================================================
 */
-#define ILOC_instruction_as_a_comment(instrucao) \
-    do {                                             \
-        printf("\t# ");                              \
-        imprimeIlocInstruction(instrucao);           \
-        printf("\n");                                \
-    } while (0)
-
-
 RegisterMap registerMapping[NUM_REGISTERS]; 
 int nextFreeRegister = 0; 
 
@@ -30,6 +22,7 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
         */
         char* dest = allocateRegister(instr->arg3);
         printf("\tmovl\t$%s, %s\n", instr->arg1, dest);
+        imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "storeAI") == 0) {
         /* ILOC: storeAI r1 => rfp, offset
@@ -37,14 +30,14 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
          */
         char* src = allocateRegister(instr->arg1);
         printf("\tmovl\t%s, -%s(%%rbp)", src, instr->arg3);
-        ILOC_instruction_as_a_comment(instr);
+        imprimeIlocInstruction(instr);
     } else if (strcmp(instr->op, "loadAI") == 0) {
         /*  ILOC: loadAI rfp, offset => r1
          *   ASM: movl offset(%rbp), r1
          */         
         char* dest = allocateRegister(instr->arg3);
         printf("\tmovl\t-%s(%%rbp), %s", instr->arg2, dest);
-        ILOC_instruction_as_a_comment(instr);
+        imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "add") == 0) {
         // ILOC: add r1, r2 => r3
