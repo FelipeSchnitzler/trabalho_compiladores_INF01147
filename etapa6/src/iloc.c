@@ -142,61 +142,6 @@ IlocList_t* concatenaInstrucoes(IlocList_t* lista1, IlocList_t* lista2) {
     return lista1;
 }
 
-/*
-============================================================================================
- ASSEMBLY GENERATION
-===============================================================================================
-*/
-
-/* Função auxiliar para traduzir ILOC para Assembly */
-void translateIlocToAsm(IlocInstruction_t* instr) {
-    if (strcmp(instr->op, "loadI") == 0) {
-        // ILOC: loadI value => r1
-        // ASM: movl $value, r1
-        printf("\tmovl\t$%s, %%r%s\n", instr->arg1, instr->arg3);
-    } else if (strcmp(instr->op, "storeAI") == 0) {
-        // ILOC: storeAI r1 => rfp, offset
-        // ASM: movl r1, offset(%rbp)
-        printf("\tmovl\t%%r%s, %s(%%rbp)\n", instr->arg1, instr->arg3);
-    } else if (strcmp(instr->op, "loadAI") == 0) {
-        // ILOC: loadAI rfp, offset => r1
-        // ASM: movl offset(%rbp), r1
-        printf("\tmovl\t%s(%%rbp), %%r%s\n", instr->arg2, instr->arg3);
-    } else if (strcmp(instr->op, "add") == 0) {
-        // ILOC: add r1, r2 => r3
-        // ASM: addl r2, r1; movl r1, r3
-        printf("\taddl\t%%r%s, %%r%s\n", instr->arg2, instr->arg1);
-        printf("\tmovl\t%%r%s, %%r%s\n", instr->arg1, instr->arg3);
-    } else {
-        fprintf(stderr, "Unsupported operation: %s\n", instr->op);
-    }
-}
-
-/* Função principal para gerar e imprimir o código Assembly */
-void generateASM(IlocList_t* ilocList) {
-    // Cabeçalho do Assembly
-    printf("\t.file\t\"program.c\"\n");
-    printf("\t.text\n");
-    printf("\t.globl\tmain\n");
-    printf("\t.type\tmain, @function\n");
-    printf("main:\n");
-    printf("\t# Prologue\n");
-    printf("\tpushq\t%%rbp\n");
-    printf("\tmovq\t%%rsp, %%rbp\n");
-
-    // Traduzir cada instrução ILOC para Assembly
-    IlocList_t* current = ilocList;
-    while (current != NULL) {
-        translateIlocToAsm(current->instruction);
-        current = current->next;
-    }
-
-    // Epílogo
-    printf("\n\t# Epilogue\n");
-    printf("\tmovl\t$0, %%eax\n"); // Retorno 0
-    printf("\tpopq\t%%rbp\n");
-    printf("\tret\n");
-}
 
 // // ==============  operation functions  ==============
 // IlocOp_t* new_ILOC_instruction(const char* name, const char* operator_1, const char* operator_2, const char* target, const char* label){

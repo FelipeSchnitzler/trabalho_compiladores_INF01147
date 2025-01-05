@@ -1,21 +1,22 @@
-	.file   "program.c"
+	.file	"foo.c"
 	.text
-	.globl  main
-	.type   main, @function
+	.globl	main
+	.type	main, @function
 main:
-	# Prologue
-	pushq   %rbp
-	movq    %rsp, %rbp
-	movl    $1, %rr1
-	movl    %rr1, 4(%rbp)
-	movl    4(%rbp), %rr2
-	movl    $1, %rr3
-	addl    %rr3, %rr2
-	movl    %rr2, %rr4
-	movl    %rr4, 8(%rbp)
-	movl    8(%rbp), %rr5
-
-	# Epilogue
-	movl    $0, %eax
-	popq    %rbp
+.LFB0:
+	# .cfi_startproc
+	pushq	%rbp
+	# .cfi_def_cfa_offset 16
+	# .cfi_offset 6, -16
+	movq	%rsp, %rbp
+	# .cfi_def_cfa_register 6
+	movl	$2, -4(%rbp)
+	movl	-4(%rbp), %eax
+	popq	%rbp
+	# .cfi_def_cfa 7, 8
 	ret
+	# .cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	"GCC: (GNU) 14.2.1 20240912 (Red Hat 14.2.1-3)"
+	.section	.note.GNU-stack,"",@progbits

@@ -88,10 +88,16 @@
 //  return 0;
 //}
 // ===============================================
+//main = > int {
+//  int a ;
+//  int b;
+//  a = 1;
+//  b = a + 1;
+//  return b;
+//}
+
 main = > int {
   int a;
-  int b;
-  a = 1;
-  b = a + 1;
-  return b;
+  a = 2 ;
+  return a;
 }

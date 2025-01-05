@@ -36,15 +36,6 @@ void imprimeListaIlocInstructions(const IlocList_t* lista);
 
 IlocList_t* concatenaInstrucoes(IlocList_t* lista1, IlocList_t* lista2);
 
-/*
-============================================================================================
- ASSEMBLY GENERATION
-===============================================================================================
-*/
-
-// const char* mapRegister(const char* virtualReg);
-void generateASM(IlocList_t* ilocList);
-void translateIlocToAsm(IlocInstruction_t* instr);
 
 
 #endif

@@ -3,6 +3,7 @@
 #include "table.h"
 #include "errors.h"
 #include "iloc.h"
+#include "generateASM.h"
 
 extern int yyparse(void);
 extern int yylex_destroy(void);
@@ -24,7 +25,8 @@ int main (int argc, char **argv)
   #ifdef GRAPHVIZ_PRINT
   exporta (arvore);
   #endif
-  // imprimeListaIlocInstructions(((asd_tree_t *) arvore)->codigo);
+  imprimeListaIlocInstructions(((asd_tree_t *) arvore)->codigo);
+  printf("\n=================================================\n");
   generateASM(((asd_tree_t *) arvore)->codigo);
   asd_free((asd_tree_t *) arvore);
   yylex_destroy();
