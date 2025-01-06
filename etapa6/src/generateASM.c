@@ -141,7 +141,15 @@ char* allocateRegister(char* virtualReg) {
         case 5: physicalReg = "%edi"; break;
         case 6: physicalReg = "%r8d"; break;
         case 7: physicalReg = "%r9d"; break;
-       
+        case 8: physicalReg = "%r10d"; break;
+        case 9: physicalReg = "%r11d"; break;
+        case 10: physicalReg = "%r12d"; break;
+        case 11: physicalReg = "%r13d"; break;
+        case 12: physicalReg = "%r14d"; break;
+        case 13: physicalReg = "%r15d"; break;
+        default:
+            physicalReg = "UNKNOWN";
+            break;
     }
 
     
@@ -274,13 +282,10 @@ void handleLogicalOperation(IlocInstruction_t* instr) {
         printf("\tandl\t%s, %s\n", s1, s2);
         printf("\tmovl\t%s, %s\n", s2, dest);
     } 
-        else if (strcmp(instr->op, "or") == 0) {
-        s1 = allocateRegister(instr->arg1);
-        s2 = allocateRegister(instr->arg2);
+    else if (strcmp(instr->op, "or") == 0) {
         printf("\torl\t%s, %s\n", s1, s2);
         printf("\tmovl\t%s, %s\n", s2, dest);
     } else if (strcmp(instr->op, "not") == 0) {
-        s1 = allocateRegister(instr->arg1);
         printf("\tnotl\t%s\n", s1);
         printf("\tmovl\t%s, %s\n", s1, dest);
     } else {

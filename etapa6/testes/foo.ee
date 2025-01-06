@@ -109,14 +109,29 @@
 //}
 
 
+//main = > int {
+//  int a;
+//  int z;
+//  int w;
+//  int b;
+//  z = 109;
+//  w = 0;
+//  a = z & w;
+//  b = a + 5;
+//  return 0;
+//}
+
+
 main = > int {
   int a;
-  int z;
-  int w;
   int b;
-  z = 109;
-  w = 0;
-  a = z & w;
-  b = a + 5;
+  int c;
+  a = 10;
+  b = 2;
+  c = 0;
+  while (a > 5) {
+    a = a - 1;
+    c = c + 123;
+  };
   return 0;
 }

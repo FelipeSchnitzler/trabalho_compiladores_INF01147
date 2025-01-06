@@ -284,7 +284,6 @@ sequencia_de_comandos:
         $$ = $1; 
     }
     | comando_simples ';' sequencia_de_comandos { 
-        //[MAYBE][ACTION] : Criar macro para Acoes de Comandos
         $$ = ($1 != NULL) ? $1 : $3;
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
@@ -293,7 +292,6 @@ sequencia_de_comandos:
         
     } 
     | declaracao_variavel  ';' sequencia_de_comandos { 
-        //[MAYBE][ACTION] : Criar macro para Acoes de Comandos
         $$ = ($1 != NULL) ? $1 : $3; 
         if ($1 != NULL && $3 != NULL) {
             asd_add_child(asd_get_last_child($$), $3);

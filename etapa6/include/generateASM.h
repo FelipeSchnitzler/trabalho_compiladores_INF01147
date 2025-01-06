@@ -8,16 +8,17 @@
  ASSEMBLY GENERATION
 ===============================================================================================
 */
-#define NUM_REGISTERS 8 
+#define NUM_REGISTERS 14 
 
 typedef struct {
-    char* virtualReg;   /* Registradores ILOC: R1,R2...R12,R13..*/
+    char* virtualReg;   /* Registradores ILOC: R1,R2...R13,R14,R15*/
     char* physicalReg;  
 } RegisterMap;
 
 #include <stdio.h>
 #include <string.h>
 
+/* Mapeia: operacoes de comparacao */
 typedef enum {
     cmp_LT,
     cmp_GT,
@@ -28,6 +29,7 @@ typedef enum {
     cmp_UNKNOWN // caso inválido
 } ComparisonType;
 
+/* Mapeia: Operacoes Binarias (Aritmeticas) */
 typedef enum {
     bin_ADD,
     bin_SUB,
@@ -43,7 +45,6 @@ typedef enum {
 void generateASM(IlocList_t* ilocList);
 void translateIlocToAsm(IlocInstruction_t* instr);
 char* allocateRegister(char* virtualReg) ;
-
 
 /* ======================================================= */
 /* Comparacao */
