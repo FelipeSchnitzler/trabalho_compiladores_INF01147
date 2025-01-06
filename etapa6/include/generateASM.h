@@ -36,6 +36,14 @@ typedef enum {
     bin_UNKNOWN
 } BinaryOperationType;
 
+/* ======================================================= 
+ *  Operacoes Base
+ * ======================================================= */
+
+void generateASM(IlocList_t* ilocList);
+void translateIlocToAsm(IlocInstruction_t* instr);
+char* allocateRegister(char* virtualReg) ;
+
 
 /* ======================================================= */
 /* Comparacao */
@@ -45,11 +53,11 @@ void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao);
 /* Operacoes Binarias (Aritmeticas) */
 BinaryOperationType string_to_binary_operation_type(const char* op) ;
 void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instrucao);
+
+
+/* Operacoes Logicas: AND,OR y NOT*/
+void handleLogicalOperation(IlocInstruction_t* instrucao);
 /* ======================================================= */
 
-
-void generateASM(IlocList_t* ilocList);
-void translateIlocToAsm(IlocInstruction_t* instr);
-char* allocateRegister(char* virtualReg) ;
 
 

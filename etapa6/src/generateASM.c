@@ -70,7 +70,11 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
         } 
         else if (binOp != bin_UNKNOWN) {
             handleBinaryOperation(binOp, instr);
-        } else { 
+        } 
+        else if (strcmp(instr->op, "and") == 0 || strcmp(instr->op, "or") == 0 || strcmp(instr->op, "not") == 0) {
+            handleLogicalOperation(instr);
+        } 
+        else { 
             fprintf(stderr, "Operacao Invalida : %s\n", instr->op);
         }
     }
@@ -255,3 +259,31 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
     printf("\n");
 }
 
+/* ======================================================= 
+ * Operacoes Logicas: AND,OR y NOT 
+ * ======================================================= */
+void handleLogicalOperation(IlocInstruction_t* instr) {
+    char* s1 = allocateRegister(instr->arg1);
+    char* s2 = instr->arg2 != NULL ? allocateRegister(instr->arg2) : NULL;
+    char* dest = allocateRegister(instr->arg3);
+
+    printf("\n");
+    imprimeIlocInstruction(instr);
+
+    if (strcmp(instr->op, "and") == 0) {
+        printf("\tandl\t%s, %s\n", s1, s2);
+        printf("\tmovl\t%s, %s\n", s2, dest);
+    } 
+        else if (strcmp(instr->op, "or") == 0) {
+        s1 = allocateRegister(instr->arg1);
+        s2 = allocateRegister(instr->arg2);
+        printf("\torl\t%s, %s\n", s1, s2);
+        printf("\tmovl\t%s, %s\n", s2, dest);
+    } else if (strcmp(instr->op, "not") == 0) {
+        s1 = allocateRegister(instr->arg1);
+        printf("\tnotl\t%s\n", s1);
+        printf("\tmovl\t%s, %s\n", s1, dest);
+    } else {
+        fprintf(stderr, "Operacao logica desconhecida: %s\n", instr->op);
+    }
+}

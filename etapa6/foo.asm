@@ -31,6 +31,10 @@ main:
 	movl	%ebx, -12(%rbp)	; # storeAI r2 => rfp, 12
 	movl	-8(%rbp), %ecx	; # loadAI rfp, 8 => r3
 	movl	-12(%rbp), %edx	; # loadAI rfp, 12 => r4
+
+	; # and r3, r4 => r5
+	andl	%ecx, %edx
+	movl	%edx, %esi
 	movl	%esi, -4(%rbp)	; # storeAI r5 => rfp, 4
 	movl	-4(%rbp), %edi	; # loadAI rfp, 4 => r6
 	movl	$5, %r8d	; # loadI 5 => r7
