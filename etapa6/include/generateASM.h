@@ -9,6 +9,8 @@
 ===============================================================================================
 */
 #define NUM_REGISTERS 14 
+#define NUM_TEMP_REGISTERS 8
+#define RETURN_REGISTER_INDEX 16
 
 typedef struct {
     char* virtualReg;   /* Registradores ILOC: R1,R2...R13,R14,R15*/
@@ -35,6 +37,7 @@ typedef enum {
     bin_SUB,
     bin_MUL,
     bin_DIV,
+    bin_MOD,
     bin_UNKNOWN
 } BinaryOperationType;
 
