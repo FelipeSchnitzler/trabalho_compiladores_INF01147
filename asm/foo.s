@@ -1,21 +1,22 @@
-	.file	"program.c"
+	.file	"foo.c"
 	.text
 	.globl	main
 	.type	main, @function
 main:
-	# Prologue
+.LFB0:
+	.cfi_startproc
 	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
 	movq	%rsp, %rbp
-
-	# Variáveis locais
-	movl    $2, %eax	# loadI 2 => r1
-	movl    $1, %ebx  	# loadI 1 => r2
-	# cmp_GT r1, r2 => r3
-	cmpl    %ebx, %eax    
-	setg	%al
-	movzbl	%al, %ecx 
-
-	movl	%ecx, -4(%rbp)	# storeAI r3 => rfp, 4
-	movl	-4(%rbp), %eax	# loadAI rfp, 4 => r4
+	.cfi_def_cfa_register 6
+	movl	$6, -4(%rbp)
+	movl	-4(%rbp), %eax
 	popq	%rbp
+	.cfi_def_cfa 7, 8
 	ret
+	.cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	"GCC: (GNU) 14.2.1 20240912 (Red Hat 14.2.1-3)"
+	.section	.note.GNU-stack,"",@progbits

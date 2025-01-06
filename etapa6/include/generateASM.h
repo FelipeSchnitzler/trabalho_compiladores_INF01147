@@ -28,11 +28,23 @@ typedef enum {
     cmp_UNKNOWN // caso inválido
 } ComparisonType;
 
-/* ======================================================= */
+typedef enum {
+    bin_ADD,
+    bin_SUB,
+    bin_MUL,
+    bin_DIV,
+    bin_UNKNOWN
+} BinaryOperationType;
 
+
+/* ======================================================= */
+/* Comparacao */
 ComparisonType string_to_comparison_type(const char* str);
 void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao);
 
+/* Operacoes Binarias (Aritmeticas) */
+BinaryOperationType string_to_binary_operation_type(const char* op) ;
+void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instrucao);
 /* ======================================================= */
 
 

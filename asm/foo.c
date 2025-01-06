@@ -8,7 +8,7 @@
 
 int main(){
 	int a;
-	a = 2 < 1 ;
+	a = 2 * 3 ;
 	return a;
 }
 

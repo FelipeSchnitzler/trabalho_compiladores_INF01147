@@ -39,19 +39,17 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
         printf("\tmovl\t-%s(%%rbp), %s", instr->arg2, dest);
         imprimeIlocInstruction(instr);
 
-    } else if (strcmp(instr->op, "add") == 0) {
-        // ILOC: add r1, r2 => r3
-        // ASM: addl r2, r1; movl r1, r3
-        printf("\taddl\t%%r%s, %%r%s\n", instr->arg2, instr->arg1);
-        printf("\tmovl\t%%r%s, %%r%s\n", instr->arg1, instr->arg3);
-
-    }else if (strcmp(instr->op, "RETURN") == 0){ 
+    } else if (strcmp(instr->op, "RETURN") == 0){ 
         // IlocInstruction_t *temp = instr;
         printf("\tret\n");
     } else {
         ComparisonType cmp = string_to_comparison_type(instr->op);
         if (cmp != cmp_UNKNOWN) {
             handleComparison(cmp, instr);
+        } 
+        BinaryOperationType binOp = string_to_binary_operation_type(instr->op);
+        if (binOp != bin_UNKNOWN) {
+            handleBinaryOperation(binOp, instr);
         } else { 
             fprintf(stderr, "Unsupported operation: %s\n", instr->op);
         }
@@ -77,10 +75,9 @@ void generateASM(IlocList_t* ilocList) {
     // Traduzir cada instrução ILOC para Assembly
     IlocList_t* current = ilocList;
     while (current != NULL) {
-        /*--- RETURN -------- */
+        /* if operation === RETURN:  */
         if(strcmp(current->instruction->op, "RETURN") == 0){
-            /* Disclaimer: Assim o EAX sera usado*/
-            nextFreeRegister = 0; 
+            nextFreeRegister = 0; /* Disclaimer: Assim o EAX sera usado*/
             translateIlocToAsm(current->next->instruction);    
             current = current->next->next;
             continue;
@@ -90,12 +87,13 @@ void generateASM(IlocList_t* ilocList) {
         current = current->next;
     }
     
-    // linha abaixo ja esta sendo incluida no if(op == RETURN)
-    // printf("\tmovl\t$0, %%eax\n"); 
     printf("\tpopq\t%%rbp\n");
     printf("\tret\n");
 }
 
+/* ======================================================= 
+ *  Alocacao de Registradores
+ * ======================================================= */
 
 char* allocateRegister(char* virtualReg) {
     // Verifica se já existe mapeamento
@@ -106,13 +104,9 @@ char* allocateRegister(char* virtualReg) {
         }
     }
 
-    // Se todos os registradores físicos estão ocupados
-    if (nextFreeRegister >= NUM_REGISTERS) {
-        printf("Error: Out of physical registers. Consider spilling to memory.\n");
-        exit(1);
-    }
+    // Se todos os registradores físicos estão ocupados, reutiliza o primeiro
+    nextFreeRegister = nextFreeRegister >= NUM_REGISTERS ? 0 : nextFreeRegister;
 
-    // Aloca um novo registrador
     char* physicalReg;
     switch (nextFreeRegister) {
         case 0: physicalReg = "%eax"; break;
@@ -123,18 +117,20 @@ char* allocateRegister(char* virtualReg) {
         case 5: physicalReg = "%edi"; break;
         case 6: physicalReg = "%r8d"; break;
         case 7: physicalReg = "%r9d"; break;
-        // Adicione mais se necessário
+       
     }
 
-    // Adiciona ao mapeamento
+    
     registerMapping[nextFreeRegister].virtualReg = strdup(virtualReg);
     registerMapping[nextFreeRegister].physicalReg = strdup(physicalReg);
     nextFreeRegister++;
 
     return physicalReg;
 }
+/* ======================================================= 
+ *  Comparacao
+ * ======================================================= */
 
-// Função que trata os tipos de comparação
 void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao) {
     /* ref: https://cs.wellesley.edu/~cs240/s16/slides/x86-control.pdf ;
      * slide 5;
@@ -171,7 +167,7 @@ void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao) {
             break;
     }
 
-        printf("\tmovzbl\t%%al, %s \n\n", dest);  
+    printf("\tmovzbl\t%%al, %s \n\n", dest);  
 }
 
 ComparisonType string_to_comparison_type(const char* str) {
@@ -184,3 +180,59 @@ ComparisonType string_to_comparison_type(const char* str) {
 
     return cmp_UNKNOWN;  // Retorna cmp_UNKNOWN se não for encontrado
 }
+/* ======================================================= 
+ *  Operacoes Binarias (Aritmeticas) 
+ * ======================================================= */
+ 
+BinaryOperationType string_to_binary_operation_type(const char* op) {
+    if (strcmp(op, "add") == 0) {
+        return bin_ADD;
+    } else if (strcmp(op, "sub") == 0) {
+        return bin_SUB;
+    } else if (strcmp(op, "mul") == 0) {
+        return bin_MUL;
+    } else if (strcmp(op, "div") == 0) {
+        return bin_DIV;
+    } else {
+        return bin_UNKNOWN;
+    }
+}
+
+void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instrucao) {
+    /* Lógica para operações binárias
+     * O código assembly gerado depende do tipo da operação binária.
+     */
+    char* s1 = allocateRegister(instrucao->arg2);
+    char* s2 = allocateRegister(instrucao->arg1);
+    char* dest = allocateRegister(instrucao->arg3);
+    
+    printf("\n");
+    imprimeIlocInstruction(instrucao);
+    
+    switch (binOp) {
+        case bin_ADD:
+            printf("\taddl\t%s, %s\n", s1, s2);
+            printf("\tmovl\t%s, %s\n", s2, dest);
+            break;
+        case bin_SUB:
+            printf("\tsubl\t%s, %s\n", s1, s2);
+            printf("\tmovl\t%s, %s\n", s2, dest);
+            break;
+        case bin_MUL:
+            printf("\timull\t%s, %s\n", s1, s2);
+            printf("\tmovl\t%s, %s\n", s2, dest);
+            break;
+        case bin_DIV:
+            printf("\tmovl\t%s, %%eax\n", s1);
+            printf("\tcltd\n");
+            printf("\tidivl\t%s\n", s2);
+            printf("\tmovl\t%%eax, %s\n", dest);
+            break;
+        default:
+            printf("Unknown binary operation\n");
+            break;
+    }
+    
+    printf("\n");
+}
+
