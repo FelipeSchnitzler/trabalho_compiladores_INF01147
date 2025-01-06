@@ -1,0 +1,10 @@
+//ERR_DECLARED
+f = > int  {
+  int a;
+  return 0;
+}
+
+f = > int  {
+  int b;
+  int b;
+}

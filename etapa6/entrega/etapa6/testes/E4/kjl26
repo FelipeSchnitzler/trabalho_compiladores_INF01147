@@ -1,0 +1,6 @@
+g = xis <- int > int  { return 0; }
+f = > int  {
+    int a;
+    g(a);
+    return 0;
+}

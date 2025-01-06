@@ -1,0 +1,5 @@
+//CORRECT
+main = > int {
+  if (a == 2) { };
+  if ((a+b) <= 10) { };
+}

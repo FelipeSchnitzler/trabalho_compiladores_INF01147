@@ -1,0 +1,7 @@
+//ERR_DECLARED
+main = > int {
+ {
+  int main;
+ };
+}
+main = > int {}

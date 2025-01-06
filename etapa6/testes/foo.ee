@@ -140,5 +140,6 @@ main = > int {
   int a;
   int b; 
   b = 3 ;
-  a = 30 % b;
+  a = 4 % b;
+  return 1;
 }

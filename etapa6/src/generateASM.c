@@ -6,7 +6,7 @@
 ==============================================================================================
 */
 RegisterMap registerMapping[NUM_REGISTERS]; 
-int nextFreeRegister = 0; 
+extern int nextFreeRegister = 0; 
 
 /*
 ============================================================================================
@@ -51,7 +51,11 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
         printf("\tjmp\t%s", instr->arg1);
         imprimeIlocInstruction(instr);
     } else if (strcmp(instr->op, "cbr") == 0) {
-
+        /*  ILOC: cbr r1 => L1, L2
+         *   ASM: cmpl $0, r1
+         *        je L2
+         *        jmp L1
+         */
         char* src = allocateRegister(instr->arg1);
         printf("\tcmpl\t$0, %s\n", src);
         printf("\tje\t%s\n", instr->arg3);
@@ -97,9 +101,9 @@ void generateASM(IlocList_t* ilocList) {
     while (current != NULL) {
         /* if operation === RETURN:  */
         if(strcmp(current->instruction->op, "RETURN") == 0){
-            nextFreeRegister = RETURN_REGISTER_INDEX; /* Disclaimer: Assim o EAX sera usado*/
+            // nextFreeRegister = 8 ;
             translateIlocToAsm(current->next->instruction);    
-            current = current->next->next;
+            current = current->next;
             continue;
         }
 
@@ -125,29 +129,30 @@ char* allocateRegister(char* virtualReg) {
     }
 
     // Se todos os registradores físicos estão ocupados, reutiliza o primeiro
-    nextFreeRegister = nextFreeRegister >= NUM_TEMP_REGISTERS ? 0 : nextFreeRegister;
+    nextFreeRegister = nextFreeRegister >= NUM_REGISTERS ? 0 : nextFreeRegister;
 
     char* physicalReg;
     switch (nextFreeRegister) {
-        case 0:  physicalReg = "%r8d";  break;
-        case 1:  physicalReg = "%r9d";  break;
-        case 2:  physicalReg = "%r10d"; break;
-        case 3:  physicalReg = "%r11d"; break;
-        case 4:  physicalReg = "%r12d"; break;
-        case 5:  physicalReg = "%r13d"; break;
-        case 6:  physicalReg = "%r14d"; break;
-        case 7:  physicalReg = "%r15d"; break;
-        case 8:  physicalReg = "%eax";  break;
-        case 9:  physicalReg = "%ebx";  break;
-        case 10: physicalReg = "%ecx";  break;
-        case 11: physicalReg = "%edx";  break;
-        case 12: physicalReg = "%esi";  break;
-        case 13: physicalReg = "%edi";  break;
-        case 16: physicalReg = "%eax";  break; // Return Register
+        case 0: physicalReg = "%r8d"; break;
+        case 1: physicalReg = "%r9d"; break;
+        case 2: physicalReg = "%r10d"; break;
+        case 3: physicalReg = "%r11d"; break;
+        case 4: physicalReg = "%r12d"; break;
+        case 5: physicalReg = "%r13d"; break;
+        case 6: physicalReg = "%r14d"; break;
+        case 7: physicalReg = "%r15d"; break;
+        case 8: physicalReg = "%eax"; break;
+        case 9: physicalReg = "%ebx"; break;
+        case 10: physicalReg = "%ecx"; break;
+        case 11: physicalReg = "%edx"; break;
+        case 12: physicalReg = "%esi"; break;
+        case 13: physicalReg = "%edi"; break;
+        case 16: physicalReg = "%eax"; printf("oiiiii") ; break;
         default:
             physicalReg = "UNKNOWN";
-        break;
-}
+            break;
+    }
+
 
     
     registerMapping[nextFreeRegister].virtualReg = strdup(virtualReg);
@@ -221,9 +226,10 @@ BinaryOperationType string_to_binary_operation_type(const char* op) {
         return bin_MUL;
     } else if (strcmp(op, "div") == 0) {
         return bin_DIV;
-    } else if (strcmp(op, "mod") == 0) { // Adicionado suporte para módulo
+    } else if (strcmp(op, "mod") == 0) {
         return bin_MOD;
-    } else {
+    }
+    else {
         return bin_UNKNOWN;
     }
 }
@@ -257,6 +263,12 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
             printf("\tcltd\n");
             printf("\tidivl\t%s\n", s2);
             printf("\tmovl\t%%eax, %s\n", dest);
+            break;
+        case bin_MOD:
+            printf("\tmovl\t%s, %%eax\n", s1);
+            printf("\tcltd\n");
+            printf("\tidivl\t%s\n", s2);
+            printf("\tmovl\t%%edx, %s\n", dest);
             break;
         default:
             printf("Unknown binary operation\n");

@@ -1,0 +1,5 @@
+f = a <- int > int
+{
+  int a;
+  c = 3 * f(a) + a;
+}

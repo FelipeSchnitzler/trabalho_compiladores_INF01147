@@ -1,0 +1,4 @@
+//CORRECT
+main = > int {
+  x = x <= x <= x <= x;
+}
