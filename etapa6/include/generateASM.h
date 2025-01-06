@@ -31,7 +31,7 @@ typedef enum {
 /* ======================================================= */
 
 ComparisonType string_to_comparison_type(const char* str);
-void handleComparison(ComparisonType cmp);
+void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao);
 
 /* ======================================================= */
 
