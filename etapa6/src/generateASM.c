@@ -136,47 +136,42 @@ char* allocateRegister(char* virtualReg) {
 
 // Função que trata os tipos de comparação
 void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao) {
+    /* ref: https://cs.wellesley.edu/~cs240/s16/slides/x86-control.pdf ;
+     * slide 5;
+     */
+    char* s1 = allocateRegister(instrucao->arg2);
+    char* s2 = allocateRegister(instrucao->arg1);
+    char *dest = allocateRegister(instrucao->arg3);
+    
+    printf("\n");
+    imprimeIlocInstruction(instrucao);
+    printf("\tcmpl\t%s, %s\n", s1, s2);
+    
     switch (cmp) {
         case cmp_LT:
-            // printf("Handling cmp_LT\n");
-            imprimeIlocInstruction(instrucao);
-            printf("\tcmpl\t%%r%s, %%r%s\n", "1", "2");
             printf("\tsetl\t%%al\n");
             break;
         case cmp_GT:
-            /*
-                cmp_GT r1, r2 => r3 # r1 > r2 ? 
-                storeAI r3 => rfp, 4
-                cmp S2, S1 Set condition codes according to S1 - S2  >>  link: https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf
-                setg AL Set AL to 1 if S1 > S2; set to 0 otherwise
-            */ 
-            char* s1 = allocateRegister(instrucao->arg1);
-            char* s2 = allocateRegister(instrucao->arg2);
-            char *dest = allocateRegister(instrucao->arg3);
-            imprimeIlocInstruction(instrucao);
-
-            //ref: https://cs.wellesley.edu/~cs240/s16/slides/x86-control.pdf , slide 5;
-            printf("\tcmpl\t%s, %s\n", s1, s2);
             printf("\tsetg\t%%al\n");
-            printf("\tmovzbl\t%%al, %s \n\n", dest);    
-
             break;
         case cmp_LE:
-            printf("Handling cmp_LE\n");
+            printf("\tsetle\t%%al\n");
             break;
         case cmp_GE:
-            printf("Handling cmp_GE\n");
+            printf("\tsetge\t%%al\n");
             break;
         case cmp_EQ:
-            printf("Handling cmp_EQ\n");
+            printf("\tsete\t%%al\n");
             break;
         case cmp_NE:
-            printf("Handling cmp_NE\n");
+            printf("\tsetne\t%%al\n");
             break;
         default:
             printf("Unknown comparison type\n");
             break;
     }
+
+        printf("\tmovzbl\t%%al, %s \n\n", dest);  
 }
 
 ComparisonType string_to_comparison_type(const char* str) {
