@@ -89,7 +89,7 @@ IlocList_t* criaInstrucao(char* operacao, char* arg1, char* arg2, char* arg3) {
 void imprimeIlocInstruction(const IlocInstruction_t* instrucao) {
     /* Flag: imprimir codigo ILOC como comentario*/
     #ifdef COMMENT_ILOC
-        printf("\t# ");
+        printf("\t; # ");
     #endif
 
     if (!instrucao) {
@@ -124,7 +124,7 @@ void imprimeListaIlocInstructions(const IlocList_t* lista) {
         printf("A lista está vazia.\n");
         return;
     }
-    printf("# [ILOC] =============================\n");
+    printf("; # [ILOC] =============================\n");
 
     const IlocList_t* atual = lista;
     while (atual) {

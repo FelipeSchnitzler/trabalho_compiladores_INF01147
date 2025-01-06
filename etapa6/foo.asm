@@ -1,10 +1,18 @@
-# [ILOC] =============================
-	# loadI 2 => r1
-	# loadI 3 => r2
-	# add r1, r2 => r3
-	# storeAI r3 => rfp, 4
-	# RETURN
-	# loadAI rfp, 4 => r4
+; # [ILOC] =============================
+	; # loadI 109 => r1
+	; # storeAI r1 => rfp, 8
+	; # loadI 0 => r2
+	; # storeAI r2 => rfp, 12
+	; # loadAI rfp, 8 => r3
+	; # loadAI rfp, 12 => r4
+	; # and r3, r4 => r5
+	; # storeAI r5 => rfp, 4
+	; # loadAI rfp, 4 => r6
+	; # loadI 5 => r7
+	; # add r6, r7 => r8
+	; # storeAI r8 => rfp, 16
+	; # RETURN
+	; # loadI 0 => r9
 
 =================================================
 	.file	"program.c"
@@ -12,19 +20,26 @@
 	.globl	main
 	.type	main, @function
 main:
-	# Prologue
+	# Prologo
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	# Variáveis locais
-	movl	$2, %eax	# loadI 2 => r1
-	movl	$3, %ebx	# loadI 3 => r2
+	;#Main 
+	movl	$109, %eax	; # loadI 109 => r1
+	movl	%eax, -8(%rbp)	; # storeAI r1 => rfp, 8
+	movl	$0, %ebx	; # loadI 0 => r2
+	movl	%ebx, -12(%rbp)	; # storeAI r2 => rfp, 12
+	movl	-8(%rbp), %ecx	; # loadAI rfp, 8 => r3
+	movl	-12(%rbp), %edx	; # loadAI rfp, 12 => r4
+	movl	%esi, -4(%rbp)	; # storeAI r5 => rfp, 4
+	movl	-4(%rbp), %edi	; # loadAI rfp, 4 => r6
+	movl	$5, %r8d	; # loadI 5 => r7
 
-	# add r1, r2 => r3
-	addl	%ebx, %eax
-	movl	%eax, %ecx
+	; # add r6, r7 => r8
+	addl	%r8d, %edi
+	movl	%edi, %r9d
 
-	movl	%ecx, -4(%rbp)	# storeAI r3 => rfp, 4
-	movl	-4(%rbp), %eax	# loadAI rfp, 4 => r4
+	movl	%r9d, -16(%rbp)	; # storeAI r8 => rfp, 16
+	movl	$0, %eax	; # loadI 0 => r9
 	popq	%rbp
 	ret

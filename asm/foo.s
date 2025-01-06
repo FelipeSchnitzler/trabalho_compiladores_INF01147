@@ -4,18 +4,23 @@
 	.type	main, @function
 main:
 .LFB0:
-	.cfi_startproc
+	# Prologue
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	$6, -4(%rbp)
-	movl	-4(%rbp), %eax
+
+	# Variáveis locais
+	movl	$2, %eax	# loadI 2 => r1
+	movl	$3, %ebx	# loadI 3 => r2
+
+	# add r1, r2 => r3
+	imull	%ebx, %eax
+	movl	%eax, %ecx
+
+	movl	%ecx, -4(%rbp)	# storeAI r3 => rfp, 4
+	movl	-4(%rbp), %eax	# loadAI rfp, 4 => r4
 	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
-	.cfi_endproc
+
 .LFE0:
 	.size	main, .-main
 	.ident	"GCC: (GNU) 14.2.1 20240912 (Red Hat 14.2.1-3)"

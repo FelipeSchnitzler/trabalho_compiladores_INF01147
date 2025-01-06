@@ -16,10 +16,12 @@ int nextFreeRegister = 0;
 
 /* Função auxiliar para traduzir ILOC para Assembly */
 void translateIlocToAsm(IlocInstruction_t* instr) {
-    if (strcmp(instr->op, "loadI") == 0) {
+    if (instr->op[0] == 'L') {
+        printf("\n%s:\n", instr->op);
+    }
+    else if (strcmp(instr->op, "loadI") == 0) {
         /*  ILOC: loadI 10 => r1
-        *   ASM: movl $10, %r1
-        */
+         *   ASM: movl $10, %r1 */
         char* dest = allocateRegister(instr->arg3);
         printf("\tmovl\t$%s, %s", instr->arg1, dest);
         imprimeIlocInstruction(instr);
@@ -42,16 +44,34 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
     } else if (strcmp(instr->op, "RETURN") == 0){ 
         // IlocInstruction_t *temp = instr;
         printf("\tret\n");
+    } else if (strcmp(instr->op, "jumpI") == 0) {
+        /*  ILOC: jumpI => L1
+         *   ASM: jmp L1
+         */
+        printf("\tjmp\t%s", instr->arg1);
+        imprimeIlocInstruction(instr);
+    } else if (strcmp(instr->op, "cbr") == 0) {
+        /*  ILOC: cbr r1 => L1, L2
+         *   ASM: cmpl $0, r1
+         *        je L2
+         *        jmp L1
+         */
+        char* src = allocateRegister(instr->arg1);
+        printf("\tcmpl\t$0, %s\n", src);
+        printf("\tje\t%s\n", instr->arg3);
+        printf("\tjmp\t%s", instr->arg2);
+        imprimeIlocInstruction(instr);
     } else {
         ComparisonType cmp = string_to_comparison_type(instr->op);
+        BinaryOperationType binOp = string_to_binary_operation_type(instr->op);
+
         if (cmp != cmp_UNKNOWN) {
             handleComparison(cmp, instr);
         } 
-        BinaryOperationType binOp = string_to_binary_operation_type(instr->op);
-        if (binOp != bin_UNKNOWN) {
+        else if (binOp != bin_UNKNOWN) {
             handleBinaryOperation(binOp, instr);
         } else { 
-            fprintf(stderr, "Unsupported operation: %s\n", instr->op);
+            fprintf(stderr, "Operacao Invalida : %s\n", instr->op);
         }
     }
 }
@@ -64,12 +84,12 @@ void generateASM(IlocList_t* ilocList) {
     printf("\t.globl\tmain\n");
     printf("\t.type\tmain, @function\n");
     printf("main:\n");
-    printf("\t# Prologue\n");
+    printf("\t# Prologo\n");
     printf("\tpushq\t%%rbp\n");
     printf("\tmovq\t%%rsp, %%rbp\n");
 
     // ================================================
-    printf("\n\t# Variáveis locais\n");
+    printf("\n\t;#Main \n");
     // ================================================
 
     // Traduzir cada instrução ILOC para Assembly
@@ -163,7 +183,6 @@ void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao) {
             printf("\tsetne\t%%al\n");
             break;
         default:
-            printf("Unknown comparison type\n");
             break;
     }
 

@@ -96,8 +96,27 @@
 //  return b;
 //}
 
+//main = > int {
+//  int a;
+//  int b;
+//  a = 2 * 3;
+//  if (a > 0) {
+//    b = 393;
+//  }else{
+//    b = 432;
+//  };
+//  return a;
+//}
+
+
 main = > int {
   int a;
-  a = 2 + 3;
-  return a;
+  int z;
+  int w;
+  int b;
+  z = 109;
+  w = 0;
+  a = z & w;
+  b = a + 5;
+  return 0;
 }
