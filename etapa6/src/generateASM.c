@@ -377,14 +377,14 @@ void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* inst
         printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
         printf("\timull\t-%s(%%rbp), %%eax\n", temp2);
 
-         if((strcmp(next->op, "loadAI") == 0)){
+         if((strcmp(next->op, "storeAI") == 0)){
             printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
          } else { 
             printf("\tmovl\t%%eax, %s\n", dest);
          }
         printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
     }else {
-        printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        printf("\n\t ; # ++++++++++ [ DIV ] ++++++++++++++++++++++++++++++++++++++++++++++++\n");
         printf("\n\t ; #  %s\n", instr->op);
         printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
 
@@ -392,7 +392,7 @@ void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* inst
         printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
         printf("\tcltd\n");
         printf("\tidivl\t-%s(%%rbp)\n", temp2);
-        if((strcmp(next->op, "loadAI") == 0)){
+        if((strcmp(next->op, "storeAI") == 0)){
             printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
          }else { 
             printf("\tmovl\t%%eax, %s\n", dest);
