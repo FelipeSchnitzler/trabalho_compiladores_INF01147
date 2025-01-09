@@ -143,10 +143,10 @@ main = > int {
     int b;
     int c;
     int d;
-    a = 100;
-    b = 60;
-    c = 30 ;
+    a = 10;
+    b = 6;
+    c = 3 ;
 
-    a = b * c;
+    a = b * c + 500 / 5;
     return  a;
 }

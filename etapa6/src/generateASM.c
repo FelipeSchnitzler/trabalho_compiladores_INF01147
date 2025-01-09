@@ -26,7 +26,16 @@ void translateIlocToAsm(IlocInstruction_t* instr, int isEnd) {
         imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "storeAI") == 0) {
-        char* src = instr->arg1[0] == 'r' ? allocateRegister(instr->arg1) : instr->arg1;
+        char* src;
+        if(instr->arg1[0] != 'r'){
+            src = calloc(strlen(instr->arg1) + 2, sizeof(char));
+            sprintf(src, "$%s", instr->arg1);
+        } else { 
+            src = allocateRegister(instr->arg1);
+        }
+
+        //----------------------------------------------------------------------------
+
         printf("\tmovl\t%s, -%s(%%rbp)", src, instr->arg3);
         imprimeIlocInstruction(instr);
     } else if (strcmp(instr->op, "loadAI") == 0) {    
@@ -104,7 +113,10 @@ void generateASM(IlocList_t* ilocList) {
         } else if (
             (strcmp(current->instruction->op, "loadAI") == 0) &&
             (strcmp(current->next->instruction->op, "loadAI") == 0) &&
-            (strcmp(current->next->next->instruction->op, "mult") == 0)  
+            (
+                (strcmp(current->next->next->instruction->op, "mult") == 0)
+                ||
+                (strcmp(current->next->next->instruction->op, "div") == 0))
         ){
             char *desloc_1 = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
             char *desloc_2 = calloc(strlen(current->next->instruction->arg1) + 1, sizeof(char));
@@ -126,7 +138,9 @@ void generateASM(IlocList_t* ilocList) {
             // translateIlocToAsm(current->instruction, 0);
             optimizeASMMultiplication(desloc_1, desloc_2, current->instruction, current->next->instruction);
 
-            current = current->next->next;
+
+            current = (strcmp(current->next->instruction->op, "storeAI") == 0) ?  current->next->next : current->next;
+            
 
             
             free(desloc_1);
@@ -346,15 +360,44 @@ void handleLogicalOperation(IlocInstruction_t* instr) {
 void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next) {
 // void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
 
+
+    int bin_op = string_to_binary_operation_type(instr->op);
+
     char* op = instr->op;
     char* dest = allocateRegister(instr->arg3);
-
-    printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("\n\t ; #  %s\n", instr->op);
-    printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
     
-    printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
-    printf("\timull\t-%s(%%rbp), %%eax\n", temp2);
-    printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
-    printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    if(bin_op == bin_MUL)
+    {
+
+
+        printf("\n\t ; # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+        printf("\n\t ; #  %s\n", instr->op);
+        printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
+        
+        printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
+        printf("\timull\t-%s(%%rbp), %%eax\n", temp2);
+
+         if((strcmp(next->op, "loadAI") == 0)){
+            printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
+         } else { 
+            printf("\tmovl\t%%eax, %s\n", dest);
+         }
+        printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    }else {
+        printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        printf("\n\t ; #  %s\n", instr->op);
+        printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
+
+
+        printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
+        printf("\tcltd\n");
+        printf("\tidivl\t-%s(%%rbp)\n", temp2);
+        if((strcmp(next->op, "loadAI") == 0)){
+            printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
+         }else { 
+            printf("\tmovl\t%%eax, %s\n", dest);
+         }
+        printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
+    }
 }
