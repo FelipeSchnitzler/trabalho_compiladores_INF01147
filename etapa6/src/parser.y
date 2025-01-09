@@ -676,9 +676,14 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
 asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
     asd_tree_t *node = asd_new_with_1_child(op, expr);
 
+
+
     node->local = GeraTemp();
     if (strcmp(op, "-") == 0) {
-        node->codigo = criaInstrucao("rsubI", "0", expr->local, node->local);
+        /* IlocList_t *tempCode = criaInstrucao("rsubI", expr->local,"0", node->local); */
+        node->codigo = concatenaInstrucoes(expr->codigo,  criaInstrucao("rsubI", expr->local,"0", node->local));
+    
+
     } else if (strcmp(op, "!") == 0) {
         char *tempZero = GeraTemp();
         IlocList_t *loadZero = criaInstrucao("loadI", "0", NULL, tempZero);

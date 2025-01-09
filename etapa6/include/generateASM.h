@@ -37,6 +37,7 @@ typedef enum {
     bin_MUL,
     bin_DIV,
     bin_MOD,
+    bin_RSUBI,
     bin_UNKNOWN
 } BinaryOperationType;
 

@@ -13,6 +13,8 @@ echo "Arquivo, Código de Saída" > "$OUTPUT_CSV"
 
 # Loop para processar os arquivos kwj00 a kwj20
 for i in $(seq -w 0 22); do
+
+    echo "Processando arquivo kwj${i}..."
     INPUT_FILE="${INPUT_DIR}/kwj${i}"
 
     # Verifica se o arquivo de entrada existe

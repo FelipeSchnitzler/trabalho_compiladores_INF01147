@@ -88,7 +88,8 @@ void generateASM(IlocList_t* ilocList) {
         /* if operation === RETURN:  */
         if(strcmp(current->instruction->op, "RETURN") == 0){
             // nextFreeRegister = 8 ;
-            translateIlocToAsm(current->next->instruction, 1);    
+            int isEnd = 1;
+            translateIlocToAsm(current->next->instruction, isEnd);    
             current = current->next->next;
             continue;
         }
@@ -215,6 +216,8 @@ BinaryOperationType string_to_binary_operation_type(const char* op) {
         return bin_DIV;
     } else if (strcmp(op, "mod") == 0) {
         return bin_MOD;
+    } else if (strcmp(op, "rsubI") == 0) {
+        return bin_RSUBI;
     }
     else {
         return bin_UNKNOWN;
@@ -252,11 +255,15 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
             printf("\tmovl\t%%eax, %s\n", dest);
             break;
         case bin_MOD:
-    
             printf("\tmovl\t%s, %%eax\n", s2);
             printf("\tcltd\n");
             printf("\tidivl\t%s\n", s1);
             printf("\tmovl\t%%edx, %s\n", dest);
+            break;
+        case bin_RSUBI:
+            printf("\tmovl\t%s, %%eax\n", s2);  // Carrega s2 em EAX
+            printf("\tnegl\t%%eax\n");          // Negação: 0 - EAX
+            printf("\tmovl\t%%eax, %s\n", dest); // Move para destino
             break;
         default:
             printf("Unknown binary operation\n");
