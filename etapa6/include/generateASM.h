@@ -9,6 +9,7 @@
 ===============================================================================================
 */
 #define NUM_REGISTERS 14 
+#define NUM_TEMP_REGISTERS 8
 
 typedef struct {
     char* virtualReg;   /* Registradores ILOC: R1,R2...R13,R14,R15*/
@@ -44,7 +45,7 @@ typedef enum {
  * ======================================================= */
 
 void generateASM(IlocList_t* ilocList);
-void translateIlocToAsm(IlocInstruction_t* instr);
+void translateIlocToAsm(IlocInstruction_t* instr, int isEnd);
 char* allocateRegister(char* virtualReg) ;
 
 /* ======================================================= */

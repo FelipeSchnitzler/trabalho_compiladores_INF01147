@@ -6,7 +6,7 @@
 ==============================================================================================
 */
 RegisterMap registerMapping[NUM_REGISTERS]; 
-extern int nextFreeRegister = 0; 
+int nextFreeRegister = 0; 
 
 /*
 ============================================================================================
@@ -15,47 +15,31 @@ extern int nextFreeRegister = 0;
 */
 
 /* Função auxiliar para traduzir ILOC para Assembly */
-void translateIlocToAsm(IlocInstruction_t* instr) {
+void translateIlocToAsm(IlocInstruction_t* instr, int isEnd) {
+        
     if (instr->op[0] == 'L') {
         printf("\n%s:\n", instr->op);
     }
     else if (strcmp(instr->op, "loadI") == 0) {
-        /*  ILOC: loadI 10 => r1
-         *   ASM: movl $10, %r1 */
         char* dest = allocateRegister(instr->arg3);
         printf("\tmovl\t$%s, %s", instr->arg1, dest);
         imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "storeAI") == 0) {
-        /* ILOC: storeAI r1 => rfp, offset
-         * ASM: movl r1, offset(%rbp)
-         */
         char* src = allocateRegister(instr->arg1);
         printf("\tmovl\t%s, -%s(%%rbp)", src, instr->arg3);
         imprimeIlocInstruction(instr);
-    } else if (strcmp(instr->op, "loadAI") == 0) {
-        /*  ILOC: loadAI rfp, offset => r1
-         *   ASM: movl offset(%rbp), r1
-         */         
-        char* dest = allocateRegister(instr->arg3);
+    } else if (strcmp(instr->op, "loadAI") == 0) {    
+        char* dest = isEnd == 0 ? allocateRegister(instr->arg3) : "%eax";
         printf("\tmovl\t-%s(%%rbp), %s", instr->arg2, dest);
         imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "RETURN") == 0){ 
-        // IlocInstruction_t *temp = instr;
         printf("\tret\n");
     } else if (strcmp(instr->op, "jumpI") == 0) {
-        /*  ILOC: jumpI => L1
-         *   ASM: jmp L1
-         */
         printf("\tjmp\t%s", instr->arg1);
         imprimeIlocInstruction(instr);
     } else if (strcmp(instr->op, "cbr") == 0) {
-        /*  ILOC: cbr r1 => L1, L2
-         *   ASM: cmpl $0, r1
-         *        je L2
-         *        jmp L1
-         */
         char* src = allocateRegister(instr->arg1);
         printf("\tcmpl\t$0, %s\n", src);
         printf("\tje\t%s\n", instr->arg3);
@@ -80,7 +64,9 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
     }
 }
 
-/* Função principal para gerar e imprimir o código Assembly */
+/* ==========================================================================
+ * Função principal para gerar e imprimir o código Assembly 
+ * ==========================================================================*/
 void generateASM(IlocList_t* ilocList) {
     // Cabeçalho do Assembly
     printf("\t.file\t\"program.c\"\n");
@@ -102,15 +88,16 @@ void generateASM(IlocList_t* ilocList) {
         /* if operation === RETURN:  */
         if(strcmp(current->instruction->op, "RETURN") == 0){
             // nextFreeRegister = 8 ;
-            translateIlocToAsm(current->next->instruction);    
-            current = current->next;
+            translateIlocToAsm(current->next->instruction, 1);    
+            current = current->next->next;
             continue;
         }
 
-        translateIlocToAsm(current->instruction);
+        translateIlocToAsm(current->instruction, 0);
         current = current->next;
     }
     
+
     printf("\tpopq\t%%rbp\n");
     printf("\tret\n");
 }
@@ -129,7 +116,7 @@ char* allocateRegister(char* virtualReg) {
     }
 
     // Se todos os registradores físicos estão ocupados, reutiliza o primeiro
-    nextFreeRegister = nextFreeRegister >= NUM_REGISTERS ? 0 : nextFreeRegister;
+    nextFreeRegister = nextFreeRegister >= NUM_TEMP_REGISTERS ? 0 : nextFreeRegister;
 
     char* physicalReg;
     switch (nextFreeRegister) {
@@ -147,7 +134,7 @@ char* allocateRegister(char* virtualReg) {
         case 11: physicalReg = "%edx"; break;
         case 12: physicalReg = "%esi"; break;
         case 13: physicalReg = "%edi"; break;
-        case 16: physicalReg = "%eax"; printf("oiiiii") ; break;
+        case 16: physicalReg = "%eax"; break;
         default:
             physicalReg = "UNKNOWN";
             break;
@@ -265,9 +252,10 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
             printf("\tmovl\t%%eax, %s\n", dest);
             break;
         case bin_MOD:
-            printf("\tmovl\t%s, %%eax\n", s1);
+    
+            printf("\tmovl\t%s, %%eax\n", s2);
             printf("\tcltd\n");
-            printf("\tidivl\t%s\n", s2);
+            printf("\tidivl\t%s\n", s1);
             printf("\tmovl\t%%edx, %s\n", dest);
             break;
         default:

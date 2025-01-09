@@ -137,9 +137,9 @@
 //}
 
 main = > int {
-  int a;
   int b; 
-  b = 3 ;
-  a = 4 % b;
-  return 1;
+  int c;
+  b = 1 ;
+  c = 3;
+  return c;
 }

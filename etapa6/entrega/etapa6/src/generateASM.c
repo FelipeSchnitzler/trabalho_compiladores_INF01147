@@ -133,25 +133,24 @@ char* allocateRegister(char* virtualReg) {
 
     char* physicalReg;
     switch (nextFreeRegister) {
-        case 0: physicalReg = "%eax"; break;
-        case 1: physicalReg = "%ebx"; break;
-        case 2: physicalReg = "%ecx"; break;
-        case 3: physicalReg = "%edx"; break;
-        case 4: physicalReg = "%esi"; break;
-        case 5: physicalReg = "%edi"; break;
-        case 6: physicalReg = "%r8d"; break;
-        case 7: physicalReg = "%r9d"; break;
-        case 8: physicalReg = "%r10d"; break;
-        case 9: physicalReg = "%r11d"; break;
-        case 10: physicalReg = "%r12d"; break;
-        case 11: physicalReg = "%r13d"; break;
-        case 12: physicalReg = "%r14d"; break;
-        case 13: physicalReg = "%r15d"; break;
+        case 0: physicalReg = "%r8d"; break;
+        case 1: physicalReg = "%r9d"; break;
+        case 2: physicalReg = "%r10d"; break;
+        case 3: physicalReg = "%r11d"; break;
+        case 4: physicalReg = "%r12d"; break;
+        case 5: physicalReg = "%r13d"; break;
+        case 6: physicalReg = "%r14d"; break;
+        case 7: physicalReg = "%r15d"; break;
+        case 8: physicalReg = "%eax"; break;
+        case 9: physicalReg = "%ebx"; break;
+        case 10: physicalReg = "%ecx"; break;
+        case 11: physicalReg = "%edx"; break;
+        case 12: physicalReg = "%esi"; break;
+        case 13: physicalReg = "%edi"; break;
         default:
             physicalReg = "UNKNOWN";
             break;
     }
-
     
     registerMapping[nextFreeRegister].virtualReg = strdup(virtualReg);
     registerMapping[nextFreeRegister].physicalReg = strdup(physicalReg);
