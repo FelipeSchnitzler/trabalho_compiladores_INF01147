@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,6 +63,9 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
 /* Operacoes Logicas: AND,OR y NOT*/
 void handleLogicalOperation(IlocInstruction_t* instrucao);
 /* ======================================================= */
+
+
+void optimizeASMMultiplication(char *temp1, char *temp2,  IlocInstruction_t* instr);
 
 
 

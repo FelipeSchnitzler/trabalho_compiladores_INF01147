@@ -684,7 +684,7 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
     } 
     else if (strcmp(operator, "*") == 0) {
         // Código para multiplicação
-        IlocList_t* mul = criaInstrucao("mul", left->local, right->local, node->local);
+        IlocList_t* mul = criaInstrucao("mult", left->local, right->local, node->local);
         tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mul));
     } 
     else if (strcmp(operator, "/") == 0) {

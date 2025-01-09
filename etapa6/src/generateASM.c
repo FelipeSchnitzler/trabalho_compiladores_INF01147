@@ -26,7 +26,7 @@ void translateIlocToAsm(IlocInstruction_t* instr, int isEnd) {
         imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "storeAI") == 0) {
-        char* src = allocateRegister(instr->arg1);
+        char* src = instr->arg1[0] == 'r' ? allocateRegister(instr->arg1) : instr->arg1;
         printf("\tmovl\t%s, -%s(%%rbp)", src, instr->arg3);
         imprimeIlocInstruction(instr);
     } else if (strcmp(instr->op, "loadAI") == 0) {    
@@ -92,7 +92,45 @@ void generateASM(IlocList_t* ilocList) {
             translateIlocToAsm(current->next->instruction, isEnd);    
             current = current->next->next;
             continue;
+        }else if ((strcmp(current->instruction->op, "loadI") == 0) && (strcmp(current->next->instruction->op, "storeAI") == 0)) {
+            char *temp = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
+            strcpy(temp, current->instruction->arg1);
+            current = current->next;
+            current->instruction->arg1 = temp;
+            translateIlocToAsm(current->instruction, 0);
+            current = current->next;
+            free(temp);
+            continue;
+        } else if (
+            (strcmp(current->instruction->op, "loadAI") == 0) &&
+            (strcmp(current->next->instruction->op, "loadAI") == 0) &&
+            (strcmp(current->next->next->instruction->op, "mult") == 0)  
+        ){
+            char *desloc_1 = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
+            char *desloc_2 = calloc(strlen(current->next->instruction->arg1) + 1, sizeof(char));
+
+            strcpy(desloc_1, current->instruction->arg2);
+            strcpy(desloc_2, current->next->instruction->arg2);
+           
+            current = current->next->next->next;
+            current->instruction->arg1 = desloc_1;
+            current->instruction->arg2 = desloc_2;
+            
+            // translateIlocToAsm(current->instruction, 0);
+            optimizeASMMultiplication(desloc_1, desloc_2, current->instruction);
+
+
+            // next 
+            current = current->next;
+            
+            free(desloc_1);
+            free(desloc_2);
+            continue;
         }
+
+
+
+
 
         translateIlocToAsm(current->instruction, 0);
         current = current->next;
@@ -210,7 +248,7 @@ BinaryOperationType string_to_binary_operation_type(const char* op) {
         return bin_ADD;
     } else if (strcmp(op, "sub") == 0) {
         return bin_SUB;
-    } else if (strcmp(op, "mul") == 0) {
+    } else if (strcmp(op, "mult") == 0) {
         return bin_MUL;
     } else if (strcmp(op, "div") == 0) {
         return bin_DIV;
@@ -224,16 +262,16 @@ BinaryOperationType string_to_binary_operation_type(const char* op) {
     }
 }
 
-void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instrucao) {
+void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instr) {
     /* Lógica para operações binárias
      * O código assembly gerado depende do tipo da operação binária.
      */
-    char* s1 = allocateRegister(instrucao->arg2);
-    char* s2 = allocateRegister(instrucao->arg1);
-    char* dest = allocateRegister(instrucao->arg3);
-    
+    char* s1 = instr->arg2[0] == 'r' ? allocateRegister(instr->arg2) : instr->arg2;
+    char* s2 = instr->arg1[0] == 'r' ? allocateRegister(instr->arg1) : instr->arg1;
+    char* dest = allocateRegister(instr->arg3);
+
     printf("\n");
-    imprimeIlocInstruction(instrucao);
+    imprimeIlocInstruction(instr);
     
     switch (binOp) {
         case bin_ADD:
@@ -245,13 +283,14 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
             printf("\tmovl\t%s, %s\n", s2, dest);
             break;
         case bin_MUL:
-            printf("\timull\t%s, %s\n", s1, s2);
-            printf("\tmovl\t%s, %s\n", s2, dest);
+            printf("\tmovl\t%s, %%eax\n", s1);
+            printf("\timull\t%s, %%eax\n", s2);
+            printf("\tmovl\t%%eax, %s\n", dest);
             break;
         case bin_DIV:
-            printf("\tmovl\t%s, %%eax\n", s1);
+            printf("\tmovl\t%s, %%eax\n", s2);
             printf("\tcltd\n");
-            printf("\tidivl\t%s\n", s2);
+            printf("\tidivl\t%s\n", s1);
             printf("\tmovl\t%%eax, %s\n", dest);
             break;
         case bin_MOD:
@@ -297,4 +336,20 @@ void handleLogicalOperation(IlocInstruction_t* instr) {
     } else {
         fprintf(stderr, "Operacao logica desconhecida: %s\n", instr->op);
     }
+}
+
+
+void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
+
+    char* op = instr->op;
+    char* dest = allocateRegister(instr->arg3);
+
+    printf("\n ;# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("\n\t ;#  %s\n", instr->op);
+    printf("temp1: %s\n ; temp2: %s\n", temp1, temp2);
+    
+    printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
+    printf("\timull\t-%s(%%rbp), %%eax\n", temp2);
+    printf("\tmovl\t%%eax, %s\n", dest);
+    printf("\n ;# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 }
