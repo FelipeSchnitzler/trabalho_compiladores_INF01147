@@ -65,7 +65,7 @@ void handleLogicalOperation(IlocInstruction_t* instrucao);
 /* ======================================================= */
 
 
-void optimizeASMMultiplication(char *temp1, char *temp2,  IlocInstruction_t* instr);
-
+// void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr); 
+void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next);
 
 

@@ -112,22 +112,27 @@ void generateASM(IlocList_t* ilocList) {
             strcpy(desloc_1, current->instruction->arg2);
             strcpy(desloc_2, current->next->instruction->arg2);
            
-            current = current->next->next->next;
+            current = current->next->next;
+
+        
+            printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            imprimeIlocInstruction(current->instruction);
+            imprimeIlocInstruction(current->next->instruction);
+            printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
             current->instruction->arg1 = desloc_1;
             current->instruction->arg2 = desloc_2;
             
             // translateIlocToAsm(current->instruction, 0);
-            optimizeASMMultiplication(desloc_1, desloc_2, current->instruction);
+            optimizeASMMultiplication(desloc_1, desloc_2, current->instruction, current->next->instruction);
 
+            current = current->next->next;
 
-            // next 
-            current = current->next;
             
             free(desloc_1);
             free(desloc_2);
             continue;
         }
-
 
 
 
@@ -338,18 +343,18 @@ void handleLogicalOperation(IlocInstruction_t* instr) {
     }
 }
 
-
-void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
+void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next) {
+// void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
 
     char* op = instr->op;
     char* dest = allocateRegister(instr->arg3);
 
-    printf("\n ;# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("\n\t ;#  %s\n", instr->op);
-    printf("temp1: %s\n ; temp2: %s\n", temp1, temp2);
+    printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("\n\t ; #  %s\n", instr->op);
+    printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
     
     printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
     printf("\timull\t-%s(%%rbp), %%eax\n", temp2);
-    printf("\tmovl\t%%eax, %s\n", dest);
-    printf("\n ;# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
+    printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 }
