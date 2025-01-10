@@ -152,7 +152,10 @@ void generateASM(IlocList_t* ilocList) {
             (
                 (strcmp(current->next->next->instruction->op, "sub") == 0) ||
                 (strcmp(current->next->next->instruction->op, "add") == 0)
-            )
+            ) && 
+            (strcmp(current->next->next->next->instruction->op, "storeAI") == 0) && 
+            (strcmp(current->instruction->arg1, current->next->next->next->instruction->arg2) == 0) &&  // rfp == rfp ?
+            (strcmp(current->instruction->arg2, current->next->next->next->instruction->arg3) == 0) // desloc == desloc ?
         ) {
             /*
                 Simplificar: 
