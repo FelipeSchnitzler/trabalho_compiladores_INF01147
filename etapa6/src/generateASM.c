@@ -146,6 +146,41 @@ void generateASM(IlocList_t* ilocList) {
             free(desloc_1);
             free(desloc_2);
             continue;
+        } else if (
+            (strcmp(current->instruction->op, "loadAI") == 0) &&
+            (strcmp(current->next->instruction->op, "loadI") == 0) &&
+            (
+                (strcmp(current->next->next->instruction->op, "sub") == 0) ||
+                (strcmp(current->next->next->instruction->op, "add") == 0)
+            )
+        ) {
+            /*
+                Simplificar: 
+            	    movl	-4(%rbp), %r15d	; # loadAI rfp, 4 => r11
+	                movl	$1, %r8d	; # loadI 1 => r12
+	                subl	%r8d, %r9d
+	                movl	%r9d, %r10d
+	                movl	%r10d, -4(%rbp)	; # storeAI r13 => rfp, 4
+                Para: 
+                    subl	$1, -4(%rbp) 
+            */
+            char *desloc = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
+            // printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            // printf("##########################");
+            imprimeIlocInstruction(current->instruction);
+            
+            // printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            sprintf(desloc, "%s", current->instruction->arg2);
+            char *incremento = calloc(strlen(current->next->instruction->arg1) + 1, sizeof(char));
+            sprintf(incremento, "$%s", current->next->instruction->arg1);
+
+            current = current->next->next;
+            printf("\n\t %sl\t%s, -%s(%%rbp)\n", current->instruction->op, incremento, desloc);
+            current = current->next->next;
+            free(desloc);
+            free(incremento);
+            continue;
+
         }
 
 
