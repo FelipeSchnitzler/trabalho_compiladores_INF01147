@@ -49,7 +49,7 @@ clean:
 entrega: entrega_dir 
 	
 	# Cria um arquivo tar.gz contendo src, includes e Makefile
-	tar -cvzf entrega/$(ETAPA).tgz src/ include/ Makefile
+	tar -cvzf entrega/$(ETAPA).tgz src/ include/ Makefile README.md
 	
 entrega_dir: clean_entrega
 	echo "Criando diretório de entrega..."

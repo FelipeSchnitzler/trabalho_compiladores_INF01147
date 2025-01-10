@@ -136,7 +136,7 @@ void generateASM(IlocList_t* ilocList) {
             current->instruction->arg2 = desloc_2;
             
             // translateIlocToAsm(current->instruction, 0);
-            optimizeASMMultiplication(desloc_1, desloc_2, current->instruction, current->next->instruction);
+            optimizeASMDivMultiplication(desloc_1, desloc_2, current->instruction, current->next->instruction);
 
 
             current = (strcmp(current->next->instruction->op, "storeAI") == 0) ?  current->next->next : current->next;
@@ -185,9 +185,6 @@ void generateASM(IlocList_t* ilocList) {
             continue;
 
         }
-
-
-
 
         translateIlocToAsm(current->instruction, 0);
         current = current->next;
@@ -395,8 +392,8 @@ void handleLogicalOperation(IlocInstruction_t* instr) {
     }
 }
 
-void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next) {
-// void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
+void optimizeASMDivMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next) {
+// void optimizeASMDivMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
 
 
     int bin_op = string_to_binary_operation_type(instr->op);
@@ -406,9 +403,7 @@ void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* inst
     
     if(bin_op == bin_MUL)
     {
-
-
-        printf("\n\t ; # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+        printf("\n\t ; # ++++++++++ [ MUL ] ++++++++++++++++++++++++++++++++++++++++++++++++\n");
         printf("\n\t ; #  %s\n", instr->op);
         printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
         

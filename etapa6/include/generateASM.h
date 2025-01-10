@@ -28,7 +28,7 @@ typedef enum {
     cmp_GE,
     cmp_EQ,
     cmp_NE,
-    cmp_UNKNOWN // caso inválido
+    cmp_UNKNOWN 
 } ComparisonType;
 
 /* Mapeia: Operacoes Binarias (Aritmeticas) */
@@ -46,8 +46,13 @@ typedef enum {
  *  Operacoes Base
  * ======================================================= */
 
+/* Função principal para gerar e imprimir o código Assembly */
 void generateASM(IlocList_t* ilocList);
+
+/* Função para traduzir cada instrução ILOC para Assembly */
 void translateIlocToAsm(IlocInstruction_t* instr, int isEnd);
+
+/* Função para alocar registradores */
 char* allocateRegister(char* virtualReg) ;
 
 /* ======================================================= */
@@ -59,13 +64,13 @@ void handleComparison(ComparisonType cmp, IlocInstruction_t* instrucao);
 BinaryOperationType string_to_binary_operation_type(const char* op) ;
 void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instrucao);
 
-
-/* Operacoes Logicas: AND,OR y NOT*/
+/* Operacoes Logicas: AND,OR y NOT 
+ * Gera o código assembly para operações lógicas 
+*/
 void handleLogicalOperation(IlocInstruction_t* instrucao);
 /* ======================================================= */
 
 
-// void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr); 
-void optimizeASMMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next);
+void optimizeASMDivMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next);
 
 
