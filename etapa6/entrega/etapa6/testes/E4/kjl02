@@ -1,5 +1,0 @@
-//ERR_DECLARED
-f = > int  {
-    int a;
-    float a;
-}

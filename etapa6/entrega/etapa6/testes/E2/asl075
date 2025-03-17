@@ -1,4 +1,0 @@
-//INCORRECT
-main = param <- int | a <- float -> int {
-    a = 3.5;
-}

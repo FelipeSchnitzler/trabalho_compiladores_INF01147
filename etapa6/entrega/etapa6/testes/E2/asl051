@@ -1,5 +1,0 @@
-//CORRECT
-main = > int {
-  int x;
-  f(a+b, 8%2);
-}

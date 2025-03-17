@@ -1,5 +1,0 @@
-//ERR_UNDECLARED
-f = > int  {
-    b = 2;
-    return 0;
-}

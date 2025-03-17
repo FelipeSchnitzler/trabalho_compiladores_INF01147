@@ -1,4 +1,0 @@
-//CORRECT
-main = > int {
-  int a, b <= 2, c;
-}

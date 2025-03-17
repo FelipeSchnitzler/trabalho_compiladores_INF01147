@@ -1,5 +1,0 @@
-//CORRECT
-main = > int {
-  int c;
-  if (c) { };
-}

@@ -1,4 +1,0 @@
-//INCORRECT
-main = > int {
-  f();
-}

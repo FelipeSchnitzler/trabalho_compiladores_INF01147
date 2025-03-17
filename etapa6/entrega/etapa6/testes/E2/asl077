@@ -1,6 +1,0 @@
-//INCORRECT
-main = > int {
-  while ( ) {
-    int x;
-  }
-}

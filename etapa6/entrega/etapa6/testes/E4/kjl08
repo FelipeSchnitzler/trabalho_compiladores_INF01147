@@ -1,4 +1,0 @@
-//ERR_DECLARED
-f = a <- int | b <- int > int {
-  int b;
-}

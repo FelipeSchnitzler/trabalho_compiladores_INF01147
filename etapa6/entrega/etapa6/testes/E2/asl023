@@ -1,6 +1,0 @@
-//CORRECT
-main = > int {
-  int a;
-  a = 0;
-  return 0;
-}

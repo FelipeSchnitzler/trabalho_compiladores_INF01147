@@ -1,5 +1,0 @@
-//INCORRECT
-main = (int param, float a) > int
-{
-  int teste <= 2;
-}

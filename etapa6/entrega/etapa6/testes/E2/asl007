@@ -1,4 +1,0 @@
-//INCORRECT
-main = > int {
-   a = (( b * 1) + c) and 1;
-}
