@@ -8,7 +8,9 @@
 
 int main(){
 	int a;
-	a = 2 * 3 ;
+	int b;
+	b = 3;
+	a = 4 % 3 ;
 	return a;
 }
 

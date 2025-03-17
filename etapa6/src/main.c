@@ -26,7 +26,7 @@ int main (int argc, char **argv)
   exporta (arvore);
   #endif
   imprimeListaIlocInstructions(((asd_tree_t *) arvore)->codigo);
-  printf("\n=================================================\n");
+  printf("\n ;# =================================================\n");
   generateASM(((asd_tree_t *) arvore)->codigo);
   asd_free((asd_tree_t *) arvore);
   yylex_destroy();

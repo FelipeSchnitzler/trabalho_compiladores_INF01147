@@ -15,47 +15,40 @@ int nextFreeRegister = 0;
 */
 
 /* Função auxiliar para traduzir ILOC para Assembly */
-void translateIlocToAsm(IlocInstruction_t* instr) {
+void translateIlocToAsm(IlocInstruction_t* instr, int isEnd) {
+        
     if (instr->op[0] == 'L') {
         printf("\n%s:\n", instr->op);
     }
     else if (strcmp(instr->op, "loadI") == 0) {
-        /*  ILOC: loadI 10 => r1
-         *   ASM: movl $10, %r1 */
         char* dest = allocateRegister(instr->arg3);
         printf("\tmovl\t$%s, %s", instr->arg1, dest);
         imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "storeAI") == 0) {
-        /* ILOC: storeAI r1 => rfp, offset
-         * ASM: movl r1, offset(%rbp)
-         */
-        char* src = allocateRegister(instr->arg1);
+        char* src;
+        if(instr->arg1[0] != 'r'){
+            src = calloc(strlen(instr->arg1) + 2, sizeof(char));
+            sprintf(src, "$%s", instr->arg1);
+        } else { 
+            src = allocateRegister(instr->arg1);
+        }
+
+        //----------------------------------------------------------------------------
+
         printf("\tmovl\t%s, -%s(%%rbp)", src, instr->arg3);
         imprimeIlocInstruction(instr);
-    } else if (strcmp(instr->op, "loadAI") == 0) {
-        /*  ILOC: loadAI rfp, offset => r1
-         *   ASM: movl offset(%rbp), r1
-         */         
-        char* dest = allocateRegister(instr->arg3);
+    } else if (strcmp(instr->op, "loadAI") == 0) {    
+        char* dest = isEnd == 0 ? allocateRegister(instr->arg3) : "%eax";
         printf("\tmovl\t-%s(%%rbp), %s", instr->arg2, dest);
         imprimeIlocInstruction(instr);
 
     } else if (strcmp(instr->op, "RETURN") == 0){ 
-        // IlocInstruction_t *temp = instr;
         printf("\tret\n");
     } else if (strcmp(instr->op, "jumpI") == 0) {
-        /*  ILOC: jumpI => L1
-         *   ASM: jmp L1
-         */
         printf("\tjmp\t%s", instr->arg1);
         imprimeIlocInstruction(instr);
     } else if (strcmp(instr->op, "cbr") == 0) {
-        /*  ILOC: cbr r1 => L1, L2
-         *   ASM: cmpl $0, r1
-         *        je L2
-         *        jmp L1
-         */
         char* src = allocateRegister(instr->arg1);
         printf("\tcmpl\t$0, %s\n", src);
         printf("\tje\t%s\n", instr->arg3);
@@ -80,7 +73,9 @@ void translateIlocToAsm(IlocInstruction_t* instr) {
     }
 }
 
-/* Função principal para gerar e imprimir o código Assembly */
+/* ==========================================================================
+ * Função principal para gerar e imprimir o código Assembly 
+ * ==========================================================================*/
 void generateASM(IlocList_t* ilocList) {
     // Cabeçalho do Assembly
     printf("\t.file\t\"program.c\"\n");
@@ -101,16 +96,101 @@ void generateASM(IlocList_t* ilocList) {
     while (current != NULL) {
         /* if operation === RETURN:  */
         if(strcmp(current->instruction->op, "RETURN") == 0){
-            nextFreeRegister = 0; /* Disclaimer: Assim o EAX sera usado*/
-            translateIlocToAsm(current->next->instruction);    
+            // nextFreeRegister = 8 ;
+            int isEnd = 1;
+            translateIlocToAsm(current->next->instruction, isEnd);    
             current = current->next->next;
             continue;
+        }else if ((strcmp(current->instruction->op, "loadI") == 0) && (strcmp(current->next->instruction->op, "storeAI") == 0)) {
+            char *temp = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
+            strcpy(temp, current->instruction->arg1);
+            current = current->next;
+            current->instruction->arg1 = temp;
+            translateIlocToAsm(current->instruction, 0);
+            current = current->next;
+            free(temp);
+            continue;
+        } else if (
+            (strcmp(current->instruction->op, "loadAI") == 0) &&
+            (strcmp(current->next->instruction->op, "loadAI") == 0) &&
+            (
+                (strcmp(current->next->next->instruction->op, "mult") == 0)
+                ||
+                (strcmp(current->next->next->instruction->op, "div") == 0))
+        ){
+            char *desloc_1 = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
+            char *desloc_2 = calloc(strlen(current->next->instruction->arg1) + 1, sizeof(char));
+
+            strcpy(desloc_1, current->instruction->arg2);
+            strcpy(desloc_2, current->next->instruction->arg2);
+           
+            current = current->next->next;
+
+        
+            printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            imprimeIlocInstruction(current->instruction);
+            imprimeIlocInstruction(current->next->instruction);
+            printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
+            current->instruction->arg1 = desloc_1;
+            current->instruction->arg2 = desloc_2;
+            
+            // translateIlocToAsm(current->instruction, 0);
+            optimizeASMDivMultiplication(desloc_1, desloc_2, current->instruction, current->next->instruction);
+
+
+            current = (strcmp(current->next->instruction->op, "storeAI") == 0) ?  current->next->next : current->next;
+            
+
+            
+            free(desloc_1);
+            free(desloc_2);
+            continue;
+        } else if (
+            (strcmp(current->instruction->op, "loadAI") == 0) &&
+            (strcmp(current->next->instruction->op, "loadI") == 0) &&
+            (
+                (strcmp(current->next->next->instruction->op, "sub") == 0) ||
+                (strcmp(current->next->next->instruction->op, "add") == 0)
+            ) && 
+            (strcmp(current->next->next->next->instruction->op, "storeAI") == 0) && 
+            (strcmp(current->instruction->arg1, current->next->next->next->instruction->arg2) == 0) &&  // rfp == rfp ?
+            (strcmp(current->instruction->arg2, current->next->next->next->instruction->arg3) == 0) // desloc == desloc ?
+        ) {
+            /*
+                Simplificar: 
+            	    movl	-4(%rbp), %r15d	; # loadAI rfp, 4 => r11
+	                movl	$1, %r8d	; # loadI 1 => r12
+	                subl	%r8d, %r9d
+	                movl	%r9d, %r10d
+	                movl	%r10d, -4(%rbp)	; # storeAI r13 => rfp, 4
+                Para: 
+                    subl	$1, -4(%rbp) 
+            */
+            char *desloc = calloc(strlen(current->instruction->arg1) + 1, sizeof(char));
+            // printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            // printf("##########################");
+            imprimeIlocInstruction(current->instruction);
+            
+            // printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            sprintf(desloc, "%s", current->instruction->arg2);
+            char *incremento = calloc(strlen(current->next->instruction->arg1) + 1, sizeof(char));
+            sprintf(incremento, "$%s", current->next->instruction->arg1);
+
+            current = current->next->next;
+            printf("\n\t %sl\t%s, -%s(%%rbp)\n", current->instruction->op, incremento, desloc);
+            current = current->next->next;
+            free(desloc);
+            free(incremento);
+            continue;
+
         }
 
-        translateIlocToAsm(current->instruction);
+        translateIlocToAsm(current->instruction, 0);
         current = current->next;
     }
     
+
     printf("\tpopq\t%%rbp\n");
     printf("\tret\n");
 }
@@ -129,20 +209,30 @@ char* allocateRegister(char* virtualReg) {
     }
 
     // Se todos os registradores físicos estão ocupados, reutiliza o primeiro
-    nextFreeRegister = nextFreeRegister >= NUM_REGISTERS ? 0 : nextFreeRegister;
+    nextFreeRegister = nextFreeRegister >= NUM_TEMP_REGISTERS ? 0 : nextFreeRegister;
 
     char* physicalReg;
     switch (nextFreeRegister) {
-        case 0: physicalReg = "%eax"; break;
-        case 1: physicalReg = "%ebx"; break;
-        case 2: physicalReg = "%ecx"; break;
-        case 3: physicalReg = "%edx"; break;
-        case 4: physicalReg = "%esi"; break;
-        case 5: physicalReg = "%edi"; break;
-        case 6: physicalReg = "%r8d"; break;
-        case 7: physicalReg = "%r9d"; break;
-       
+        case 0: physicalReg = "%r8d"; break;
+        case 1: physicalReg = "%r9d"; break;
+        case 2: physicalReg = "%r10d"; break;
+        case 3: physicalReg = "%r11d"; break;
+        case 4: physicalReg = "%r12d"; break;
+        case 5: physicalReg = "%r13d"; break;
+        case 6: physicalReg = "%r14d"; break;
+        case 7: physicalReg = "%r15d"; break;
+        case 8: physicalReg = "%eax"; break;
+        case 9: physicalReg = "%ebx"; break;
+        case 10: physicalReg = "%ecx"; break;
+        case 11: physicalReg = "%edx"; break;
+        case 12: physicalReg = "%esi"; break;
+        case 13: physicalReg = "%edi"; break;
+        case 16: physicalReg = "%eax"; break;
+        default:
+            physicalReg = "UNKNOWN";
+            break;
     }
+
 
     
     registerMapping[nextFreeRegister].virtualReg = strdup(virtualReg);
@@ -212,25 +302,30 @@ BinaryOperationType string_to_binary_operation_type(const char* op) {
         return bin_ADD;
     } else if (strcmp(op, "sub") == 0) {
         return bin_SUB;
-    } else if (strcmp(op, "mul") == 0) {
+    } else if (strcmp(op, "mult") == 0) {
         return bin_MUL;
     } else if (strcmp(op, "div") == 0) {
         return bin_DIV;
-    } else {
+    } else if (strcmp(op, "mod") == 0) {
+        return bin_MOD;
+    } else if (strcmp(op, "rsubI") == 0) {
+        return bin_RSUBI;
+    }
+    else {
         return bin_UNKNOWN;
     }
 }
 
-void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instrucao) {
+void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instr) {
     /* Lógica para operações binárias
      * O código assembly gerado depende do tipo da operação binária.
      */
-    char* s1 = allocateRegister(instrucao->arg2);
-    char* s2 = allocateRegister(instrucao->arg1);
-    char* dest = allocateRegister(instrucao->arg3);
-    
+    char* s1 = instr->arg2[0] == 'r' ? allocateRegister(instr->arg2) : instr->arg2;
+    char* s2 = instr->arg1[0] == 'r' ? allocateRegister(instr->arg1) : instr->arg1;
+    char* dest = allocateRegister(instr->arg3);
+
     printf("\n");
-    imprimeIlocInstruction(instrucao);
+    imprimeIlocInstruction(instr);
     
     switch (binOp) {
         case bin_ADD:
@@ -242,14 +337,26 @@ void handleBinaryOperation(BinaryOperationType binOp, IlocInstruction_t* instruc
             printf("\tmovl\t%s, %s\n", s2, dest);
             break;
         case bin_MUL:
-            printf("\timull\t%s, %s\n", s1, s2);
-            printf("\tmovl\t%s, %s\n", s2, dest);
+            printf("\tmovl\t%s, %%eax\n", s1);
+            printf("\timull\t%s, %%eax\n", s2);
+            printf("\tmovl\t%%eax, %s\n", dest);
             break;
         case bin_DIV:
-            printf("\tmovl\t%s, %%eax\n", s1);
+            printf("\tmovl\t%s, %%eax\n", s2);
             printf("\tcltd\n");
-            printf("\tidivl\t%s\n", s2);
+            printf("\tidivl\t%s\n", s1);
             printf("\tmovl\t%%eax, %s\n", dest);
+            break;
+        case bin_MOD:
+            printf("\tmovl\t%s, %%eax\n", s2);
+            printf("\tcltd\n");
+            printf("\tidivl\t%s\n", s1);
+            printf("\tmovl\t%%edx, %s\n", dest);
+            break;
+        case bin_RSUBI:
+            printf("\tmovl\t%s, %%eax\n", s2);  // Carrega s2 em EAX
+            printf("\tnegl\t%%eax\n");          // Negação: 0 - EAX
+            printf("\tmovl\t%%eax, %s\n", dest); // Move para destino
             break;
         default:
             printf("Unknown binary operation\n");
@@ -274,16 +381,56 @@ void handleLogicalOperation(IlocInstruction_t* instr) {
         printf("\tandl\t%s, %s\n", s1, s2);
         printf("\tmovl\t%s, %s\n", s2, dest);
     } 
-        else if (strcmp(instr->op, "or") == 0) {
-        s1 = allocateRegister(instr->arg1);
-        s2 = allocateRegister(instr->arg2);
+    else if (strcmp(instr->op, "or") == 0) {
         printf("\torl\t%s, %s\n", s1, s2);
         printf("\tmovl\t%s, %s\n", s2, dest);
     } else if (strcmp(instr->op, "not") == 0) {
-        s1 = allocateRegister(instr->arg1);
         printf("\tnotl\t%s\n", s1);
         printf("\tmovl\t%s, %s\n", s1, dest);
     } else {
         fprintf(stderr, "Operacao logica desconhecida: %s\n", instr->op);
+    }
+}
+
+void optimizeASMDivMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr, IlocInstruction_t* next) {
+// void optimizeASMDivMultiplication(char *temp1, char *temp2, IlocInstruction_t* instr) {
+
+
+    int bin_op = string_to_binary_operation_type(instr->op);
+
+    char* op = instr->op;
+    char* dest = allocateRegister(instr->arg3);
+    
+    if(bin_op == bin_MUL)
+    {
+        printf("\n\t ; # ++++++++++ [ MUL ] ++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        printf("\n\t ; #  %s\n", instr->op);
+        printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
+        
+        printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
+        printf("\timull\t-%s(%%rbp), %%eax\n", temp2);
+
+         if((strcmp(next->op, "storeAI") == 0)){
+            printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
+         } else { 
+            printf("\tmovl\t%%eax, %s\n", dest);
+         }
+        printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    }else {
+        printf("\n\t ; # ++++++++++ [ DIV ] ++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        printf("\n\t ; #  %s\n", instr->op);
+        printf("\n\t ; # temp1: %s :: temp2: %s\n", temp1, temp2);
+
+
+        printf("\tmovl\t-%s(%%rbp), %%eax\n", temp1);
+        printf("\tcltd\n");
+        printf("\tidivl\t-%s(%%rbp)\n", temp2);
+        if((strcmp(next->op, "storeAI") == 0)){
+            printf("\tmovl\t%%eax, -%s(%%rbp)\n", next->arg3);
+         }else { 
+            printf("\tmovl\t%%eax, %s\n", dest);
+         }
+        printf("\n\t ; # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
     }
 }

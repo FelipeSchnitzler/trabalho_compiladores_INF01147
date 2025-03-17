@@ -284,7 +284,6 @@ sequencia_de_comandos:
         $$ = $1; 
     }
     | comando_simples ';' sequencia_de_comandos { 
-        //[MAYBE][ACTION] : Criar macro para Acoes de Comandos
         $$ = ($1 != NULL) ? $1 : $3;
         if ($1 != NULL && $3 != NULL) {
             asd_add_child($$, $3);
@@ -293,7 +292,6 @@ sequencia_de_comandos:
         
     } 
     | declaracao_variavel  ';' sequencia_de_comandos { 
-        //[MAYBE][ACTION] : Criar macro para Acoes de Comandos
         $$ = ($1 != NULL) ? $1 : $3; 
         if ($1 != NULL && $3 != NULL) {
             asd_add_child(asd_get_last_child($$), $3);
@@ -337,7 +335,6 @@ lista_de_identificadores:
             asd_add_child($$, $3);
         }
     }
-
     | identificador { if($1 != NULL){
         $$ = $1;
         } 
@@ -409,7 +406,6 @@ comando_atribuicao:
 /* ============================== [3.3.3] chamada de funcao ============================== */
 chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
 { 
-    /*[Macro]: Handle symbol search --------------------------------------------------------------------- */
     Symbol *symbol = find_symbol_in_stack(stack,$1->valor);
     if(symbol == NULL){
         printf("Erro na linha %d, funcao '%s' nao declarada\n",get_line_number(), $1->valor);
@@ -420,10 +416,7 @@ chamada_funcao: TK_IDENTIFICADOR '(' lista_argumentos ')'
         exit(ERR_VARIABLE);
     }
 
-    /*[Macro]: fim ----------------------------------------------------------------------------------------*/ 
-
     $$ = asd_new(cria_label_func($1->valor));
-    
     asd_add_child($$,$3); 
     valor_lexico_free($1);
 };
@@ -442,7 +435,6 @@ lista_argumentos:
 comando_retorno: TK_PR_RETURN expressao { 
     $$ = asd_new("return"); 
     asd_add_child($$,$2); 
-    // $$->codigo = $2->codigo;
     
     IlocList_t* tempCode = criaInstrucao("RETURN", NULL, NULL, NULL); 
     $$->codigo = concatenaInstrucoes(tempCode, $2->codigo);     
@@ -588,10 +580,6 @@ expr_unary:
     };
 
 primary: 
-
-    /* Expressoes caso 2 
-     * [MAYBE ACTION]: Criar macro para verificar se o identificador foi declarado
-     */
     TK_LIT_FLOAT { 
         $$ = handleLiteral($1, FLOAT);
     }
@@ -623,38 +611,19 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
     node->local = GeraTemp(); 
     IlocList_t* tempCode = NULL;
 
-    if (strcmp(operator, "<") == 0) {
-        tempCode = criaInstrucao("cmp_LT", left->local, right->local, node->local);
-    } else if (strcmp(operator, ">") == 0) {
-        tempCode = criaInstrucao("cmp_GT", left->local, right->local, node->local);
-    } else if (strcmp(operator, "<=") == 0) {
-        tempCode = criaInstrucao("cmp_LE", left->local, right->local, node->local);
-    } else if (strcmp(operator, ">=") == 0) {
-        tempCode = criaInstrucao("cmp_GE", left->local, right->local, node->local);
-    } else if (strcmp(operator, "==") == 0) {
-        tempCode = criaInstrucao("cmp_EQ", left->local, right->local, node->local);
-    } else if (strcmp(operator, "!=") == 0) {
-        tempCode = criaInstrucao("cmp_NE", left->local, right->local, node->local);
-    }else if (strcmp(operator, "&") == 0) {
-        PRINT_SEPARATOR
-        PRINT_DEBUG
-        tempCode = criaInstrucao("and", left->local, right->local, node->local);
-        /* imprimeIlocInstruction(tempCode);   */
-        PRINT_SEPARATOR
-    } else if (strcmp(operator,  "|") == 0) {
-        tempCode = criaInstrucao("or", left->local, right->local, node->local);
-    } 
+    if (strcmp(operator, "<") == 0)         { tempCode = criaInstrucao("cmp_LT", left->local, right->local, node->local); } 
+    else if (strcmp(operator, ">") == 0)    { tempCode = criaInstrucao("cmp_GT", left->local, right->local, node->local); } 
+    else if (strcmp(operator, "<=") == 0)   { tempCode = criaInstrucao("cmp_LE", left->local, right->local, node->local); } 
+    else if (strcmp(operator, ">=") == 0)   { tempCode = criaInstrucao("cmp_GE", left->local, right->local, node->local); } 
+    else if (strcmp(operator, "==") == 0)   { tempCode = criaInstrucao("cmp_EQ", left->local, right->local, node->local); } 
+    else if (strcmp(operator, "!=") == 0)   { tempCode = criaInstrucao("cmp_NE", left->local, right->local, node->local); }
+    else if (strcmp(operator, "&") == 0)    { tempCode = criaInstrucao("and", left->local, right->local, node->local);} 
+    else if (strcmp(operator,  "|") == 0)   { tempCode = criaInstrucao("or", left->local, right->local, node->local); } 
     else {
         fprintf(stderr, "Erro interno: operador relacional inválido '%s' em handle_relop.\n", operator);
         exit(EXIT_FAILURE);
     }
-
     node->codigo = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, tempCode));
-
-
-    /* PRINT_SEPARATOR
-    PRINT_CODE
-    PRINT_SEPARATOR */
 
     return node;
 
@@ -673,27 +642,22 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
     IlocList_t* tempCode = NULL;
 
     if (strcmp(operator, "+") == 0) {
-        // Código para soma
         IlocList_t* add = criaInstrucao("add", left->local, right->local, node->local);
         tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, add));
     } 
     else if (strcmp(operator, "-") == 0) {
-        // Código para subtração
         IlocList_t* sub = criaInstrucao("sub", left->local, right->local, node->local);
         tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, sub));
     } 
     else if (strcmp(operator, "*") == 0) {
-        // Código para multiplicação
-        IlocList_t* mul = criaInstrucao("mul", left->local, right->local, node->local);
+        IlocList_t* mul = criaInstrucao("mult", left->local, right->local, node->local);
         tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mul));
     } 
     else if (strcmp(operator, "/") == 0) {
-        // Código para divisão
         IlocList_t* div = criaInstrucao("div", left->local, right->local, node->local);
         tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, div));
     } 
     else if (strcmp(operator, "%") == 0) {
-        // Código para módulo
         IlocList_t* mod = criaInstrucao("mod", left->local, right->local, node->local);
         tempCode = concatenaInstrucoes(left->codigo, concatenaInstrucoes(right->codigo, mod));
     } 
@@ -712,9 +676,14 @@ asd_tree_t* handle_relop (const char* operator, asd_tree_t* left, asd_tree_t* ri
 asd_tree_t *handleUnaryOperation(char *op, asd_tree_t *expr) {
     asd_tree_t *node = asd_new_with_1_child(op, expr);
 
+
+
     node->local = GeraTemp();
     if (strcmp(op, "-") == 0) {
-        node->codigo = criaInstrucao("rsubI", "0", expr->local, node->local);
+        /* IlocList_t *tempCode = criaInstrucao("rsubI", expr->local,"0", node->local); */
+        node->codigo = concatenaInstrucoes(expr->codigo,  criaInstrucao("rsubI", expr->local,"0", node->local));
+    
+
     } else if (strcmp(op, "!") == 0) {
         char *tempZero = GeraTemp();
         IlocList_t *loadZero = criaInstrucao("loadI", "0", NULL, tempZero);
